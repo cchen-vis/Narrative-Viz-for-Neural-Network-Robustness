@@ -1,0 +1,31 @@
+.y_axis .tick text {
+    font-size: 10px;
+    font-weight: bold;
+    fill: black;
+}
+
+.y_axis path.domain {
+    stroke: black;
+}
+
+.x_axis .tick text {
+    font-size: 10px;
+    font-weight: bold;
+    fill: black;
+}
+
+.x_axis path.domain {
+    stroke: black;
+}
+
+.bar rect:hover {
+    stroke: black;
+}
+
+.bar rect text {
+    opacity: 0;
+}
+
+.bar rect:hover text {
+    opacity: 1;
+}
