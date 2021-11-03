@@ -1,17 +1,17 @@
 var img = 0;
 
 // Create SVG containers
-var imgSelectG = d3.select("#G2").append("svg")
+var imgSelectG = d3.select("#G3").append("svg")
     .attr("id", "imgSelect")
     .attr("width", "200px")
     .attr("height", "600px");
 
-var chartG = d3.select("#G2").append("svg")
+var chartG = d3.select("#G3").append("svg")
     .attr("id", "groupedBarChart")
     .attr("width", "800px")
     .attr("height", "600px");
 
-var ribbonG = d3.select("#G2").append("svg")
+var ribbonG = d3.select("#G3").append("svg")
     .attr("id", "ribbonChart")
     .attr("width", "800px")
     .attr("height", "600px");
@@ -33,13 +33,6 @@ var hScale = d3.scaleLinear()
 var xScale0 = d3.scaleLinear()
     .domain([-0.5,10.5])
     .range([0, chartWidth]);
-var xScale1 = d3.scaleLinear()
-    .domain([0,1])
-    .range([0,barWidth]);
-var cScale = d3.scaleOrdinal()
-    .domain(["NT", "AT"])
-    .range(["blue", "red"])
-
 var xScaleRibbon = d3.scaleLinear()
     .domain([-0.5,10.5])
     .range([0, chartWidth]);
@@ -51,12 +44,6 @@ var cScaleRibbon = d3.scaleOrdinal()
     .range(d3.schemeTableau10)
 
 // Legends
-var cLegend = d3.legendColor()
-    .scale(cScale);
-chartG.append("g")
-    .attr("transform", 'translate('+[chartWidth + axisPadding, 100]+')')
-    .call(cLegend)
-
 var cLegendRibbon = d3.legendColor()
     .scale(cScaleRibbon);
 ribbonG.append("g")
@@ -76,10 +63,6 @@ var yAxisG = chartG.append('g')
     .attr('class', 'y_axis')
     .attr("transform", 'translate('+[axisPadding, axisPadding]+')')
     .call(yAxis);
-xAxisG.append('text')
-    .attr('class', 'x label')
-    .attr('transform', 'translate(300,25)')
-    .text('Class Label');
 
 var xAxis = d3.axisBottom(xScaleRibbon);
 var yAxis = d3.axisLeft(yScaleRibbon);
@@ -93,9 +76,28 @@ ribbonG.append('g')
     .attr("transform", 'translate('+[axisPadding, axisPadding]+')')
     .call(yAxis);
 
-d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
-    d3.json("../Datasets/stepWiseProb_AT.json").then(at_data => {
+// Axis labels
+chartG.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'translate('+[axisPadding/2 + chartWidth/2, chartHeight+axisPadding + 50]+')')
+    .text('Epoch of training');
+chartG.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 250, 50]+')')
+    .text("Model's performance on adversarial examples furing training");
 
+ribbonG.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'translate('+[axisPadding/2 + chartWidth/2, chartHeight+axisPadding + 50]+')')
+    .text('Step of PGD');
+ribbonG.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 225, 50]+')')
+    .text("AT model's prediction probabilites for current image");
+
+// d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
+d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
+    d3.json("../Datasets/stepWiseProb_AT.json").then(at_data => {
         // Initialize bar chart
         data = getData();
 
@@ -110,9 +112,9 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
             .append("rect")
             .attr("width", barWidth)
             .attr("height", (d,i) => hScale(0) - hScale(d))
-            .attr("x", (d,i) => xScale0(Math.floor(i/2)) + xScale1(i%2) + axisPadding - barWidth)
+            .attr("x", (d,i) => xScale0(i) + axisPadding - barWidth/2)
             .attr("y", (d,i) => hScale(d) + axisPadding)
-            .style("fill", (d,i) => cScale(convertToColor(i)));
+            .style("fill", (d,i) => "red");
 
         // Initialize image select
         for (i = 0; i < 10; i++) {
@@ -166,7 +168,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
                 .data(data)
                 .attr("height", (d,i) => hScale(0) - hScale(d))
                 .attr("y", (d,i) => hScale(d) + axisPadding)
-                .style("fill", (d,i) => cScale(i % 2));
+                .style("fill", (d,i) => "red");
 
             ribbonG
                 .selectAll("mypoints")
@@ -190,11 +192,11 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
         }
 
         // Return data from left-to-right order, i.e. NT step 0, AT step 0, NT step 1, ...
+        // Get data for every 10th iteration
         function getData() {
             arr = Array();
-            for (i = 0; i <= 10; i++) {
-                arr.push(nt_data[String(i)][img][img])
-                arr.push(at_data[String(i)][img][img])
+            for (i = 1; i <= 10; i++) {
+                arr.push(train_at[10*i - 1]["adv_acc"] / 100)
             }
             return arr;
         }

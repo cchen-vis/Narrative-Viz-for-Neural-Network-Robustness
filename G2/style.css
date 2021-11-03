@@ -29,3 +29,9 @@
 .bar rect:hover text {
     opacity: 1;
 }
+
+.axis_label {
+    font-size: 16px;
+    font-weight: 600;
+    fill: black;
+}

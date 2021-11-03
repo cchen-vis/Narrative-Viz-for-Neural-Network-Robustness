@@ -19,10 +19,10 @@ var imgG = d3.select("#G2")
     .attr("height", "200px")
 
 // Global constants
-var margin = 100;
+var margin = 200;
 var chartWidth = parseInt(chartG.attr("width")) - margin;
 var chartHeight = parseInt(chartG.attr("height")) - margin;
-var axisPadding = 25;
+var axisPadding = margin/2;
 var barWidth = 50;
 var imageOffsetX = 550;
 
@@ -51,6 +51,16 @@ xAxisG.append('text')
     .attr('class', 'x label')
     .attr('transform', 'translate(300,25)')
     .text('Class Label');
+
+// Axis labels
+chartG.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'translate('+[axisPadding/2 + chartWidth/2, chartHeight+axisPadding + 50]+')')
+    .text('Image label');
+chartG.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 100, 50]+')')
+    .text("Probability of prediction");
 
 d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
@@ -85,7 +95,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         .append("rect")
         .attr("width", barWidth)
         .attr("height", (d,i) => hScale(0) - hScale(d))
-        .attr("x", (d,i) => xScale(convertLabel(i)) + barWidth/2 + 10)
+        .attr("x", (d,i) => xScale(convertLabel(i)) + axisPadding + 5)
         .attr("y", (d,i) => hScale(d) + axisPadding)
         .style("fill", (d,i) => cScale(i));
 
