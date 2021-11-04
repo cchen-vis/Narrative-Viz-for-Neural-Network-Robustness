@@ -31,7 +31,7 @@ var hScale = d3.scaleLinear()
     .domain([0,1])
     .range([chartHeight, 1]);
 var xScale0 = d3.scaleLinear()
-    .domain([-0.5,10.5])
+    .domain([5,105])
     .range([0, chartWidth]);
 var xScaleRibbon = d3.scaleLinear()
     .domain([-0.5,10.5])
@@ -112,7 +112,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
             .append("rect")
             .attr("width", barWidth)
             .attr("height", (d,i) => hScale(0) - hScale(d))
-            .attr("x", (d,i) => xScale0(i) + axisPadding - barWidth/2)
+            .attr("x", (d,i) => xScale0((i+1)*10) + axisPadding - barWidth/2)
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => "red");
 
