@@ -64,8 +64,8 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data => {
         .on("mouseover", function(d, i) {
             d3.select(this).attr("opacity", 1).attr("stroke-width", 2);
             tooltip.style("visibility", "visible");
-            tooltip.style("top", (y(parseFloat(d.adv_acc)))+"px")
-                   .style("left",(x(parseFloat(d.clean_acc)) + 20)+"px")
+            tooltip.style("top", d3.select(this).attr("cy") + "px")
+                   .style("left", d3.select(this).attr("cx") + "px")
                    .text(EpsLetter + "=" + (d.eps == "0.0000" ? "0" : d.eps == "0.0039" ? "1/255" : d.eps == "0.0078" ? "2/255" : d.eps == "0.0157" ? "4/255" : d.eps == "0.0314" ? "8/255" : "16/255"));
             svg.append("line")
                .attr("class", "g5-hoverAddOn")
@@ -74,6 +74,7 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data => {
                .attr("y1", y(parseFloat(d.adv_acc)))
                .attr("y2", height)
                .attr("stroke", "black")
+               .attr("stroke-width", 1.5)
                .attr("stroke-dasharray", "20,10,5,5,5,10");
             svg.append("line")
                .attr("class", "g5-hoverAddOn")
@@ -82,6 +83,7 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data => {
                .attr("y1", y(parseFloat(d.adv_acc)))
                .attr("y2", y(parseFloat(d.adv_acc)))
                .attr("stroke", "black")
+               .attr("stroke-width", 1.5)
                .attr("stroke-dasharray", "20,10,5,5,5,10");
             svg.append("text")
                .attr("class", "g5-hoverAddOn")
