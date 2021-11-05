@@ -84,7 +84,7 @@ chartG.append('text')
 chartG.append('text')
     .attr('class', 'axis_label')
     .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 250, 50]+')')
-    .text("Model's performance on adversarial examples furing training");
+    .text("Model's performance on adversarial examples during training");
 
 ribbonG.append('text')
     .attr('class', 'axis_label')

@@ -1,10 +1,9 @@
-let samples;
-
+const EpsLetter = "\u03F5";
 const margin = {top: 20, right: 80, bottom: 20, left: 80},
       width = 800 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom,
       padding = 100;
-const svg = d3.select("#G4")
+const svg = d3.select("#G5")
     .attr("width", width + margin.left + margin.right + padding)
     .attr("height", height + margin.top + margin.bottom + padding)
     .append("g")
@@ -15,185 +14,95 @@ const svg = d3.select("#G4")
 // Scales and Axes
 const x = d3.scaleLinear().range([0, width]);
 const y = d3.scaleLinear().range([height, 0]);
-const color = d3.scaleOrdinal().range(d3.schemeSet1);
 
-Promise.all([
-    d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv")
-]).then(data => {
-    let at_acc = data[0];
-    let nt_acc = data[1];
-    let acc = [];
-    let clean, adv;
-
-    for (let i = 0; i < nt_acc.length; i++) {
-        acc.push({
-            epoch: nt_acc[i].epoch_num,
-            nt_clean: nt_acc[i].clean_acc,
-            nt_adv: nt_acc[i].adv_acc,
-            at_clean: at_acc[i].clean_acc,
-            at_adv: at_acc[i].adv_acc
-        });
-    }
-    
-    samples = d3.keys(acc[0]).filter(key => key !== "epoch").map(name => {
-        return {
-            name: name,
-            values: acc.map(d => {return {epoch: d.epoch, acc: +d[name]}})
-        };
-    });
-
-    color.domain(["at", "nt"]);
-    x.domain([1, 100]);
-    y.domain([0, 100]);
+d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data => {
+    x.domain([Math.min(...data.map(d => parseFloat(d.clean_acc)))-5, Math.max(...data.map(d => parseFloat(d.clean_acc)))+5]);
+    y.domain([Math.min(...data.map(d => parseFloat(d.adv_acc)))-5, Math.max(...data.map(d => parseFloat(d.adv_acc)))+5]);
     const xAxis = d3.axisBottom(x);
     const yAxis = d3.axisLeft(y);
 
     // Add on axes and axis labels
     svg.append("g")
-        .attr("class", "g4-xaxis")
+        .attr("class", "g5-xaxis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
     svg.append("g")
-        .attr("class", "g4-yaxis")
+        .attr("class", "g5-yaxis")
         .call(yAxis)
     svg.append("text")
-        .attr("class", "g4-yaxis-label")
+        .attr("class", "g5-yaxis-label")
         .attr("y", 6)
-        .attr("dy", ".71em")
+        .attr("dy", -35)
         .attr("transform", "rotate(-90)")
         .style("text-anchor", "end")
-        .text("Accuracy (%)");
-
-    let sample = svg.selectAll(".g4-sample")
-        .data(samples)
-        .enter()
-        .append("g")
-        .attr("class", "g4-sample")
-        .attr("data-sample", d => d.name);
-
-    const line = d3.line()
-        .x(d => x(d.epoch))
-        .y(d => y(d.acc))
-
-    // Build a legend
-    const legend = svg.selectAll(".g4-legend")
-        .data(samples)
-        .enter()
-        .append("g")
-        .attr("class", "g4-legend")
-        .attr("transform", (d, i) => "translate(0," + (450 + i * 20) + ")");
-    legend.append("line")
-        .attr("x1", width - 28)
-        .attr("y1", 10)
-        .attr("x2", width)
-        .attr("y2", 10)
-        .style("stroke-dasharray", d => {
-            if (d.name.split("_")[1] === "adv") return "4"
-        })
-        .style("stroke", d => color(d.name.split("_")[0]))
-    legend.append("text")
-        .attr("x", width - 44)
-        .attr("y", 9)
-        .attr("dy", ".35em")
+        .text("Adversarial Accuracy (%)");
+    svg.append("text")
+        .attr("class", "g5-xaxis-label")
+        .attr("x", width)
+        .attr("dy", height+35)
         .style("text-anchor", "end")
-        .text(d => {
-            switch (d.name) {
-                case "nt_clean": return "Normal model on Clean images";
-                case "nt_adv": return "Normal model on Adversarial images";
-                case "at_clean": return "Adversarially-trained model on Clean images";
-                case "at_adv": return "Adversarially-trained model on Adversarial images";
-            }
-        });
+        .text("Clean Accuracy (%)");
 
-    // Lines
-    sample.append("path")
-        .attr("class", "g4-line")
-        .attr("d", d => line(d.values))
-        .attr("stroke", d => color(d.name.split("_")[0]))
-        .attr("fill", "none")
-        .attr("stroke-dasharray", d => {
-            if (d.name.split("_")[1] === "adv") return "4"
-        })
-    
-    // Points
-    sample.selectAll(".g4-circle")
-        .data(d => d.values)
+    var tooltip = d3.select("#div-G5")
+        .append("div")
+        .style("position", "absolute")
+        .style("visibility", "hidden")
+        .text("I'm a circle!");
+
+    svg.selectAll(".g5-mark")
+        .data(data)
         .enter()
         .append("circle")
-        .attr("class", "g4-circle")
-        .attr("r", 1)
-        .attr("cx", d => x(d.epoch))
-        .attr("cy", d => y(d.acc))
-        .style("fill", function(d, i) {
-            const model = this.parentNode.getAttribute("data-sample");
-            return color(model.split("_")[0]);
-        });
-}).then(() => {
-    // Hover line
-    // Added at the end so it's on top of everything else
-    const mouse = svg.append("g")
-        .attr("class", "g4-mouse-over-effects");
-    mouse.append("path")
-        .attr("class", "g4-mouse-line")
-        .style("stroke", "black")
-        .style("stroke-width", "1px")
-        .style("opacity", "0");
-    const epochLabel = mouse.append("text")
-        .attr("id", "g4-epoch-label")
-        .attr("transform", "translate(0,20)")
-        .style("text-anchor", "middle");
-
-    // Hover labels
-    const mousePerLine = mouse.selectAll(".g4-mouse-per-line")
-        .data(samples)
-        .enter()
-        .append("g")
-        .attr("class", "g4-mouse-per-line");
-    mousePerLine.append("circle")
-        .attr("r", 7)
-        .style("stroke", d => color(d.name.split("_")[0]))
-        .style("fill", "none")
-        .style("stroke-width", "1px")
-        .style("opacity", "0");
-    mousePerLine.append("text")
-        .attr("transform", "translate(10,-10)");
-
-    // Add on the hover events when we have the data and stuff
-    const lines = document.getElementsByClassName("g4-line");
-    mouse.append("svg:rect")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("fill", "none")
-        .attr("pointer-events", "all")
-        .on("mouseout", () => {
-            d3.select(".g4-mouse-line").style("opacity", "0");
-            d3.selectAll(".g4-mouse-per-line circle").style("opacity", "0");
-            d3.selectAll(".g4-mouse-per-line text").style("opacity", "0");
+        .attr("class", "g5-mark")
+        .attr("r", d => 100*Math.sqrt(parseFloat(d.eps)))
+        .attr("cx", d => x(parseFloat(d.clean_acc)))
+        .attr("cy", d => y(parseFloat(d.adv_acc)))
+        .attr("opacity", 0.6)
+        .attr("fill", "#C235CE")
+        .attr("stroke", "black")
+        .attr("stroke-width", 0.3)
+        .on("mouseover", function(d, i) {
+            d3.select(this).attr("opacity", 1).attr("stroke-width", 2);
+            tooltip.style("visibility", "visible");
+            tooltip.style("top", (y(parseFloat(d.adv_acc)))+"px")
+                   .style("left",(x(parseFloat(d.clean_acc)) + 20)+"px")
+                   .text(EpsLetter + "=" + (d.eps == "0.0000" ? "0" : d.eps == "0.0039" ? "1/255" : d.eps == "0.0078" ? "2/255" : d.eps == "0.0157" ? "4/255" : d.eps == "0.0314" ? "8/255" : "16/255"));
+            svg.append("line")
+               .attr("class", "g5-hoverAddOn")
+               .attr("x1", x(parseFloat(d.clean_acc)))
+               .attr("x2", x(parseFloat(d.clean_acc)))
+               .attr("y1", y(parseFloat(d.adv_acc)))
+               .attr("y2", height)
+               .attr("stroke", "black")
+               .attr("stroke-dasharray", "20,10,5,5,5,10");
+            svg.append("line")
+               .attr("class", "g5-hoverAddOn")
+               .attr("x1", 0)
+               .attr("x2", x(parseFloat(d.clean_acc)))
+               .attr("y1", y(parseFloat(d.adv_acc)))
+               .attr("y2", y(parseFloat(d.adv_acc)))
+               .attr("stroke", "black")
+               .attr("stroke-dasharray", "20,10,5,5,5,10");
+            svg.append("text")
+               .attr("class", "g5-hoverAddOn")
+               .attr("x", x(parseFloat(d.clean_acc))+5)
+               .attr("y", height-5)
+               .text(d.clean_acc + "%")
+               .attr("font-family", "Arial, Helvetica, sans-serif")
+               .attr("fill", "green");
+            svg.append("text")
+               .attr("class", "g5-hoverAddOn")
+               .attr("x", 5)
+               .attr("y", y(parseFloat(d.adv_acc))+15)
+               .text(d.adv_acc + "%")
+               .attr("font-family", "Arial, Helvetica, sans-serif")
+               .attr("fill", "red");
         })
-        .on("mouseover", () => {
-            d3.select(".g4-mouse-line").style("opacity", "1");
-            d3.selectAll(".g4-mouse-per-line circle").style("opacity", "1");
-            d3.selectAll(".g4-mouse-per-line text").style("opacity", "1");
+        .on("mouseout", function(d, i) {
+            d3.select(this).attr("opacity", 0.6);
+            tooltip.style("visibility", "hidden");
+            svg.selectAll(".g5-hoverAddOn").remove()
         })
-        .on("mousemove", function() {
-            let mouse = d3.mouse(this);
-            const epoch = Math.round(x.invert(mouse[0]));
-            d3.select(".g4-mouse-line")
-                .attr("d", function() {
-                    let d = "M" + x(epoch) + "," + height;  // draw from (x, top)
-                    d += " " + x(epoch) + "," + 0;          // down to   (x, bottom)
-                    return d;
-                });
-            d3.selectAll(".g4-mouse-per-line")
-                .attr("transform", function(d, i) {
-                    d3.select(this).select("text")
-                        .text(d.values[epoch - 1].acc + "%");
-                    return "translate(" + x(epoch) + "," + y(d.values[epoch - 1].acc) + ")";
-                });
-            d3.select("#g4-epoch-label")
-                .attr("transform", function(d, i) {
-                    d3.select(this).text("Epoch " + epoch);
-                    return "translate(" + mouse[0] + "," + (height + 30) + ")";
-                });
-        });
+        .on('click', d => {});
+    
 });
