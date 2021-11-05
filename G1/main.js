@@ -104,9 +104,9 @@ heatmap.selectAll(".g1-heatmap-measure")
 function updateHeat() {
     const chosenImg = d3.select(".g1-selected-image").attr("data-index");
     heatmap.selectAll(".g1-heatmap-square")
-        .attr("fill", (d, i) => heat(steps[currentEpoch + "th-epoch"][chosenImg][i]));
+        .attr("fill", (d, i) => heat(steps[currentEpoch][chosenImg][i]));
     heatmap.selectAll(".g1-heatmap-measure")
-        .text((d, i) => steps[currentEpoch + "th-epoch"][chosenImg][i].toFixed(4));
+        .text((d, i) => (steps[currentEpoch][chosenImg][i] * 100).toFixed(2) + "%");
 }
 
 d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
@@ -196,7 +196,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
     return d3.json("../Datasets/examplesOutputProbPerEpoch_NT.json");
 }).then(dataset => {
     steps = dataset;
-    updateHeat(1);
+    updateHeat();
 }).then(() => {
     // Hover line
     // Added at the end so it's on top of everything else
