@@ -1,0 +1,16 @@
+.g1-selected-image {
+    outline: 5px solid gold;
+}
+
+.g1-line {
+    stroke-width: 3;
+}
+
+.g1-mouse-per-line text {
+    font-family: sans-serif;
+}
+
+.g1-heatmap text {
+    font-size: 13px;
+    font-weight: bold;
+}
