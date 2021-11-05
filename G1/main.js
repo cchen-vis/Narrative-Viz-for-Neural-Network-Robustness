@@ -29,7 +29,7 @@ const yAcc = d3.scaleLinear()
     .domain([0, 100])
     .range([height, 0]);
 const color = d3.scaleOrdinal()
-    .domain(["loss", "accuracy"])
+    .domain(["accuracy", "loss"])
     .range(d3.schemeSet2);
 const heat = d3.interpolateRdBu;  // Already domain [0, 1]
 const xAxis = d3.axisBottom(x);
