@@ -18,8 +18,7 @@ const y = d3.scaleLinear().range([height, 0]);
 const color = d3.scaleOrdinal().range(d3.schemeSet1);
 
 Promise.all([
-    d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv"),
-    d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
+    d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv")
 ]).then(data => {
     let at_acc = data[0];
     let nt_acc = data[1];
