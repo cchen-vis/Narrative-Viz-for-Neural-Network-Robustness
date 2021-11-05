@@ -99,7 +99,7 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data => {
                .attr("fill", "red");
         })
         .on("mouseout", function(d, i) {
-            d3.select(this).attr("opacity", 0.6);
+            d3.select(this).attr("opacity", 0.6).attr("stroke-width", 0.3);
             tooltip.style("visibility", "hidden");
             svg.selectAll(".g5-hoverAddOn").remove()
         })
