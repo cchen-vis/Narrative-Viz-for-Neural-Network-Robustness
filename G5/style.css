@@ -5,3 +5,5 @@
 .g4-mouse-per-line text {
     font-family: sans-serif;
 }
+
+circle { cursor: pointer; }
