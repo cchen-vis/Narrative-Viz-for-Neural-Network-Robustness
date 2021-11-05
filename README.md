@@ -9,4 +9,4 @@
  - stepWiseProb_AT.json: stepwise output probabilities for the images in sampleImages_AT.json; of size [10,10,10], [10 steps of PGD] * [10 images (whose labels are from 0 to 9)] * [10 labels]
  - stepWiseProb_NT.json: stepwise output probabilities for the images in sampleImages_NT.json; of size [10,10,10], [10 steps of PGD] * [10 images (whose labels are from 0 to 9)] * [10 labels]
  - examplesOutputProbPerEpoch_NT.json: selected examples' output probabilities per epoch for the naturally-trained model; of size [100, 10, 10], [100 epochs] * [10 images] * [10 labels]
- - clean_and_adversarial_acc_NT_model.csv: clean accuracy and adversarial accuracy for models trained with different $\epsilon$ (a.k.a. attacking radius)
+ - clean_and_adversarial_acc_NT_model.csv: clean accuracy and adversarial accuracy for models trained with different &epsilon; (a.k.a. attacking radius)
