@@ -19,10 +19,10 @@ var imgG = d3.select("#G2")
     .attr("height", "200px")
 
 // Global constants
-var margin = 200;
-var chartWidth = parseInt(chartG.attr("width")) - margin;
-var chartHeight = parseInt(chartG.attr("height")) - margin;
-var axisPadding = margin/2;
+var margin_G2 = 200;
+var chartWidth = parseInt(chartG.attr("width")) - margin_G2;
+var chartHeight = parseInt(chartG.attr("height")) - margin_G2;
+var axisPadding = margin_G2/2;
 var barWidth = 50;
 var imageOffsetX = 550;
 
@@ -82,10 +82,10 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         .html("PGD Step: "+ epoch);
 
     // Initialize bar chart
-    data = prob_data[epoch][img];
+    data_G2 = prob_data[epoch][img];
 
     var bars = chartG.selectAll(".rect")
-        .data(data);
+        .data(data_G2);
 
     var barsEnter = bars.enter()
         .append("g")
@@ -126,12 +126,12 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
     // Initialize image select
     for (i = 0; i < 10; i++) {
         filepath = "../Datasets/images/img" + i +"0.png"
-        x = (i%2)*50
-        y = Math.floor(i/2)*50
+        // x = (i%2)*50
+        // y = Math.floor(i/2)*50
     
         imgSelectG.append("svg")
-            .attr("x", x)
-            .attr("y", y)
+            .attr("x", (i%2)*50)
+            .attr("y", Math.floor(i/2)*50)
             .attr("width", 50)
             .attr("height", 50)
             .on("click", onImgSelect)
@@ -147,12 +147,12 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         d3.select("#slider_text")
             .html("PGD Step: "+ epoch);
     
-        data = prob_data[epoch][img];
+        data_G2 = prob_data[epoch][img];
         var svg = d3.select("#stackedBarChart");
         var barRect = svg.selectAll(".bar rect");
 
         barRect
-            .data(data)
+            .data(data_G2)
             .attr("height", (d,i) => hScale(0) - hScale(d))
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
@@ -164,18 +164,18 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
     }
 
     function onImgSelect() {
-        x = d3.select(this).attr("x");
-        y = d3.select(this).attr("y");
+        let thisXAttr = d3.select(this).attr("x");
+        let thisyAttr = d3.select(this).attr("y");
         epoch = 0;
         d3.select("#epoch_slider").attr("value", 0);
-        img = 2*(y/50) + (x/50);
+        img = 2*(thisyAttr/50) + (thisXAttr/50);
 
-        data = prob_data[epoch][img];
+        data_G2 = prob_data[epoch][img];
         var svg = d3.select("#stackedBarChart");
         var barRect = svg.selectAll(".bar rect");
 
         barRect
-            .data(data)
+            .data(data_G2)
             .attr("height", (d,i) => hScale(0) - hScale(d))
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   

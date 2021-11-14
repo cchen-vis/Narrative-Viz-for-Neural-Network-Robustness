@@ -1,0 +1,56 @@
+/* G1 */
+.g1-selected-image {
+    outline: 5px solid gold;
+}
+
+.g1-line {
+    stroke-width: 3;
+}
+
+.g1-mouse-per-line text {
+    font-family: sans-serif;
+}
+
+.g1-heatmap text {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* G2 */
+.y_axis .tick text {
+    font-size: 10px;
+    font-weight: bold;
+    fill: black;
+}
+
+.y_axis path.domain {
+    stroke: black;
+}
+
+.x_axis .tick text {
+    font-size: 10px;
+    font-weight: bold;
+    fill: black;
+}
+
+.x_axis path.domain {
+    stroke: black;
+}
+
+.bar rect:hover {
+    stroke: black;
+}
+
+.bar rect text {
+    opacity: 0;
+}
+
+.bar rect:hover text {
+    opacity: 1;
+}
+
+.axis_label {
+    font-size: 16px;
+    font-weight: 600;
+    fill: black;
+}

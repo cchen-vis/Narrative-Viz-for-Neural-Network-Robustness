@@ -1,4 +1,4 @@
-let data;
+let data_G1;
 let steps;
 
 const margin = {top: 20, right: 80, bottom: 20, left: 80},
@@ -32,7 +32,7 @@ const color = d3.scaleOrdinal()
     .domain(["accuracy", "loss"])
     .range(d3.schemeSet2);
 const heat = d3.interpolateRdBu;  // Already domain [0, 1]
-const xAxis = d3.axisBottom(x);
+const xAxis_G1 = d3.axisBottom(x);
 const yLossAxis = d3.axisLeft(yLoss);
 const yAccAxis = d3.axisRight(yAcc);
 
@@ -110,7 +110,7 @@ function updateHeat() {
 }
 
 d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
-    data = dataset;
+    data_G1 = dataset;
 
     // Add on axes and axis labels
     const axes = graph.append("g")
@@ -118,7 +118,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
     axes.append("g")
         .attr("class", "g1-xaxis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
+        .call(xAxis_G1)
     axes.append("g")
         .attr("class", "g1-loss-yaxis")
         .call(yLossAxis)
@@ -152,7 +152,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
         .y(d => y(d.acc))
 
     graph.append("path")
-        .datum(data)
+        .datum(data_G1)
         .attr("class", "g1-loss-line g1-line")
         .attr("d", d3.line()
             .x(d => x(d.epoch_num))
@@ -162,7 +162,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
         .attr("stroke-width", 1.5)
         .attr("fill", "none")
     graph.append("path")
-        .datum(data)
+        .datum(data_G1)
         .attr("class", "g1-acc-line g1-line")
         .attr("d", d3.line()
             .x(d => x(d.epoch_num))
@@ -174,7 +174,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
     
     // Points
     graph.selectAll(".g1-loss-circle")
-        .data(data)
+        .data(data_G1)
         .enter()
         .append("circle")
         .attr("class", "g1-loss-circle g1-circle")
@@ -183,7 +183,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
         .attr("cy", d => yLoss(d.loss))
         .style("fill", color("loss"))
     graph.selectAll(".g1-acc-circle")
-        .data(data)
+        .data(data_G1)
         .enter()
         .append("circle")
         .attr("class", "g1-acc-circle g1-circle")
@@ -268,26 +268,26 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
                 });
             d3.select(".g1-mouse-loss-line")
                 .attr("d", function() {
-                    let d = "M0," + yLoss(data[epoch - 1].loss);
-                    d += " " + x(epoch) + "," + yLoss(data[epoch - 1].loss);
+                    let d = "M0," + yLoss(data_G1[epoch - 1].loss);
+                    d += " " + x(epoch) + "," + yLoss(data_G1[epoch - 1].loss);
                     return d;
                 });
             d3.select(".g1-mouse-acc-line")
                 .attr("d", function() {
-                    let d = "M" + x(epoch) + "," + yAcc(data[epoch - 1].clean_acc);
-                    d += " " + width + "," + yAcc(data[epoch - 1].clean_acc);
+                    let d = "M" + x(epoch) + "," + yAcc(data_G1[epoch - 1].clean_acc);
+                    d += " " + width + "," + yAcc(data_G1[epoch - 1].clean_acc);
                     return d;
                 });
             d3.selectAll(".g1-mouse-per-line")
                 .attr("transform", function(d) {
                     if (d === "loss") {
                         d3.select(this).select("text")
-                            .text(data[epoch - 1].loss);
-                        return "translate(" + x(epoch) + "," + yLoss(data[epoch - 1].loss) + ")";
+                            .text(data_G1[epoch - 1].loss);
+                        return "translate(" + x(epoch) + "," + yLoss(data_G1[epoch - 1].loss) + ")";
                     } else {
                         d3.select(this).select("text")
-                            .text(data[epoch - 1].clean_acc + "%");
-                        return "translate(" + x(epoch) + "," + yAcc(data[epoch - 1].clean_acc) + ")";
+                            .text(data_G1[epoch - 1].clean_acc + "%");
+                        return "translate(" + x(epoch) + "," + yAcc(data_G1[epoch - 1].clean_acc) + ")";
                     }
                 });
             d3.select("#g1-epoch-label")
