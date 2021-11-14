@@ -1,9 +1,5 @@
 const EpsLetter = "\u03F5";
-const margin = {top: 20, right: 80, bottom: 20, left: 80},
-      width = 800 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom,
-      padding = 100;
-const svg = d3.select("#G5")
+const svg_g5 = d3.select("#G5")
     .attr("width", width + margin.left + margin.right + padding)
     .attr("height", height + margin.top + margin.bottom + padding)
     .append("g")
@@ -12,98 +8,106 @@ const svg = d3.select("#G5")
     .attr("height", height);
 
 // Scales and Axes
-const x = d3.scaleLinear().range([0, width]);
-const y = d3.scaleLinear().range([height, 0]);
+const x_g5 = d3.scaleLinear().range([0, width]);
+const y_g5 = d3.scaleLinear().range([height, 0]);
 
-d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data => {
-    x.domain([Math.min(...data.map(d => parseFloat(d.clean_acc)))-5, Math.max(...data.map(d => parseFloat(d.clean_acc)))+5]);
-    y.domain([Math.min(...data.map(d => parseFloat(d.adv_acc)))-5, Math.max(...data.map(d => parseFloat(d.adv_acc)))+5]);
-    const xAxis = d3.axisBottom(x);
-    const yAxis = d3.axisLeft(y);
+d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then(data_g5 => {
+    x_g5.domain([Math.min(...data_g5.map(d => parseFloat(d.clean_acc)))-5, Math.max(...data_g5.map(d => parseFloat(d.clean_acc)))+5]);
+    y_g5.domain([Math.min(...data_g5.map(d => parseFloat(d.adv_acc)))-5, Math.max(...data_g5.map(d => parseFloat(d.adv_acc)))+5]);
+    const xAxis_g5 = d3.axisBottom(x_g5);
+    const yAxis_g5 = d3.axisLeft(y_g5);
 
     // Add on axes and axis labels
-    svg.append("g")
+    svg_g5.append("g")
         .attr("class", "g5-xaxis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-    svg.append("g")
+        .call(xAxis_g5)
+    svg_g5.append("g")
         .attr("class", "g5-yaxis")
-        .call(yAxis)
-    svg.append("text")
+        .call(yAxis_g5)
+    svg_g5.append("text")
         .attr("class", "g5-yaxis-label")
         .attr("y", 6)
         .attr("dy", -35)
         .attr("transform", "rotate(-90)")
         .style("text-anchor", "end")
         .text("Adversarial Accuracy (%)");
-    svg.append("text")
+    svg_g5.append("text")
         .attr("class", "g5-xaxis-label")
         .attr("x", width)
         .attr("dy", height+35)
         .style("text-anchor", "end")
         .text("Clean Accuracy (%)");
 
-    var tooltip = d3.select("#div-G5")
-        .append("div")
-        .style("position", "absolute")
-        .style("visibility", "hidden")
-        .text("I'm a circle!");
+    // var tooltip_g5 = d3.select("#div4G5")
+    //     .append("div")
+    //     .style("position", "absolute")
+    //     .style("visibility", "hidden")
+    //     .text("I'm a tooltip!");
 
-    svg.selectAll(".g5-mark")
-        .data(data)
+    svg_g5.selectAll(".g5-text")
+        .data(data_g5)
+        .enter()
+        .append("text")
+        .attr("x", d => x_g5(parseFloat(d.clean_acc))+ 100*Math.sqrt(parseFloat(d.eps)))
+        .attr("y", d => y_g5(parseFloat(d.adv_acc)) - 100*Math.sqrt(parseFloat(d.eps)))
+        .text(d => d.eps == "0.0000"? null : EpsLetter + "=" + (d.eps == "0.0000" ? "0" : d.eps == "0.0039" ? "1/255" : d.eps == "0.0078" ? "2/255" : d.eps == "0.0157" ? "4/255" : d.eps == "0.0314" ? "8/255" : "16/255"));
+
+    svg_g5.selectAll(".g5-mark")
+        .data(data_g5)
         .enter()
         .append("circle")
         .attr("class", "g5-mark")
         .attr("r", d => 100*Math.sqrt(parseFloat(d.eps)))
-        .attr("cx", d => x(parseFloat(d.clean_acc)))
-        .attr("cy", d => y(parseFloat(d.adv_acc)))
+        .attr("cx", d => x_g5(parseFloat(d.clean_acc)))
+        .attr("cy", d => y_g5(parseFloat(d.adv_acc)))
         .attr("opacity", 0.6)
         .attr("fill", "#C235CE")
         .attr("stroke", "black")
         .attr("stroke-width", 0.3)
         .on("mouseover", function(d, i) {
             d3.select(this).attr("opacity", 1).attr("stroke-width", 2);
-            tooltip.style("visibility", "visible");
-            tooltip.style("top", d3.select(this).attr("cy") + "px")
-                   .style("left", d3.select(this).attr("cx") + "px")
-                   .text(EpsLetter + "=" + (d.eps == "0.0000" ? "0" : d.eps == "0.0039" ? "1/255" : d.eps == "0.0078" ? "2/255" : d.eps == "0.0157" ? "4/255" : d.eps == "0.0314" ? "8/255" : "16/255"));
-            svg.append("line")
+            // tooltip_g5.style("visibility", "visible");
+            // tooltip_g5.style("top", d3.select(this).attr("cy") + "px")
+            //        .style("left", d3.select(this).attr("cx") + "px")
+            //        .text(EpsLetter + "=" + (d.eps == "0.0000" ? "0" : d.eps == "0.0039" ? "1/255" : d.eps == "0.0078" ? "2/255" : d.eps == "0.0157" ? "4/255" : d.eps == "0.0314" ? "8/255" : "16/255"));
+            svg_g5.append("line")
                .attr("class", "g5-hoverAddOn")
-               .attr("x1", x(parseFloat(d.clean_acc)))
-               .attr("x2", x(parseFloat(d.clean_acc)))
-               .attr("y1", y(parseFloat(d.adv_acc)))
+               .attr("x1", x_g5(parseFloat(d.clean_acc)))
+               .attr("x2", x_g5(parseFloat(d.clean_acc)))
+               .attr("y1", y_g5(parseFloat(d.adv_acc)))
                .attr("y2", height)
                .attr("stroke", "black")
                .attr("stroke-width", 1.5)
                .attr("stroke-dasharray", "20,10,5,5,5,10");
-            svg.append("line")
+            svg_g5.append("line")
                .attr("class", "g5-hoverAddOn")
                .attr("x1", 0)
-               .attr("x2", x(parseFloat(d.clean_acc)))
-               .attr("y1", y(parseFloat(d.adv_acc)))
-               .attr("y2", y(parseFloat(d.adv_acc)))
+               .attr("x2", x_g5(parseFloat(d.clean_acc)))
+               .attr("y1", y_g5(parseFloat(d.adv_acc)))
+               .attr("y2", y_g5(parseFloat(d.adv_acc)))
                .attr("stroke", "black")
                .attr("stroke-width", 1.5)
                .attr("stroke-dasharray", "20,10,5,5,5,10");
-            svg.append("text")
+            svg_g5.append("text")
                .attr("class", "g5-hoverAddOn")
-               .attr("x", x(parseFloat(d.clean_acc))+5)
+               .attr("x", x_g5(parseFloat(d.clean_acc))+5)
                .attr("y", height-5)
                .text(d.clean_acc + "%")
                .attr("font-family", "Arial, Helvetica, sans-serif")
                .attr("fill", "green");
-            svg.append("text")
+            svg_g5.append("text")
                .attr("class", "g5-hoverAddOn")
                .attr("x", 5)
-               .attr("y", y(parseFloat(d.adv_acc))+15)
+               .attr("y", y_g5(parseFloat(d.adv_acc))+15)
                .text(d.adv_acc + "%")
                .attr("font-family", "Arial, Helvetica, sans-serif")
                .attr("fill", "red");
         })
         .on("mouseout", function(d, i) {
             d3.select(this).attr("opacity", 0.6).attr("stroke-width", 0.3);
-            tooltip.style("visibility", "hidden");
-            svg.selectAll(".g5-hoverAddOn").remove()
+            // tooltip_g5.style("visibility", "hidden");
+            svg_g5.selectAll(".g5-hoverAddOn").remove()
         })
         .on('click', d => {});
     

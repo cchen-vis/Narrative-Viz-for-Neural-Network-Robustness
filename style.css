@@ -63,3 +63,6 @@
 .g4-mouse-per-line text {
     font-family: sans-serif;
 }
+
+/* G5 */
+circle { cursor: pointer; }
