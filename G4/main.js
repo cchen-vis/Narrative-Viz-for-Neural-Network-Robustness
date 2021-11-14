@@ -1,10 +1,6 @@
 let samples;
 
-const margin = {top: 20, right: 80, bottom: 20, left: 80},
-      width = 800 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom,
-      padding = 100;
-const svg = d3.select("#G4")
+const svg_g4 = d3.select("#G4")
     .attr("width", width + margin.left + margin.right + padding)
     .attr("height", height + margin.top + margin.bottom + padding)
     .append("g")
@@ -13,16 +9,16 @@ const svg = d3.select("#G4")
     .attr("height", height);
 
 // Scales and Axes
-const x = d3.scaleLinear().range([0, width]);
-const y = d3.scaleLinear().range([height, 0]);
-const color = d3.scaleOrdinal().range(d3.schemeSet1);
+const x_g4 = d3.scaleLinear().range([0, width]);
+const y_g4 = d3.scaleLinear().range([height, 0]);
+const color_g4 = d3.scaleOrdinal().range(d3.schemeSet1);
 
 Promise.all([
     d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv"),
     d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
-]).then(data => {
-    let at_acc = data[0];
-    let nt_acc = data[1];
+]).then(data_g4 => {
+    let at_acc = data_g4[0];
+    let nt_acc = data_g4[1];
     let acc = [];
     let clean, adv;
 
@@ -43,21 +39,21 @@ Promise.all([
         };
     });
 
-    color.domain(["at", "nt"]);
-    x.domain([1, 100]);
-    y.domain([0, 100]);
-    const xAxis = d3.axisBottom(x);
-    const yAxis = d3.axisLeft(y);
+    color_g4.domain(["at", "nt"]);
+    x_g4.domain([1, 100]);
+    y_g4.domain([0, 100]);
+    const xAxis_g4 = d3.axisBottom(x_g4);
+    const yAxis_g4 = d3.axisLeft(y_g4);
 
     // Add on axes and axis labels
-    svg.append("g")
+    svg_g4.append("g")
         .attr("class", "g4-xaxis")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-    svg.append("g")
+        .call(xAxis_g4)
+    svg_g4.append("g")
         .attr("class", "g4-yaxis")
-        .call(yAxis)
-    svg.append("text")
+        .call(yAxis_g4)
+    svg_g4.append("text")
         .attr("class", "g4-yaxis-label")
         .attr("y", 6)
         .attr("dy", ".71em")
@@ -65,7 +61,7 @@ Promise.all([
         .style("text-anchor", "end")
         .text("Accuracy (%)");
 
-    let sample = svg.selectAll(".g4-sample")
+    let sample = svg_g4.selectAll(".g4-sample")
         .data(samples)
         .enter()
         .append("g")
@@ -73,11 +69,11 @@ Promise.all([
         .attr("data-sample", d => d.name);
 
     const line = d3.line()
-        .x(d => x(d.epoch))
-        .y(d => y(d.acc))
+        .x(d => x_g4(d.epoch))
+        .y(d => y_g4(d.acc))
 
     // Build a legend
-    const legend = svg.selectAll(".g4-legend")
+    const legend = svg_g4.selectAll(".g4-legend")
         .data(samples)
         .enter()
         .append("g")
@@ -91,7 +87,7 @@ Promise.all([
         .style("stroke-dasharray", d => {
             if (d.name.split("_")[1] === "adv") return "4"
         })
-        .style("stroke", d => color(d.name.split("_")[0]))
+        .style("stroke", d => color_g4(d.name.split("_")[0]))
     legend.append("text")
         .attr("x", width - 44)
         .attr("y", 9)
@@ -110,7 +106,7 @@ Promise.all([
     sample.append("path")
         .attr("class", "g4-line")
         .attr("d", d => line(d.values))
-        .attr("stroke", d => color(d.name.split("_")[0]))
+        .attr("stroke", d => color_g4(d.name.split("_")[0]))
         .attr("fill", "none")
         .attr("stroke-dasharray", d => {
             if (d.name.split("_")[1] === "adv") return "4"
@@ -123,16 +119,16 @@ Promise.all([
         .append("circle")
         .attr("class", "g4-circle")
         .attr("r", 1)
-        .attr("cx", d => x(d.epoch))
-        .attr("cy", d => y(d.acc))
+        .attr("cx", d => x_g4(d.epoch))
+        .attr("cy", d => y_g4(d.acc))
         .style("fill", function(d, i) {
             const model = this.parentNode.getAttribute("data-sample");
-            return color(model.split("_")[0]);
+            return color_g4(model.split("_")[0]);
         });
 }).then(() => {
     // Hover line
     // Added at the end so it's on top of everything else
-    const mouse = svg.append("g")
+    const mouse = svg_g4.append("g")
         .attr("class", "g4-mouse-over-effects");
     mouse.append("path")
         .attr("class", "g4-mouse-line")
@@ -152,7 +148,7 @@ Promise.all([
         .attr("class", "g4-mouse-per-line");
     mousePerLine.append("circle")
         .attr("r", 7)
-        .style("stroke", d => color(d.name.split("_")[0]))
+        .style("stroke", d => color_g4(d.name.split("_")[0]))
         .style("fill", "none")
         .style("stroke-width", "1px")
         .style("opacity", "0");
@@ -178,18 +174,18 @@ Promise.all([
         })
         .on("mousemove", function() {
             let mouse = d3.mouse(this);
-            const epoch = Math.round(x.invert(mouse[0]));
+            const epoch = Math.round(x_g4.invert(mouse[0]));
             d3.select(".g4-mouse-line")
                 .attr("d", function() {
-                    let d = "M" + x(epoch) + "," + height;  // draw from (x, top)
-                    d += " " + x(epoch) + "," + 0;          // down to   (x, bottom)
+                    let d = "M" + x_g4(epoch) + "," + height;  // draw from (x, top)
+                    d += " " + x_g4(epoch) + "," + 0;          // down to   (x, bottom)
                     return d;
                 });
             d3.selectAll(".g4-mouse-per-line")
                 .attr("transform", function(d, i) {
                     d3.select(this).select("text")
                         .text(d.values[epoch - 1].acc + "%");
-                    return "translate(" + x(epoch) + "," + y(d.values[epoch - 1].acc) + ")";
+                    return "translate(" + x_g4(epoch) + "," + y_g4(d.values[epoch - 1].acc) + ")";
                 });
             d3.select("#g4-epoch-label")
                 .attr("transform", function(d, i) {
