@@ -1,108 +1,108 @@
-var img = 0;
+var img_g3 = 0;
 
 // Create SVG containers
-var imgSelectG = d3.select("#G3").append("svg")
+var imgSelectG_g3 = d3.select("#G3").append("svg")
     .attr("id", "imgSelect")
     .attr("width", "200px")
     .attr("height", "600px");
 
-var chartG = d3.select("#G3").append("svg")
+var chartG_g3 = d3.select("#G3").append("svg")
     .attr("id", "groupedBarChart")
     .attr("width", "800px")
     .attr("height", "600px");
 
-var ribbonG = d3.select("#G3").append("svg")
+var ribbonG_g3 = d3.select("#G3").append("svg")
     .attr("id", "ribbonChart")
     .attr("width", "800px")
     .attr("height", "600px");
 
 // Global constants
-var margin = 200;
-var chartWidth = parseInt(chartG.attr("width")) - margin;
-var chartHeight = parseInt(chartG.attr("height")) - margin;
-var axisPadding = margin/2;
-var barWidth = 20;
-var selectOffsetX = 25;
-var selectOffsetY = 150;
+var margin_g3 = 200;
+var chartWidth_g3 = parseInt(chartG_g3.attr("width")) - margin_g3;
+var chartHeight_g3 = parseInt(chartG_g3.attr("height")) - margin_g3;
+var axisPadding_g3 = margin_g3/2;
+var barWidth_g3 = 20;
+var selectOffsetX_g3 = 25;
+var selectOffsetY_g3 = 150;
 var keys = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"];
 
 // Scales
-var hScale = d3.scaleLinear()
+var hScale_g3 = d3.scaleLinear()
     .domain([0,1])
-    .range([chartHeight, 1]);
-var xScale0 = d3.scaleLinear()
+    .range([chartHeight_g3, 1]);
+var XScale0_g3 = d3.scaleLinear()
     .domain([5,105])
-    .range([0, chartWidth]);
-var xScaleRibbon = d3.scaleLinear()
+    .range([0, chartWidth_g3]);
+var xScaleRibbon_g3 = d3.scaleLinear()
     .domain([-0.5,10.5])
-    .range([0, chartWidth]);
-var yScaleRibbon = d3.scaleLinear()
+    .range([0, chartWidth_g3]);
+var yScaleRibbon_g3 = d3.scaleLinear()
     .domain([0, 1])
-    .range([chartHeight, 0]);
-var cScaleRibbon = d3.scaleOrdinal()
+    .range([chartHeight_g3, 0]);
+var cScaleRibbon_g3 = d3.scaleOrdinal()
     .domain(keys)
     .range(d3.schemeTableau10)
 
 // Legends
-var cLegendRibbon = d3.legendColor()
-    .scale(cScaleRibbon);
-ribbonG.append("g")
-    .attr("transform", 'translate('+[chartWidth + axisPadding, 100]+')')
-    .call(cLegendRibbon)
+var cLegendRibbon_g3 = d3.legendColor()
+    .scale(cScaleRibbon_g3);
+ribbonG_g3.append("g")
+    .attr("transform", 'translate('+[chartWidth_g3 + axisPadding_g3, 100]+')')
+    .call(cLegendRibbon_g3)
 
 
 // Axis Rendering
-var xAxis = d3.axisBottom(xScale0);
-var yAxis = d3.axisLeft(hScale);
+var xAxis_g3 = d3.axisBottom(XScale0_g3);
+var yAxis_g3 = d3.axisLeft(hScale_g3);
 
-var xAxisG = chartG.append('g')
+var xAxisG_g3 = chartG_g3.append('g')
     .attr('class', 'x_axis')
-    .attr('transform', 'translate('+[axisPadding, chartHeight+axisPadding]+')')
-    .call(xAxis);
-var yAxisG = chartG.append('g')
+    .attr('transform', 'translate('+[axisPadding_g3, chartHeight_g3+axisPadding_g3]+')')
+    .call(xAxis_g3);
+var yAxisG_g3 = chartG_g3.append('g')
     .attr('class', 'y_axis')
-    .attr("transform", 'translate('+[axisPadding, axisPadding]+')')
-    .call(yAxis);
+    .attr("transform", 'translate('+[axisPadding_g3, axisPadding_g3]+')')
+    .call(yAxis_g3);
 
-var xAxis = d3.axisBottom(xScaleRibbon);
-var yAxis = d3.axisLeft(yScaleRibbon);
+var xAxis_g3 = d3.axisBottom(xScaleRibbon_g3);
+var yAxis_g3 = d3.axisLeft(yScaleRibbon_g3);
 
-ribbonG.append('g')
+ribbonG_g3.append('g')
     .attr('class', 'x_axis')
-    .attr('transform', 'translate('+[axisPadding, chartHeight+axisPadding]+')')
-    .call(xAxis);
-ribbonG.append('g')
+    .attr('transform', 'translate('+[axisPadding_g3, chartHeight_g3+axisPadding_g3]+')')
+    .call(xAxis_g3);
+ribbonG_g3.append('g')
     .attr('class', 'y_axis')
-    .attr("transform", 'translate('+[axisPadding, axisPadding]+')')
-    .call(yAxis);
+    .attr("transform", 'translate('+[axisPadding_g3, axisPadding_g3]+')')
+    .call(yAxis_g3);
 
 // Axis labels
-chartG.append('text')
+chartG_g3.append('text')
     .attr('class', 'axis_label')
-    .attr('transform', 'translate('+[axisPadding/2 + chartWidth/2, chartHeight+axisPadding + 50]+')')
+    .attr('transform', 'translate('+[axisPadding_g3/2 + chartWidth_g3/2, chartHeight_g3+axisPadding_g3 + 50]+')')
     .text('Epoch of training');
-chartG.append('text')
+chartG_g3.append('text')
     .attr('class', 'axis_label')
-    .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 250, 50]+')')
+    .attr('transform', 'rotate(270)translate('+[-chartHeight_g3/2 - axisPadding_g3/2 - 250, 50]+')')
     .text("Model's performance on adversarial examples during training");
 
-ribbonG.append('text')
+ribbonG_g3.append('text')
     .attr('class', 'axis_label')
-    .attr('transform', 'translate('+[axisPadding/2 + chartWidth/2, chartHeight+axisPadding + 50]+')')
+    .attr('transform', 'translate('+[axisPadding_g3/2 + chartWidth_g3/2, chartHeight_g3+axisPadding_g3 + 50]+')')
     .text('Step of PGD');
-ribbonG.append('text')
+ribbonG_g3.append('text')
     .attr('class', 'axis_label')
-    .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 225, 50]+')')
+    .attr('transform', 'rotate(270)translate('+[-chartHeight_g3/2 - axisPadding_g3/2 - 225, 50]+')')
     .text("AT model's prediction probabilites for current image");
 
 // d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
 d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
     d3.json("../Datasets/stepWiseProb_AT.json").then(at_data => {
         // Initialize bar chart
-        data = getData();
+        data_g3 = getData();
 
-        var bars = chartG.selectAll(".rect")
-            .data(data);
+        var bars = chartG_g3.selectAll(".rect")
+            .data(data_g3);
 
         var barsEnter = bars.enter()
             .append("g")
@@ -110,21 +110,19 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
 
         barsEnter
             .append("rect")
-            .attr("width", barWidth)
-            .attr("height", (d,i) => hScale(0) - hScale(d))
-            .attr("x", (d,i) => xScale0((i+1)*10) + axisPadding - barWidth/2)
-            .attr("y", (d,i) => hScale(d) + axisPadding)
+            .attr("width", barWidth_g3)
+            .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
+            .attr("x", (d,i) => XScale0_g3((i+1)*10) + axisPadding_g3 - barWidth_g3/2)
+            .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
             .style("fill", (d,i) => "red");
 
         // Initialize image select
         for (i = 0; i < 10; i++) {
             filepath = "../Datasets/images/img" + i +"0.png"
-            x = (i%2)*50
-            y = Math.floor(i/2)*50
         
-            imgSelectG.append("svg")
-                .attr("x", x + selectOffsetX)
-                .attr("y", y + selectOffsetY)
+            imgSelectG_g3.append("svg")
+                .attr("x", (i%2)*50 + selectOffsetX_g3)
+                .attr("y", Math.floor(i/2)*50 + selectOffsetY_g3)
                 .attr("width", 50)
                 .attr("height", 50)
                 .on("click", onImgSelect)
@@ -135,57 +133,57 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         }
 
         // Initialize ribbon chart
-        ribbonG
+        ribbonG_g3
             .selectAll("mypoints")
             .data(getStackedData())
             .enter()
             .append("path")
-            .style("fill", function(d) { return cScaleRibbon(d.key); })
+            .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
             .attr("d", d3.area()
-                .x(function(d, i) { return xScaleRibbon(d.data.step) + axisPadding; })
-                .y0(function(d) { return yScaleRibbon(d[0]) + axisPadding; })
-                .y1(function(d) { return yScaleRibbon(d[1]) + axisPadding; })
+                .x(function(d, i) { return xScaleRibbon_g3(d.data.step) + axisPadding_g3; })
+                .y0(function(d) { return yScaleRibbon_g3(d[0]) + axisPadding_g3; })
+                .y1(function(d) { return yScaleRibbon_g3(d[1]) + axisPadding_g3; })
             );
 
         for (j = 1; j < 10; j++) {
-            points = [[xScaleRibbon(j) + axisPadding, yScaleRibbon(0) + axisPadding], 
-            [xScaleRibbon(j) + axisPadding, yScaleRibbon(1) + axisPadding]]
-            ribbonG.append("path")
+            points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
+            [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
+            ribbonG_g3.append("path")
                 .attr("d", d3.line()(points))
                 .style("stroke", "black")
         }
         
         function onImgSelect() {
-            x = d3.select(this).attr("x") - selectOffsetX;
-            y = d3.select(this).attr("y") - selectOffsetY;
-            img = 2*(y/50) + (x/50);
+            let thisXAttr = d3.select(this).attr("x") - selectOffsetX_g3;
+            let thisYAttr = d3.select(this).attr("y") - selectOffsetY_g3;
+            img_g3 = 2*(thisYAttr/50) + (thisXAttr/50);
 
-            data = getData();
+            data_g3 = getData();
             var svg = d3.select("#groupedBarChart");
             var barRect = svg.selectAll(".bar rect");
 
             barRect
-                .data(data)
-                .attr("height", (d,i) => hScale(0) - hScale(d))
-                .attr("y", (d,i) => hScale(d) + axisPadding)
+                .data(data_g3)
+                .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
+                .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
                 .style("fill", (d,i) => "red");
 
-            ribbonG
+            ribbonG_g3
                 .selectAll("mypoints")
                 .data(getStackedData())
                 .enter()
                 .append("path")
-                .style("fill", function(d) { return cScaleRibbon(d.key); })
+                .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
                 .attr("d", d3.area()
-                    .x(function(d, i) { return xScaleRibbon(d.data.step) + axisPadding; })
-                    .y0(function(d) { return yScaleRibbon(d[0]) + axisPadding; })
-                    .y1(function(d) { return yScaleRibbon(d[1]) + axisPadding; })
+                    .x(function(d, i) { return xScaleRibbon_g3(d.data.step) + axisPadding_g3; })
+                    .y0(function(d) { return yScaleRibbon_g3(d[0]) + axisPadding_g3; })
+                    .y1(function(d) { return yScaleRibbon_g3(d[1]) + axisPadding_g3; })
                 );
 
             for (j = 1; j < 10; j++) {
-                points = [[xScaleRibbon(j) + axisPadding, yScaleRibbon(0) + axisPadding], 
-                [xScaleRibbon(j) + axisPadding, yScaleRibbon(1) + axisPadding]]
-                ribbonG.append("path")
+                points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
+                [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
+                ribbonG_g3.append("path")
                     .attr("d", d3.line()(points))
                     .style("stroke", "black")
             }
@@ -207,7 +205,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
             for (i = 0; i <= 10; i++) {
                 dict = {step: i};
                 for (j = 0; j < 10; j++) {
-                    dict[convertLabel(j)] = at_data[String(i)][img][j];
+                    dict[convertLabel(j)] = at_data[String(i)][img_g3][j];
                 }
                 ribbonData.push(dict);
             }
@@ -254,9 +252,9 @@ function convertToColor(i) {
 }
 
 function getImageOrig() {
-    return "../Datasets/images/img" + String(img) + String(0) + ".png"
+    return "../Datasets/images/img" + String(img_g3) + String(0) + ".png"
 }
 
 function getImageCurr() {
-    return "../Datasets/images/img" + String(img) + String(epoch) + ".png"
+    return "../Datasets/images/img" + String(img_g3) + String(epoch) + ".png"
 }

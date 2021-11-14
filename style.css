@@ -16,7 +16,7 @@
     font-weight: bold;
 }
 
-/* G2 */
+/* G2 & G3 */
 .y_axis .tick text {
     font-size: 10px;
     font-weight: bold;
@@ -54,3 +54,4 @@
     font-weight: 600;
     fill: black;
 }
+
