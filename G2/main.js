@@ -148,8 +148,8 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .html("PGD Step: "+ epoch);
     
         data_G2 = prob_data[epoch][img];
-        var svg = d3.select("#stackedBarChart");
-        var barRect = svg.selectAll(".bar rect");
+        var thisSvg = d3.select("#stackedBarChart");
+        var barRect = thisSvg.selectAll(".bar rect");
 
         barRect
             .data(data_G2)
@@ -157,7 +157,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
             
-        imgCurr.attr("xlink:href", function() {return getImageCurr()})
+        imgCurr.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(epoch) + ".png";})
         // imgRed.attr("xlink:href", function() {return getImageR()})
         // imgGreen.attr("xlink:href", function() {return getImageG()})
         // imgBlue.attr("xlink:href", function() {return getImageB()})
@@ -171,8 +171,8 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         img = 2*(thisyAttr/50) + (thisXAttr/50);
 
         data_G2 = prob_data[epoch][img];
-        var svg = d3.select("#stackedBarChart");
-        var barRect = svg.selectAll(".bar rect");
+        var thisSvg = d3.select("#stackedBarChart");
+        var barRect = thisSvg.selectAll(".bar rect");
 
         barRect
             .data(data_G2)
@@ -180,8 +180,8 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
 
-        imgCurr.attr("xlink:href", function() {return getImageCurr()})
-        imgOrig.attr("xlink:href", function() {return getImageOrig()})
+        imgCurr.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(epoch) + ".png";})
+        imgOrig.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(0) + ".png";})
     }
 })
 
