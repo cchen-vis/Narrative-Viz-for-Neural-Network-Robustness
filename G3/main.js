@@ -168,7 +168,6 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
             let thisXAttr = d3.select(this).attr("x");
             let thisYAttr = d3.select(this).attr("y");
             img_g3 = 2*((thisYAttr-5)/55)  + ((thisXAttr-5)/55);
-            console.log(img_g3);
 
             data_g3 = getData();
             var svg = d3.select("#groupedBarChart");
