@@ -157,7 +157,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
             
-        imgCurr.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(epoch) + ".png";})
+        imgCurr.attr("xlink:href", function() {return getImageCurr();})
         // imgRed.attr("xlink:href", function() {return getImageR()})
         // imgGreen.attr("xlink:href", function() {return getImageG()})
         // imgBlue.attr("xlink:href", function() {return getImageB()})
@@ -180,8 +180,28 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
 
-        imgCurr.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(epoch) + ".png";})
-        imgOrig.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(0) + ".png";})
+        imgCurr.attr("xlink:href", function() {return getImageCurr();})
+        imgOrig.attr("xlink:href", function() {return getImageOrig();})
+    }
+
+    function getImageOrig() {
+        return "../Datasets/images/img" + String(img) + String(0) + ".png"
+    }
+    
+    function getImageCurr() {
+        return "../Datasets/images/img" + String(img) + String(epoch) + ".png"
+    }
+    
+    function getImageR() {
+        return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "r.png"
+    }
+    
+    function getImageG() {
+        return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "g.png"
+    }
+    
+    function getImageB() {
+        return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "b.png"
     }
 })
 
@@ -208,24 +228,4 @@ function convertLabel(i) {
         case 9: 
             return "truck";
     }
-}
-
-function getImageOrig() {
-    return "../Datasets/images/img" + String(img) + String(0) + ".png"
-}
-
-function getImageCurr() {
-    return "../Datasets/images/img" + String(img) + String(epoch) + ".png"
-}
-
-function getImageR() {
-    return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "r.png"
-}
-
-function getImageG() {
-    return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "g.png"
-}
-
-function getImageB() {
-    return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "b.png"
 }
