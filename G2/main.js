@@ -95,9 +95,22 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         .append("rect")
         .attr("width", barWidth)
         .attr("height", (d,i) => hScale(0) - hScale(d))
+        .attr("class", "g2-bar")
         .attr("x", (d,i) => xScale(convertLabel(i)) + axisPadding + 5)
         .attr("y", (d,i) => hScale(d) + axisPadding)
-        .style("fill", (d,i) => cScale(i));
+        .style("fill", (d,i) => cScale(i))
+        .on("mouseover", (d,i) => {
+            chartG.append("text")
+            .attr("class", "g3-hoverAddOn")
+            .attr("x", xScale(convertLabel(i)) + axisPadding + 30)
+            .attr("y", hScale(d) + axisPadding - 5)
+            .text(d >= 0.001 ? d.toFixed(3) : "< 0.001")
+            .attr("font-family", "Arial, Helvetica, sans-serif")
+            .style("text-anchor", "middle");
+        })
+        .on("mouseout", (d,i) => {
+            chartG.selectAll(".g3-hoverAddOn").remove()
+        })
 
     // Initialize images
     var imgOrig = imgG
@@ -186,6 +199,13 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
         imgCurr.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(epoch) + ".png";})
         imgOrig.attr("xlink:href", function() {return "../Datasets/images/img" + String(img) + String(0) + ".png";})
+    }
+
+    function onMouseOver() {
+        tooltip.style("visibility", "visible")
+    }
+    function onMouseOut() {
+        tooltip.style("visibility", "hidden")
     }
 })
 

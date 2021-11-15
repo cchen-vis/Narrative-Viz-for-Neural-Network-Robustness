@@ -114,7 +114,21 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
             .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
             .attr("x", (d,i) => XScale0_g3((i+1)*10) + axisPadding_g3 - barWidth_g3/2)
             .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
-            .style("fill", (d,i) => "red");
+            .style("fill", (d,i) => "red")
+            .on("mouseover", (d,i) => {
+                chartG_g3.append("text")
+                .attr("class", "g2-hoverAddOn")
+                .attr("x", xScale(convertLabel(i)) + axisPadding + 30)
+                .attr("y", hScale(d) + axisPadding - 5)
+                .text(d >= 0.001 ? d.toFixed(3) : "< 0.001")
+                .attr("font-family", "Arial, Helvetica, sans-serif")
+                .style("text-anchor", "middle");
+            })
+            .on("mouseout", function(d, i) {
+                chartG_g3.selectAll(".g2-hoverAddOn").remove()
+            })
+
+        
 
         // Initialize image select
         for (i = 0; i < 10; i++) {
