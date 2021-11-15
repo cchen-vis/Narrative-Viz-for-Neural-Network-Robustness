@@ -101,7 +101,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         .style("fill", (d,i) => cScale(i))
         .on("mouseover", (d,i) => {
             chartG.append("text")
-            .attr("class", "g3-hoverAddOn")
+            .attr("class", "g2-hoverAddOn")
             .attr("x", xScale(convertLabel(i)) + axisPadding + 30)
             .attr("y", hScale(d) + axisPadding - 5)
             .text(d >= 0.001 ? d.toFixed(3) : "< 0.001")
@@ -109,7 +109,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .style("text-anchor", "middle");
         })
         .on("mouseout", (d,i) => {
-            chartG.selectAll(".g3-hoverAddOn").remove()
+            chartG.selectAll(".g2-hoverAddOn").remove()
         })
 
     // Initialize images

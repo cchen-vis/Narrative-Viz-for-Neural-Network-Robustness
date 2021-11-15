@@ -28,7 +28,7 @@ var keys = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "hor
 
 // Scales
 var hScale_g3 = d3.scaleLinear()
-    .domain([0,1])
+    .domain([0,100])
     .range([chartHeight_g3, 1]);
 var XScale0_g3 = d3.scaleLinear()
     .domain([5,105])
@@ -111,24 +111,22 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         barsEnter
             .append("rect")
             .attr("width", barWidth_g3)
-            .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
+            .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d*100))
             .attr("x", (d,i) => XScale0_g3((i+1)*10) + axisPadding_g3 - barWidth_g3/2)
-            .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
+            .attr("y", (d,i) => hScale_g3(d*100) + axisPadding_g3)
             .style("fill", (d,i) => "red")
             .on("mouseover", (d,i) => {
                 chartG_g3.append("text")
-                .attr("class", "g2-hoverAddOn")
+                .attr("class", "g3-hoverAddOn")
                 .attr("x", xScale(convertLabel(i)) + axisPadding + 30)
                 .attr("y", hScale(d) + axisPadding - 5)
-                .text(d >= 0.001 ? d.toFixed(3) : "< 0.001")
+                .text((d*100).toFixed(2) + "%")
                 .attr("font-family", "Arial, Helvetica, sans-serif")
                 .style("text-anchor", "middle");
             })
             .on("mouseout", function(d, i) {
-                chartG_g3.selectAll(".g2-hoverAddOn").remove()
+                chartG_g3.selectAll(".g3-hoverAddOn").remove()
             })
-
-        
 
         // Initialize image select
         for (i = 0; i < 10; i++) {
@@ -185,8 +183,8 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
 
             barRect
                 .data(data_g3)
-                .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
-                .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
+                .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d*100))
+                .attr("y", (d,i) => hScale_g3(d*100) + axisPadding_g3)
                 .style("fill", (d,i) => "red");
 
             ribbonG_g3
