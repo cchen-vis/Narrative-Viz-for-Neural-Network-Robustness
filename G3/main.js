@@ -119,17 +119,16 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         // Initialize image select
         for (i = 0; i < 10; i++) {
             filepath = "../Datasets/images/img" + i +"0.png"
-        
-            imgSelectG_g3.append("svg")
-                .attr("x", (i%2)*50 + selectOffsetX_g3)
-                .attr("y", Math.floor(i/2)*50 + selectOffsetY_g3)
+    
+            imgSelectG_g3.append("image")
+                .attr("x", (i%2)*55 + 5)
+                .attr("y", Math.floor(i/2)*55 + 5)
+                .on("click", onImgSelect)
+                .attr("xlink:href", function() {return filepath})
                 .attr("width", 50)
                 .attr("height", 50)
-                .on("click", onImgSelect)
-                .append("svg:image")
-                    .attr("xlink:href", function() {return filepath})
-                    .attr("width", 50)
-                    .attr("height", 50);
+                .attr("class", i == 0 ? "G3_image_selected" : "G3_image")
+                .style("outline", i ==0 ? "5px solid gold" : "none")
         }
 
         // Initialize ribbon chart
@@ -154,13 +153,21 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         }
         
         function onImgSelect() {
-            let thisXAttr = d3.select(this).attr("x") - selectOffsetX_g3;
-            let thisYAttr = d3.select(this).attr("y") - selectOffsetY_g3;
-            img_g3 = 2*(thisYAttr/50) + (thisXAttr/50);
+            let thisXAttr = d3.select(this).attr("x");
+            let thisYAttr = d3.select(this).attr("y");
+            img_g3 = 2*((thisYAttr-5)/55)  + ((thisXAttr-5)/55);
+            console.log(img_g3);
 
             data_g3 = getData();
             var svg = d3.select("#groupedBarChart");
             var barRect = svg.selectAll(".bar rect");
+
+            d3.select(".G3_image_selected")
+                .style("outline", "none")
+                .attr("class", "G3_image");
+            d3.select(this)
+                .style("outline", "5px solid gold")
+                .attr("class", "G3_image_selected");
 
             barRect
                 .data(data_g3)

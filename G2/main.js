@@ -126,19 +126,16 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
     // Initialize image select
     for (i = 0; i < 10; i++) {
         filepath = "../Datasets/images/img" + i +"0.png"
-        // x = (i%2)*50
-        // y = Math.floor(i/2)*50
-    
-        imgSelectG.append("svg")
-            .attr("x", (i%2)*50)
-            .attr("y", Math.floor(i/2)*50)
+
+        imgSelectG.append("image")
+            .attr("x", (i%2)*55 + 5)
+            .attr("y", Math.floor(i/2)*55 + 5)
+            .on("click", onImgSelect)
+            .attr("xlink:href", function() {return filepath})
             .attr("width", 50)
             .attr("height", 50)
-            .on("click", onImgSelect)
-            .append("svg:image")
-                .attr("xlink:href", function() {return filepath})
-                .attr("width", 50)
-                .attr("height", 50);
+            .attr("class", i == 0 ? "G2_image_selected" : "G2_image")
+            .style("outline", i ==0 ? "5px solid gold" : "none")
     }
 
     // Event callback
@@ -168,7 +165,14 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         let thisyAttr = d3.select(this).attr("y");
         epoch = 0;
         d3.select("#epoch_slider").attr("value", 0);
-        img = 2*(thisyAttr/50) + (thisXAttr/50);
+        img = 2*((thisyAttr-5)/55)  + ((thisXAttr-5)/55);
+
+        d3.select(".G2_image_selected")
+            .style("outline", "none")
+            .attr("class", "G2_image");
+        d3.select(this)
+            .style("outline", "5px solid gold")
+            .attr("class", "G2_image_selected");
 
         data_G2 = prob_data[epoch][img];
         var thisSvg = d3.select("#stackedBarChart");
