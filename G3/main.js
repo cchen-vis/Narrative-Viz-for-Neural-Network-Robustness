@@ -28,7 +28,7 @@ var keys = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "hor
 
 // Scales
 var hScale_g3 = d3.scaleLinear()
-    .domain([0,1])
+    .domain([0,100])
     .range([chartHeight_g3, 1]);
 var XScale0_g3 = d3.scaleLinear()
     .domain([5,105])
@@ -111,25 +111,36 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         barsEnter
             .append("rect")
             .attr("width", barWidth_g3)
-            .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
+            .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d*100))
             .attr("x", (d,i) => XScale0_g3((i+1)*10) + axisPadding_g3 - barWidth_g3/2)
-            .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
-            .style("fill", (d,i) => "red");
+            .attr("y", (d,i) => hScale_g3(d*100) + axisPadding_g3)
+            .style("fill", (d,i) => "red")
+            .on("mouseover", (d,i) => {
+                chartG_g3.append("text")
+                .attr("class", "g3-hoverAddOn")
+                .attr("x", xScale(convertLabel(i)) + axisPadding + 30)
+                .attr("y", hScale(d) + axisPadding - 5)
+                .text((d*100).toFixed(2) + "%")
+                .attr("font-family", "Arial, Helvetica, sans-serif")
+                .style("text-anchor", "middle");
+            })
+            .on("mouseout", function(d, i) {
+                chartG_g3.selectAll(".g3-hoverAddOn").remove()
+            })
 
         // Initialize image select
         for (i = 0; i < 10; i++) {
             filepath = "../Datasets/images/img" + i +"0.png"
-        
-            imgSelectG_g3.append("svg")
-                .attr("x", (i%2)*50 + selectOffsetX_g3)
-                .attr("y", Math.floor(i/2)*50 + selectOffsetY_g3)
+    
+            imgSelectG_g3.append("image")
+                .attr("x", (i%2)*55 + 5)
+                .attr("y", Math.floor(i/2)*55 + 5)
+                .on("click", onImgSelect)
+                .attr("xlink:href", function() {return filepath})
                 .attr("width", 50)
                 .attr("height", 50)
-                .on("click", onImgSelect)
-                .append("svg:image")
-                    .attr("xlink:href", function() {return filepath})
-                    .attr("width", 50)
-                    .attr("height", 50);
+                .attr("class", i == 0 ? "G3_image_selected" : "G3_image")
+                .style("outline", i ==0 ? "5px solid gold" : "none")
         }
 
         // Initialize ribbon chart
@@ -154,18 +165,26 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         }
         
         function onImgSelect() {
-            let thisXAttr = d3.select(this).attr("x") - selectOffsetX_g3;
-            let thisYAttr = d3.select(this).attr("y") - selectOffsetY_g3;
-            img_g3 = 2*(thisYAttr/50) + (thisXAttr/50);
+            let thisXAttr = d3.select(this).attr("x");
+            let thisYAttr = d3.select(this).attr("y");
+            img_g3 = 2*((thisYAttr-5)/55)  + ((thisXAttr-5)/55);
+            console.log(img_g3);
 
             data_g3 = getData();
             var svg = d3.select("#groupedBarChart");
             var barRect = svg.selectAll(".bar rect");
 
+            d3.select(".G3_image_selected")
+                .style("outline", "none")
+                .attr("class", "G3_image");
+            d3.select(this)
+                .style("outline", "5px solid gold")
+                .attr("class", "G3_image_selected");
+
             barRect
                 .data(data_g3)
-                .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d))
-                .attr("y", (d,i) => hScale_g3(d) + axisPadding_g3)
+                .attr("height", (d,i) => hScale_g3(0) - hScale_g3(d*100))
+                .attr("y", (d,i) => hScale_g3(d*100) + axisPadding_g3)
                 .style("fill", (d,i) => "red");
 
             ribbonG_g3
