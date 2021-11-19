@@ -145,11 +145,12 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
 
         // Initialize ribbon chart
         ribbonG_g3
-            .selectAll("mypoints")
+            .selectAll(".area_g3")
             .data(getStackedData())
             .enter()
             .append("path")
             .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
+            .attr("class", "area_g3")
             .attr("d", d3.area()
                 .x(function(d, i) { return xScaleRibbon_g3(d.data.step) + axisPadding_g3; })
                 .y0(function(d) { return yScaleRibbon_g3(d[0]) + axisPadding_g3; })
@@ -187,10 +188,10 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                 .style("fill", (d,i) => "red");
 
             ribbonG_g3
-                .selectAll("mypoints")
+                .selectAll(".area_g3")
                 .data(getStackedData())
-                .enter()
-                .append("path")
+                .transition()
+                // .append("path")
                 .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
                 .attr("d", d3.area()
                     .x(function(d, i) { return xScaleRibbon_g3(d.data.step) + axisPadding_g3; })
@@ -198,13 +199,13 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                     .y1(function(d) { return yScaleRibbon_g3(d[1]) + axisPadding_g3; })
                 );
 
-            for (j = 1; j < 10; j++) {
-                points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
-                [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
-                ribbonG_g3.append("path")
-                    .attr("d", d3.line()(points))
-                    .style("stroke", "black")
-            }
+            // for (j = 1; j < 10; j++) {
+            //     points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
+            //     [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
+            //     ribbonG_g3.append("path")
+            //         .attr("d", d3.line()(points))
+            //         .style("stroke", "black")
+            // }
         }
 
         // Return data from left-to-right order, i.e. NT step 0, AT step 0, NT step 1, ...
@@ -230,6 +231,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
     
             stackedData = d3.stack()
                 .keys(["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"])
+                // .order(d3.stackOrderAscending)
                 (ribbonData);
 
             return stackedData;

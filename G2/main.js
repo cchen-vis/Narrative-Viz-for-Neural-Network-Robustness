@@ -163,6 +163,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
         barRect
             .data(data_G2)
+            .transition()
             .attr("height", (d,i) => hScale(0) - hScale(d))
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
@@ -193,6 +194,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
         barRect
             .data(data_G2)
+            .transition()
             .attr("height", (d,i) => hScale(0) - hScale(d))
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
