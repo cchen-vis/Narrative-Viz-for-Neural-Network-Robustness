@@ -1,9 +1,10 @@
 var img = 0;
 var epoch = 0;
+var alpha = 0.8;
 
 // Create SVG containers
 var imgSelectG = d3.select("#G2").append("svg")
-    .attr("id", "imgSelect")
+    .attr("id", "imgSelect_g2")
     .attr("width", "200px")
     .attr("height", "500px");
 
@@ -18,6 +19,11 @@ var imgG = d3.select("#G2")
     .attr("width", "1000px")
     .attr("height", "200px")
 
+var ribbonG_g2 = d3.select("#G2").append("svg")
+    .attr("id", "ribbonChart_g2")
+    .attr("width", "800px")
+    .attr("height", "600px");
+
 // Global constants
 var margin_G2 = 200;
 var chartWidth = parseInt(chartG.attr("width")) - margin_G2;
@@ -25,6 +31,20 @@ var chartHeight = parseInt(chartG.attr("height")) - margin_G2;
 var axisPadding = margin_G2/2;
 var barWidth = 50;
 var imageOffsetX = 550;
+var keys = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"];
+// d3.schemeTableau10 but with transparency (for the ribbon chart)
+var colors = [
+    d3.rgb(78, 121, 167, alpha),
+    d3.rgb(242, 142, 44, alpha),
+    d3.rgb(225, 87, 89, alpha),
+    d3.rgb(118, 183, 178, alpha),
+    d3.rgb(89, 161, 79, alpha),
+    d3.rgb(237, 201, 73, alpha),
+    d3.rgb(175, 122, 161, alpha),
+    d3.rgb(255, 157, 167, alpha),
+    d3.rgb(156, 117, 95, alpha),
+    d3.rgb(186, 176, 171, alpha)
+];
 
 // Scales
 var cScale = d3.scaleOrdinal(d3.schemeTableau10);
@@ -34,6 +54,17 @@ var hScale = d3.scaleLinear()
 var xScale = d3.scaleBand()
     .domain(["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"])
     .range([0, chartWidth]);
+var xScaleRibbon_g2 = d3.scaleLinear()
+    .domain([-0.5,10.5])
+    .range([0, chartWidth]);
+var yScaleRibbon_g2 = d3.scaleLinear()
+    .domain([0, 1])
+    .range([chartHeight, 0]);
+var cScaleRibbon_g2 = d3.scaleOrdinal()
+    .domain(keys)
+    .range(colors)
+var cLegendRibbon_g2 = d3.legendColor()
+    .scale(cScaleRibbon_g2);
 
 // Axis Rendering
 var xAxis = d3.axisBottom(xScale);
@@ -51,6 +82,21 @@ xAxisG.append('text')
     .attr('class', 'x label')
     .attr('transform', 'translate(300,25)')
     .text('Class Label');
+ribbonG_g2.append("g")
+    .attr("transform", 'translate('+[chartWidth + axisPadding, 100]+')')
+    .call(cLegendRibbon_g2)
+
+var xAxis_g2 = d3.axisBottom(xScaleRibbon_g2);
+var yAxis_g2 = d3.axisLeft(yScaleRibbon_g2);
+
+ribbonG_g2.append('g')
+    .attr('class', 'x_axis')
+    .attr('transform', 'translate('+[axisPadding, chartHeight+axisPadding]+')')
+    .call(xAxis_g2);
+ribbonG_g2.append('g')
+    .attr('class', 'y_axis')
+    .attr("transform", 'translate('+[axisPadding, axisPadding]+')')
+    .call(yAxis_g2);
 
 // Axis labels
 chartG.append('text')
@@ -151,6 +197,29 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .style("outline", i ==0 ? "5px solid gold" : "none")
     }
 
+    // Initialize ribbon chart
+    ribbonG_g2
+        .selectAll(".area_g2")
+        .data(getStackedData())
+        .enter()
+        .append("path")
+        .style("stroke", function(d) { return cScaleRibbon_g2(d.key); })
+        .style("fill", function(d) { return cScaleRibbon_g2(d.key); })
+        .attr("class", "area_g2")
+        .attr("d", d3.area()
+            .x((d,i) => xScaleRibbon_g2(i) + axisPadding)
+            .y0((d,i) => d[0] + axisPadding)
+            .y1((d,i) => d[1] + axisPadding)  
+        );
+
+    for (j = 1; j < 10; j++) {
+        points = [[xScaleRibbon_g2(j) + axisPadding, yScaleRibbon_g2(0) + axisPadding], 
+        [xScaleRibbon_g2(j) + axisPadding, yScaleRibbon_g2(1) + axisPadding]]
+        ribbonG_g2.append("path")
+            .attr("d", d3.line()(points))
+            .style("stroke", "black")
+    }
+
     // Event callback
     function onSlide() {
         epoch = this.value;
@@ -199,8 +268,67 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
 
+        ribbonG_g2
+            .selectAll(".area_g2")
+            .data(getStackedData())
+            .transition()
+            .style("stroke", function(d) { return cScaleRibbon_g2(d.key); })
+            .style("fill", function(d) { return cScaleRibbon_g2(d.key); })
+            .attr("d", d3.area()
+                .x((d,i) => xScaleRibbon_g2(i) + axisPadding)
+                .y0((d,i) => d[0] + axisPadding)
+                .y1((d,i) => d[1] + axisPadding)  
+            );
+
         imgCurr.attr("xlink:href", function() {return getImageCurr();})
         imgOrig.attr("xlink:href", function() {return getImageOrig();})
+    }
+
+    // Uses d3.stack to get data in format for stacked area chart
+    function getStackedData() {
+        ribbonData = Array();
+        for (i = 0; i <= 10; i++) {
+            dict = {step: i};
+            for (j = 0; j < 10; j++) {
+                dict[convertLabel(j)] = prob_data[String(i)][img][j];
+            }
+            ribbonData.push(dict);
+        }
+
+        // Get data in format amenable to ribbon chart
+        stackedData = d3.stack()
+            .keys(["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"])
+            .order(d3.stackOrderAscending)
+            (ribbonData);
+
+        // Create new data structure mimicking stackedData
+        final_data = new Array(10);
+        for (i = 0; i < 10; i++) {
+            final_data[i] = {key: convertLabel(i), length: 11};
+        }
+
+        // For all steps of PGD...
+        for (j = 0; j < 11; j++) {
+            diffs = [];
+            // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
+            for (i = 0; i < 10; i++) {
+                arr = stackedData[i][j];
+                diffs.push(arr[1] - arr[0]);
+            }
+
+            // Sort data by decreasing area
+            indices = new Array(10);
+            for (k = 0; k < 10; ++k) indices[k] = k;
+            indices.sort(function (a, b) { return diffs[a] > diffs[b] ? -1 : diffs[a] < diffs[b] ? 1 : 0; });
+
+            // Convert stackedData to sorted order
+            // Also converts raw data to pixel coordinates, so we can vertically shift areas as needed
+            final_data[indices[0]][j] = [yScaleRibbon_g2(stackedData[indices[0]][j][0]) - yScaleRibbon_g2(stackedData[indices[0]][j][1]), 0];     
+            for (l = 1; l < indices.length; l++) {
+                final_data[indices[l]][j] = [final_data[indices[l-1]][j][0] + yScaleRibbon_g2(stackedData[indices[l]][j][0]) - yScaleRibbon_g2(stackedData[indices[l]][j][1]), final_data[indices[l-1]][j][0]];
+            }
+        }
+        return final_data;
     }
 
     function getImageOrig() {
@@ -221,13 +349,6 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
     
     function getImageB() {
         return "../Datasets/image_diffs/img" + String(img) + String(epoch) + "b.png"
-    }
-
-    function onMouseOver() {
-        tooltip.style("visibility", "visible")
-    }
-    function onMouseOut() {
-        tooltip.style("visibility", "hidden")
     }
 })
 

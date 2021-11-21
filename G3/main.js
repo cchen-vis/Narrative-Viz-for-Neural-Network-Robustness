@@ -25,6 +25,19 @@ var barWidth_g3 = 20;
 var selectOffsetX_g3 = 25;
 var selectOffsetY_g3 = 150;
 var keys = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"];
+// d3.schemeTableau10 but with transparency (for the ribbon chart)
+var colors = [
+    d3.rgb(78, 121, 167, alpha),
+    d3.rgb(242, 142, 44, alpha),
+    d3.rgb(225, 87, 89, alpha),
+    d3.rgb(118, 183, 178, alpha),
+    d3.rgb(89, 161, 79, alpha),
+    d3.rgb(237, 201, 73, alpha),
+    d3.rgb(175, 122, 161, alpha),
+    d3.rgb(255, 157, 167, alpha),
+    d3.rgb(156, 117, 95, alpha),
+    d3.rgb(186, 176, 171, alpha)
+];
 
 // Scales
 var hScale_g3 = d3.scaleLinear()
@@ -41,7 +54,7 @@ var yScaleRibbon_g3 = d3.scaleLinear()
     .range([chartHeight_g3, 0]);
 var cScaleRibbon_g3 = d3.scaleOrdinal()
     .domain(keys)
-    .range(d3.schemeTableau10)
+    .range(colors)
 
 // Legends
 var cLegendRibbon_g3 = d3.legendColor()
@@ -146,15 +159,16 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         // Initialize ribbon chart
         ribbonG_g3
             .selectAll(".area_g3")
-            .data(getStackedData())
+            .data(getStackedDataG3())
             .enter()
             .append("path")
+            .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
             .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
             .attr("class", "area_g3")
             .attr("d", d3.area()
-                .x(function(d, i) { return xScaleRibbon_g3(d.data.step) + axisPadding_g3; })
-                .y0(function(d) { return yScaleRibbon_g3(d[0]) + axisPadding_g3; })
-                .y1(function(d) { return yScaleRibbon_g3(d[1]) + axisPadding_g3; })
+                .x((d,i) => xScaleRibbon_g3(i) + axisPadding_g3)
+                .y0((d,i) => d[0] + axisPadding_g3)
+                .y1((d,i) => d[1] + axisPadding_g3)  
             );
 
         for (j = 1; j < 10; j++) {
@@ -189,23 +203,15 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
 
             ribbonG_g3
                 .selectAll(".area_g3")
-                .data(getStackedData())
+                .data(getStackedDataG3())
                 .transition()
-                // .append("path")
+                .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
                 .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
                 .attr("d", d3.area()
-                    .x(function(d, i) { return xScaleRibbon_g3(d.data.step) + axisPadding_g3; })
-                    .y0(function(d) { return yScaleRibbon_g3(d[0]) + axisPadding_g3; })
-                    .y1(function(d) { return yScaleRibbon_g3(d[1]) + axisPadding_g3; })
+                    .x((d,i) => xScaleRibbon_g3(i) + axisPadding_g3)
+                    .y0((d,i) => d[0] + axisPadding_g3)
+                    .y1((d,i) => d[1] + axisPadding_g3)  
                 );
-
-            // for (j = 1; j < 10; j++) {
-            //     points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
-            //     [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
-            //     ribbonG_g3.append("path")
-            //         .attr("d", d3.line()(points))
-            //         .style("stroke", "black")
-            // }
         }
 
         // Return data from left-to-right order, i.e. NT step 0, AT step 0, NT step 1, ...
@@ -219,7 +225,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
         }
 
         // Uses d3.stack to get data in format for stacked area chart
-        function getStackedData() {
+        function getStackedDataG3() {
             ribbonData = Array();
             for (i = 0; i <= 10; i++) {
                 dict = {step: i};
@@ -228,13 +234,42 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                 }
                 ribbonData.push(dict);
             }
-    
+
+            // Get data in format amenable to ribbon chart
             stackedData = d3.stack()
                 .keys(["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"])
-                // .order(d3.stackOrderAscending)
+                .order(d3.stackOrderAscending)
                 (ribbonData);
 
-            return stackedData;
+            // Create new data structure mimicking stackedData
+            final_data = new Array(10);
+            for (i = 0; i < 10; i++) {
+                final_data[i] = {key: convertLabel(i), length: 11};
+            }
+
+            // For all steps of PGD...
+            for (j = 0; j < 11; j++) {
+                diffs = [];
+                // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
+                for (i = 0; i < 10; i++) {
+                    arr = stackedData[i][j];
+                    diffs.push(arr[1] - arr[0]);
+                }
+
+                // Sort data by decreasing area
+                indices = new Array(10);
+                for (k = 0; k < 10; ++k) indices[k] = k;
+                indices.sort(function (a, b) { return diffs[a] > diffs[b] ? -1 : diffs[a] < diffs[b] ? 1 : 0; });
+
+                // Convert stackedData to sorted order
+                // Also converts raw data to pixel coordinates, so we can vertically shift areas as needed
+                final_data[indices[0]][j] = [yScaleRibbon_g3(stackedData[indices[0]][j][0]) - yScaleRibbon_g3(stackedData[indices[0]][j][1]), 0];     
+                for (l = 1; l < indices.length; l++) {
+                    final_data[indices[l]][j] = [final_data[indices[l-1]][j][0] + yScaleRibbon_g3(stackedData[indices[l]][j][0]) - yScaleRibbon_g3(stackedData[indices[l]][j][1]), final_data[indices[l-1]][j][0]];
+                }
+            }
+            console.log(final_data);
+            return final_data;
         }
     })
 })
