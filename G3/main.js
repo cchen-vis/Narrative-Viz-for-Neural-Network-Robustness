@@ -162,7 +162,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
             .data(getStackedDataG3())
             .enter()
             .append("path")
-            .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
+            // .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
             .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
             .attr("class", "area_g3")
             .attr("d", d3.area()
@@ -205,7 +205,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                 .selectAll(".area_g3")
                 .data(getStackedDataG3())
                 .transition()
-                .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
+                // .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
                 .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
                 .attr("d", d3.area()
                     .x((d,i) => xScaleRibbon_g3(i) + axisPadding_g3)
@@ -267,8 +267,20 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                 for (l = 1; l < indices.length; l++) {
                     final_data[indices[l]][j] = [final_data[indices[l-1]][j][0] + yScaleRibbon_g3(stackedData[indices[l]][j][0]) - yScaleRibbon_g3(stackedData[indices[l]][j][1]), final_data[indices[l-1]][j][0]];
                 }
+
+                min_height = 5;
+                for (l = 0; l < indices.length; l++) {
+                    arr = final_data[indices[l]][j];
+                    if (Math.abs(arr[0] - arr[1]) < min_height) {
+                        arr[1] = arr[0] - min_height;
+                        for (k = 1; k < l; k++) {
+                            final_data[indices[k]][j][0] -= min_height;
+                            final_data[indices[k]][j][1] -= min_height;
+                        }
+                        final_data[indices[0]][j][0] -= min_height;
+                    }
+                }
             }
-            console.log(final_data);
             return final_data;
         }
     })
