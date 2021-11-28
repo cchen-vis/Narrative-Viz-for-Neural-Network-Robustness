@@ -105,12 +105,20 @@ heatmap.selectAll(".g1-heatmap-measure")
     .style("fill", "black");
 function updateHeat() {
     const chosenImg = d3.select(".g1-selected-image").attr("data-index");
+    const animTime = 50;
+    const animStyle = d3.easeLinear; //x => (x < 0.5) ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
     heatmap.selectAll(".g1-heatmap-square")
         .sort((a, b) => d3.descending(steps[currentEpoch][chosenImg][a], steps[currentEpoch][chosenImg][b]))
+        .transition()
+        .ease(animStyle)
+        .duration(animTime)
         .attr("width", d => bar(steps[currentEpoch][chosenImg][d]))
         .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)))
     heatmap.selectAll(".g1-heatmap-label")
         .sort((a, b) => d3.descending(steps[currentEpoch][chosenImg][a], steps[currentEpoch][chosenImg][b]))
+        .transition()
+        .ease(animStyle)
+        .duration(animTime)
         .attr("x", (d, i) => {
             return (bar(steps[currentEpoch][chosenImg][d]) > 100)
                 ? 10
