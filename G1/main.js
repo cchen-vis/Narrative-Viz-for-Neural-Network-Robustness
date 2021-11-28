@@ -18,6 +18,14 @@ const map = d3.select("#G1")
     .attr("width", width)
     .attr("height", height);
 
+// Building the image selection and the heatmap
+const gallery = map.append("g");
+const imgSize = 70;
+const imgMargin = 5;
+let currentEpoch = 1;
+const categories = ["airplane", "automobile", "bird", "cat", "deer",
+                    "dog", "frog", "horse", "ship", "truck"];
+
 // Scales and Axes
 const x = d3.scaleLinear()
     .domain([1, 100])
@@ -31,21 +39,19 @@ const yAcc = d3.scaleLinear()
 const color = d3.scaleOrdinal()
     .domain(["accuracy", "loss"])
     .range(d3.schemeSet2);
-const heat = d3.interpolateRdBu;  // Already domain [0, 1]
+const bar = d3.scaleLinear()
+    .domain([0, 1])
+    .range([0, imgSize * 5 + imgMargin * 4]);
+const barColor = d3.scaleOrdinal()
+    .domain(categories)
+    .range(d3.schemeSet3);
 const xAxis_G1 = d3.axisBottom(x);
 const yLossAxis = d3.axisLeft(yLoss);
 const yAccAxis = d3.axisRight(yAcc);
 
-// Building the image selection and the heatmap
-const gallery = map.append("g");
-const imgSize = 70;
-const imgMargin = 5;
-let currentEpoch = 1;
-const categories = ["airplane", "automobile", "bird", "cat", "deer",
-                    "dog", "frog", "horse", "ship", "truck"];
 const heatmap = map.append("g")
     .attr("class", "g1-heatmap")
-    .attr("transform", "translate(0,300)")
+    .attr("transform", "translate(0, 180)")
 function selectImage() {
     d3.select(".g1-selected-image")
         .classed("g1-selected-image", false);
@@ -65,48 +71,55 @@ gallery.selectAll(".g1-heatmap-img")
     .attr("x", (d, i) => (i % 5) * (imgSize + imgMargin))
     .attr("y", (d, i) => Math.floor(i / 5) * (imgSize + imgMargin))
     .on("click", selectImage);
+
 heatmap.selectAll(".g1-heatmap-square")
-    .data(categories)
+    .data([...categories.keys()])
     .enter()
     .append("rect")
     .attr("class", "g1-heatmap-square")
-    .attr("width", imgSize)
-    .attr("height", imgSize)
-    .attr("x", (d, i) => (i % 5) * (imgSize + imgMargin))
-    .attr("y", (d, i) => Math.floor(i / 5) * (imgSize + imgMargin))
-    .attr("stroke", "black")
+    .attr("height", imgSize / 2)
+    .attr("fill", d => barColor(categories[d]));
 heatmap.selectAll(".g1-heatmap-label")
-    .data(categories)
+    .data([...categories.keys()])
     .enter()
     .append("text")
     .attr("class", "g1-heatmap-label")
-    .attr("x", (d, i) => (i % 5) * (imgSize + imgMargin) + (imgSize / 2))
-    .attr("y", (d, i) => Math.floor(i / 5) * (imgSize + imgMargin) + (imgSize / 2))
-    .attr("text-anchor", "middle")
+    .attr("text-anchor", "left")
     .attr("dy", "0.3em")
-    .style("font-size", "12px")
+    .attr("fill", "black")
+    .style("font-size", "14px")
     .style("font-weight", "bold")
     .style("font-family", "sans-serif")
-    .style("fill", "white")
-    .text(d => d);
+    .text(d => categories[d]);
 heatmap.selectAll(".g1-heatmap-measure")
-    .data(categories)
+    .data([...categories.keys()])
     .enter()
     .append("text")
     .attr("class", "g1-heatmap-measure")
-    .attr("x", (d, i) => (i % 5) * (imgSize + imgMargin) + (imgSize / 2))
-    .attr("y", (d, i) => Math.floor(i / 5) * (imgSize + imgMargin) + (imgSize / 8 * 7))
-    .attr("text-anchor", "middle")
+    .attr("x", imgSize * 5 + imgMargin * 3)
+    .attr("y", d => Math.floor(d * (imgSize / 2 + imgMargin)) + (imgSize / 4))
+    .attr("text-anchor", "right")
     .attr("dy", "0.3em")
-    .style("font-size", "10px")
+    .style("font-size", "12px")
     .style("font-family", "sans-serif")
-    .style("fill", "white");
+    .style("fill", "black");
 function updateHeat() {
     const chosenImg = d3.select(".g1-selected-image").attr("data-index");
     heatmap.selectAll(".g1-heatmap-square")
-        .attr("fill", (d, i) => heat(steps[currentEpoch][chosenImg][i]));
+        .sort((a, b) => d3.descending(steps[currentEpoch][chosenImg][a], steps[currentEpoch][chosenImg][b]))
+        .attr("width", d => bar(steps[currentEpoch][chosenImg][d]))
+        .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)))
+    heatmap.selectAll(".g1-heatmap-label")
+        .sort((a, b) => d3.descending(steps[currentEpoch][chosenImg][a], steps[currentEpoch][chosenImg][b]))
+        .attr("x", (d, i) => {
+            return (bar(steps[currentEpoch][chosenImg][d]) > 100)
+                ? 10
+                : bar(steps[currentEpoch][chosenImg][d]) + 10;
+        })
+        .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + (imgSize / 4))
     heatmap.selectAll(".g1-heatmap-measure")
-        .text((d, i) => (steps[currentEpoch][chosenImg][i] * 100).toFixed(2) + "%");
+        .sort((a, b) => d3.descending(steps[currentEpoch][chosenImg][a], steps[currentEpoch][chosenImg][b]))
+        .text((d, i) => (steps[currentEpoch][chosenImg][d] * 100).toFixed(2) + "%");
 }
 
 d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
