@@ -54,7 +54,7 @@ var yScaleRibbon_g3 = d3.scaleLinear()
     .range([chartHeight_g3, 0]);
 var cScaleRibbon_g3 = d3.scaleOrdinal()
     .domain(keys)
-    .range(colors)
+    .range(d3.schemeTableau10)
 
 // Legends
 var cLegendRibbon_g3 = d3.legendColor()
@@ -164,20 +164,26 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
             .append("path")
             // .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
             .style("fill", function(d) { return cScaleRibbon_g3(d.key); })
+            .style("opacity", 0.6)
             .attr("class", "area_g3")
             .attr("d", d3.area()
                 .x((d,i) => xScaleRibbon_g3(i) + axisPadding_g3)
                 .y0((d,i) => d[0] + axisPadding_g3)
                 .y1((d,i) => d[1] + axisPadding_g3)  
-            );
+            )
+            .on("mouseover", onMouseOver)
+            .on("mouseout", onMouseOut);
 
-        for (j = 1; j < 10; j++) {
-            points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
-            [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
-            ribbonG_g3.append("path")
-                .attr("d", d3.line()(points))
-                .style("stroke", "black")
-        }
+            for (j = 1; j < 10; j++) {
+                points = [[xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(0) + axisPadding_g3], 
+                [xScaleRibbon_g3(j) + axisPadding_g3, yScaleRibbon_g3(1) + axisPadding_g3]]
+                ribbonG_g3.append("path")
+                    .attr("d", d3.line()(points))
+                    .style("stroke", "black")
+            }
+
+            ribbonG_g3.selectAll(".legendCells .cell .swatch")
+                .style("opacity", 0.6);
         
         function onImgSelect() {
             let thisXAttr = d3.select(this).attr("x");
@@ -212,6 +218,34 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                     .y0((d,i) => d[0] + axisPadding_g3)
                     .y1((d,i) => d[1] + axisPadding_g3)  
                 );
+        }
+
+        function onMouseOver() {
+            ribbonG_g3.selectAll(".area_g3")
+                .style("opacity", 0.3);
+            d3.select(this)
+                .style("opacity", 1);
+
+            var targetFill = d3.select(this).style("fill");
+
+            var legendColors = ribbonG_g3.selectAll(".legendCells .cell .swatch").nodes();
+            for (i = 0; i < 10; i++) {
+                var rect = d3.select(legendColors[i]);
+                if (rect.style("fill") == targetFill) {
+                    rect.style("opacity", 1);
+                }
+                else {
+                    rect.style("opacity", 0.3);
+                }
+
+            }
+        }
+
+        function onMouseOut() {
+            ribbonG_g3.selectAll(".area_g3")
+                .style("opacity", 0.6);
+            ribbonG_g3.selectAll(".legendCells .cell .swatch")
+                .style("opacity", 0.6);
         }
 
         // Return data from left-to-right order, i.e. NT step 0, AT step 0, NT step 1, ...
