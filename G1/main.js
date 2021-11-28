@@ -97,7 +97,6 @@ heatmap.selectAll(".g1-heatmap-measure")
     .append("text")
     .attr("class", "g1-heatmap-measure")
     .attr("x", imgSize * 5 + imgMargin * 3)
-    .attr("y", d => Math.floor(d * (imgSize / 2 + imgMargin)) + (imgSize / 4))
     .attr("text-anchor", "right")
     .attr("dy", "0.3em")
     .style("font-size", "12px")
@@ -127,7 +126,11 @@ function updateHeat() {
         .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + (imgSize / 4))
     heatmap.selectAll(".g1-heatmap-measure")
         .sort((a, b) => d3.descending(steps[currentEpoch][chosenImg][a], steps[currentEpoch][chosenImg][b]))
-        .text((d, i) => (steps[currentEpoch][chosenImg][d] * 100).toFixed(2) + "%");
+        .text((d, i) => (steps[currentEpoch][chosenImg][d] * 100).toFixed(2) + "%")
+        .transition()
+        .ease(animStyle)
+        .duration(animTime)
+        .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + (imgSize / 4))
 }
 
 d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
