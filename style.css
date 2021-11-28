@@ -9,6 +9,7 @@ d-title {
     padding: 2rem 0 1.5rem;
     contain: layout style;
     overflow-x: hidden;
+    text-align: center;
 }
 
 d-title h1 {
