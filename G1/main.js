@@ -7,7 +7,7 @@ const margin = {top: 20, right: 80, bottom: 20, left: 80},
       padding = 100;
 const graph = d3.select("#G1")
     .attr("width", 2 * width + margin.left + margin.right + padding)
-    .attr("height", 2 * height + margin.top + margin.bottom + padding)
+    .attr("height", height + margin.top + margin.bottom + padding)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .attr("width", width)

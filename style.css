@@ -1,3 +1,38 @@
+body {
+    position: relative;
+    width: 60%;
+    z-index: 15;
+    left: 20%;
+}
+
+d-title {
+    padding: 2rem 0 1.5rem;
+    contain: layout style;
+    overflow-x: hidden;
+}
+
+d-title h1 {
+    grid-column: text;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1em;
+    margin: 0 0 0.5rem;
+}
+
+.text4G {
+    /* position: relative;
+    width: 60%;
+    z-index: 15;
+    left: 20%; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.5rem;
+    text-align: "justify";
+    line-height: 150%;
+    text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
 /* G1 */
 .g1-selected-image {
     outline: 5px solid gold;
