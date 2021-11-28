@@ -210,7 +210,12 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .x((d,i) => xScaleRibbon_g2(i) + axisPadding)
             .y0((d,i) => d[0] + axisPadding)
             .y1((d,i) => d[1] + axisPadding)  
-        );
+        )
+        .on("mouseover", onMouseOver)
+        .on("mouseout", onMouseOut);
+
+    ribbonG_g3.selectAll(".legendCells .cell .swatch")
+        .style("opacity", 0.6);
 
     for (j = 1; j < 10; j++) {
         points = [[xScaleRibbon_g2(j) + axisPadding, yScaleRibbon_g2(0) + axisPadding], 
@@ -282,6 +287,34 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
         imgCurr.attr("xlink:href", function() {return getImageCurr();})
         imgOrig.attr("xlink:href", function() {return getImageOrig();})
+    }
+
+    function onMouseOver() {
+        ribbonG_g2.selectAll(".area_g2")
+            .style("opacity", 0.3);
+        d3.select(this)
+            .style("opacity", 1);
+
+        var targetFill = d3.select(this).style("fill");
+
+        var legendColors = ribbonG_g2.selectAll(".legendCells .cell .swatch").nodes();
+        for (i = 0; i < 10; i++) {
+            var rect = d3.select(legendColors[i]);
+            if (rect.style("fill") == targetFill) {
+                rect.style("opacity", 1);
+            }
+            else {
+                rect.style("opacity", 0.3);
+            }
+
+        }
+    }
+
+    function onMouseOut() {
+        ribbonG_g2.selectAll(".area_g2")
+            .style("opacity", 0.6);
+        ribbonG_g2.selectAll(".legendCells .cell .swatch")
+            .style("opacity", 0.6);
     }
 
     // Uses d3.stack to get data in format for stacked area chart

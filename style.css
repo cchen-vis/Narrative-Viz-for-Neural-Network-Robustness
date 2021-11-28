@@ -54,15 +54,6 @@ d-title h1 {
 
 /* G2 & G3 */
 
-.area_g2 {
-    pointer-events:all;
-}
-
-.area_g2:hover {
-    stroke:black;
-    stroke-width: 2;
-}
-
 .y_axis .tick text {
     font-size: 10px;
     font-weight: bold;
@@ -103,11 +94,6 @@ d-title h1 {
 
 .area_g3 {
     pointer-events:all;
-}
-
-.area_g3:hover {
-    stroke:black;
-    stroke-width: 2;
 }
 
 /* G4 */
