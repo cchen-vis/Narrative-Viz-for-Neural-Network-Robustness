@@ -328,7 +328,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
                 final_data[indices[l]][j] = [final_data[indices[l-1]][j][0] + yScaleRibbon_g2(stackedData[indices[l]][j][0]) - yScaleRibbon_g2(stackedData[indices[l]][j][1]), final_data[indices[l-1]][j][0]];
             }
 
-            min_height = 5;
+            min_height = 2.5;
             for (l = 0; l < indices.length; l++) {
                 arr = final_data[indices[l]][j];
                 if (Math.abs(arr[0] - arr[1]) < min_height) {

@@ -268,7 +268,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_AT_model.csv").then(train_at => {
                     final_data[indices[l]][j] = [final_data[indices[l-1]][j][0] + yScaleRibbon_g3(stackedData[indices[l]][j][0]) - yScaleRibbon_g3(stackedData[indices[l]][j][1]), final_data[indices[l-1]][j][0]];
                 }
 
-                min_height = 5;
+                min_height = 2.5;
                 for (l = 0; l < indices.length; l++) {
                     arr = final_data[indices[l]][j];
                     if (Math.abs(arr[0] - arr[1]) < min_height) {
