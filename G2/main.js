@@ -252,7 +252,6 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         let thisXAttr = d3.select(this).attr("x");
         let thisyAttr = d3.select(this).attr("y");
         epoch = 0;
-        d3.select("#epoch_slider").attr("value", 0);
         img = 2*((thisyAttr-5)/55)  + ((thisXAttr-5)/55);
 
         d3.select(".G2_image_selected")
@@ -287,6 +286,13 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
         imgCurr.attr("xlink:href", function() {return getImageCurr();})
         imgOrig.attr("xlink:href", function() {return getImageOrig();})
+
+        d3.select("#epoch_slider")
+            .attr("max", 0)
+            .attr("max", 10);
+
+        d3.select("#slider_text")
+            .html("PGD Step: "+ 0);
     }
 
     function onMouseOver() {
