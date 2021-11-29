@@ -44,7 +44,7 @@ const bar = d3.scaleLinear()
     .range([0, imgSize * 5 + imgMargin * 4]);
 const barColor = d3.scaleOrdinal()
     .domain(categories)
-    .range(d3.schemeSet3);
+    .range(d3.schemeTableau10);
 const xAxis_G1 = d3.axisBottom(x);
 const yLossAxis = d3.axisLeft(yLoss);
 const yAccAxis = d3.axisRight(yAcc);
