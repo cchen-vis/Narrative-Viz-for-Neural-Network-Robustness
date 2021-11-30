@@ -19,11 +19,6 @@ var imgG = d3.select("#G2")
     .attr("width", "1000px")
     .attr("height", "200px")
 
-var ribbonG_g2 = d3.select("#G2").append("svg")
-    .attr("id", "ribbonChart_g2")
-    .attr("width", "800px")
-    .attr("height", "600px");
-
 // Global constants
 var margin_G2 = 200;
 var chartWidth = parseInt(chartG.attr("width")) - margin_G2;
@@ -82,21 +77,9 @@ xAxisG.append('text')
     .attr('class', 'x label')
     .attr('transform', 'translate(300,25)')
     .text('Class Label');
-ribbonG_g2.append("g")
-    .attr("transform", 'translate('+[chartWidth + axisPadding, 100]+')')
-    .call(cLegendRibbon_g2)
 
 var xAxis_g2 = d3.axisBottom(xScaleRibbon_g2);
 var yAxis_g2 = d3.axisLeft(yScaleRibbon_g2);
-
-ribbonG_g2.append('g')
-    .attr('class', 'x_axis')
-    .attr('transform', 'translate('+[axisPadding, chartHeight+axisPadding]+')')
-    .call(xAxis_g2);
-ribbonG_g2.append('g')
-    .attr('class', 'y_axis')
-    .attr("transform", 'translate('+[axisPadding, axisPadding]+')')
-    .call(yAxis_g2);
 
 // Axis labels
 chartG.append('text')
@@ -197,34 +180,6 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .style("outline", i ==0 ? "5px solid gold" : "none")
     }
 
-    // Initialize ribbon chart
-    ribbonG_g2
-        .selectAll(".area_g2")
-        .data(getStackedData())
-        .enter()
-        .append("path")
-        // .style("stroke", function(d) { return cScaleRibbon_g2(d.key); })
-        .style("fill", function(d) { return cScaleRibbon_g2(d.key); })
-        .attr("class", "area_g2")
-        .attr("d", d3.area()
-            .x((d,i) => xScaleRibbon_g2(i) + axisPadding)
-            .y0((d,i) => d[0] + axisPadding)
-            .y1((d,i) => d[1] + axisPadding)  
-        )
-        .on("mouseover", onMouseOver)
-        .on("mouseout", onMouseOut);
-
-    ribbonG_g3.selectAll(".legendCells .cell .swatch")
-        .style("opacity", 0.6);
-
-    for (j = 1; j < 10; j++) {
-        points = [[xScaleRibbon_g2(j) + axisPadding, yScaleRibbon_g2(0) + axisPadding], 
-        [xScaleRibbon_g2(j) + axisPadding, yScaleRibbon_g2(1) + axisPadding]]
-        ribbonG_g2.append("path")
-            .attr("d", d3.line()(points))
-            .style("stroke", "black")
-    }
-
     // Event callback
     function onSlide() {
         epoch = this.value;
@@ -272,18 +227,6 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
             .attr("y", (d,i) => hScale(d) + axisPadding)
             .style("fill", (d,i) => cScale(i));   
 
-        ribbonG_g2
-            .selectAll(".area_g2")
-            .data(getStackedData())
-            .transition()
-            // .style("stroke", function(d) { return cScaleRibbon_g2(d.key); })
-            .style("fill", function(d) { return cScaleRibbon_g2(d.key); })
-            .attr("d", d3.area()
-                .x((d,i) => xScaleRibbon_g2(i) + axisPadding)
-                .y0((d,i) => d[0] + axisPadding)
-                .y1((d,i) => d[1] + axisPadding)  
-            );
-
         imgCurr.attr("xlink:href", function() {return getImageCurr();})
         imgOrig.attr("xlink:href", function() {return getImageOrig();})
 
@@ -293,34 +236,6 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 
         d3.select("#slider_text")
             .html("PGD Step: "+ 0);
-    }
-
-    function onMouseOver() {
-        ribbonG_g2.selectAll(".area_g2")
-            .style("opacity", 0.3);
-        d3.select(this)
-            .style("opacity", 1);
-
-        var targetFill = d3.select(this).style("fill");
-
-        var legendColors = ribbonG_g2.selectAll(".legendCells .cell .swatch").nodes();
-        for (i = 0; i < 10; i++) {
-            var rect = d3.select(legendColors[i]);
-            if (rect.style("fill") == targetFill) {
-                rect.style("opacity", 1);
-            }
-            else {
-                rect.style("opacity", 0.3);
-            }
-
-        }
-    }
-
-    function onMouseOut() {
-        ribbonG_g2.selectAll(".area_g2")
-            .style("opacity", 0.6);
-        ribbonG_g2.selectAll(".legendCells .cell .swatch")
-            .style("opacity", 0.6);
     }
 
     // Uses d3.stack to get data in format for stacked area chart
