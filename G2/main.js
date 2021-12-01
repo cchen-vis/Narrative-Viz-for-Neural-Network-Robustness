@@ -5,11 +5,13 @@ var alpha = 0.8;
 // Create SVG containers
 var imgSelectG = d3.select("#G2").append("svg")
     .attr("id", "imgSelect_g2")
+    .attr("transform", "translate(0,-50)")
     .attr("width", "200px")
     .attr("height", "500px");
 
 var chartG = d3.select("#G2").append("svg")
     .attr("id", "stackedBarChart")
+    .attr("transform", "translate(0,-50)")
     .attr("width", "800px")
     .attr("height", "600px");
 
@@ -98,10 +100,11 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
     d3.select("#slider_text")
         .style("width", "100px")
         .style("font-size", "1em")
-        .style("float", "left")
+        // .style("float", "left")
         // .style("margin-right", "150px")
         .style("position", "relative")
-        .style("top", "0px")
+        .style("left", "25px")
+        .style("top", "-26.5px")
         .html("PGD Step: "+ epoch);
 
     // Initialize bar chart
