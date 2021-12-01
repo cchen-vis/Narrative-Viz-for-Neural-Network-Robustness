@@ -62,7 +62,7 @@
     <h2> Neural Network's Success </h2>
     <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(w,x)\)
         parameterized by \(w\) as well as a loss function \(L(w, x, y)\), where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
-        a set of (approximately) optimal parameters \(w\). <br>
+        a set of (approximately) optimal parameters \(w\). To understand gradient descent method for neural networks, you can check <a href="https://machinelearningmastery.com/a-gentle-introduction-to-gradient-descent-procedure/" target="_blank">this tutorial</a> and <a href="https://xnought.github.io/backprop-explainer/" target="_blank">this interactive article</a>. <br>
         In the visualizations below, we show how the loss value and the test accuracy evolve, and how the output probabilities change for 10 example images using a benchmark neural network 
         ResNet-18<dt-cite key="he2016deep"></dt-cite> on the commonly-used dataset CIFAR-10<dt-cite key="krizhevsky2009learning"></dt-cite> (the training details can be found in <dt-cite key="zeng2020adversarial"></dt-cite>) . Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
         will display the changes of the predictive probabilities at different training epochs. You could find some interesting patterns there; for example, the prediction for the <i>Dog</i> 
