@@ -7,16 +7,18 @@
 <link rel="stylesheet" href="./style.css">
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://distill.pub/template.v1.js"></script>
 </head>
 <body>
     <d-title>
-        <h1>A Visual Tour to Empirical Neural Network Robustness</h1>
+        <h1>A Visual Tour to Empirical Neural Network Robustness</h1><br>   
     </d-title>
+    <h2> Neural Network's Success </h2>
     <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(w,x)\)
         parameterized by \(w\) as well as a loss function \(L(w, x, y)\) where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
         a set of (sub)optimal parameters \(w\). <br>
         In the visualizations below, we show how the loss value and the test accuracy evolve, and how the output probabilities change for 10 example images using a benchmark neural network 
-        ResNet-18 [He 16] on the commonly-used dataset CIFAR-10 [cifar10] (the training detail can be found in [huimin]). Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
+        ResNet-18<dt-cite key="he2016deep"></dt-cite> on the commonly-used dataset CIFAR-10<dt-cite key="krizhevsky2009learning"></dt-cite> (the training detail can be found in <dt-cite key="zeng2020adversarial"></dt-cite>) . Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
         will display the changes of the predictive probabilities at different training epochs. You could find some interesting patterns there, for example, the prediction for the <b>Dog</b> 
         image (2nd row, 1st column) jump between <b>Cat</b> and <b>Dog</b> many times as the training goes.
     </p>
@@ -25,8 +27,9 @@
             <svg id="G1"></svg>
         </div>
     </section>
+    <h2> PGD Attack </h2>
     <p class="text4G"> Consider the situation where an input image is poisoned by some pixel-level noise that is imperceptible to the human eye. In general, humans won’t be fooled; but unfortunately this is not 
-        true for neural networks. In fact, noises found in certain ways are able to mislead a neural network almost always, and one of the popular attackers is <i>PGD attack</i> [cite 2 papers]. As its name
+        true for neural networks. In fact, noises found in certain ways are able to mislead a neural network almost always, and one of the popular attackers is <i>PGD attack</i> <dt-cite key="goodfellow2014explaining,madry2017towards"></dt-cite>. As its name
         indicates, PGD attack is a gradient-based attacker. It main contains the following steps:
         <ol>
             <li>Start from a random perturbation \(x^{\prime}\) of a given clean image \(x\) such that \(\|x^{\prime} - x\|_p \leq \epsilon\);</li>
@@ -48,8 +51,9 @@
             </div>
         </div>
     </section>
+    <h2> Adversarial Training </h2>
     <p class="text4G">
-        Here comes a natural question: can we avoid this? The answer is yes! An popular and effective solution is <i>adversarial training</i> [cite]. The idea is just to utilize the PGD attack in your 
+        Here comes a natural question: can we avoid this? The answer is yes! An popular and effective solution is <i>adversarial training</i> <dt-cite key="madry2017towards"></dt-cite>. The idea is just to utilize the PGD attack in your 
         training process: training your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind is not trivial. In standard training, we
         solve the following minimization problem:
         $$
@@ -68,6 +72,9 @@
         <div id="G3" class="div4G" style="text-align:center;">
         </div>
     </section>
+    <h2>
+        Accuracy-Robustness Tradeoff
+    </h2>
     <p class="text4G">
         There is no free lunch: adversarial training enhances the model's robustness, however, at the price of a standard accuracy drop. The adversarial-trained model achieves an \(80.05\%\) accuracy on
         clean test images while that for the regular-trained model is \(91.64\%\). This is a classic Accuracy-Robustness tradeoff, and people are now interested in how we can achieve both. The line chart below
@@ -82,15 +89,23 @@
         Other than a binary thing, adversarial training is influenced by the hyperparameter \(\epsilon\), thus it is expected that the Accuracy-Robustness tradeoff varies when \(\epsilon\) changes. In general,
         a smaller \(\epsilon\) leads to an adversarial-trained model that is more accurate on clean images but less resistant to PGD attack, and versa vice. We adversarial-trained 5 models with \(\epsilon=1/255,\ 2/255,\ 4/255,\ 8/266,\ 16/255\) 
         (other hyperparameters, as well as the attacker, are the same to make a fair comparison), and present their clean accuracy and adversarial accuracy (i.e., accuracy under PGD attack) in the scatter plot below.
-        Note that the model with \(\epsilon=16/255\) doesn't bring better robustness than that of the model with \(\epsilon=8/255\), thus the rule mentioned above is only valid within a certain range.
+        Note that the model with \(\epsilon=16/255\) doesn't bring a better robustness than that of the model with \(\epsilon=8/255\), thus the rule mentioned above is only valid within a certain range.
     </p>
     <section id="section4G5">
         <div id="div4G5" class="div4G" style="text-align:center;">
             <svg id="G5"></svg>
         </div>
     </section>
-    <p class="text4G">
-        
+    <d-bibliography src="bibliography.bib"></d-bibliography>
+    <h3>
+        Citations
+    </h3>
+    <p>
+        [1] He, Kaiming, et al. "Deep residual learning for image recognition." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016. <br>
+        [2] Krizhevsky, Alex, and Geoffrey Hinton. "Learning multiple layers of features from tiny images." (2009): 7.<br>
+        [3] Zeng, Huimin, et al. "Are Adversarial Examples Created Equal? A Learnable Weighted Minimax Risk for Robustness under Non-uniform Attacks." Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 35. No. 12. 2021.<br>
+        [4] Goodfellow, Ian J., Jonathon Shlens, and Christian Szegedy. "Explaining and harnessing adversarial examples." arXiv preprint arXiv:1412.6572 (2014).<br>
+        [5] Madry, Aleksander, et al. "Towards Deep Learning Models Resistant to Adversarial Attacks." International Conference on Learning Representations. 2018.<br>
     </p>
 </body>
 <script src="http://d3js.org/d3.v5.min.js"></script>
@@ -101,4 +116,39 @@
 <script src="./G3/main.js"></script>
 <script src="./G4/main.js"></script>
 <script src="./G5/main.js"></script>
+
+<script type="text/bibliography">
+    @inproceedings{he2016deep,
+        title={Deep residual learning for image recognition},
+        author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+        booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+        pages={770--778},
+        year={2016}
+      }
+    @article{krizhevsky2009learning,
+        title={Learning multiple layers of features from tiny images},
+        author={Krizhevsky, Alex and Hinton, Geoffrey and others},
+        year={2009},
+        publisher={Citeseer}
+    }
+    @article{zeng2020adversarial,
+        title={Are adversarial examples created equal? A learnable weighted minimax risk for robustness under non-uniform attacks},
+        author={Zeng, Huimin and Zhu, Chen and Goldstein, Tom and Huang, Furong},
+        journal={arXiv preprint arXiv:2010.12989},
+        volume={24},
+        year={2020}
+    }
+    @article{goodfellow2014explaining,
+        title={Explaining and harnessing adversarial examples},
+        author={Goodfellow, Ian J and Shlens, Jonathon and Szegedy, Christian},
+        journal={arXiv preprint arXiv:1412.6572},
+        year={2014}
+    }
+    @article{madry2017towards,
+        title={Towards deep learning models resistant to adversarial attacks},
+        author={Madry, Aleksander and Makelov, Aleksandar and Schmidt, Ludwig and Tsipras, Dimitris and Vladu, Adrian},
+        journal={arXiv preprint arXiv:1706.06083},
+        year={2017}
+    }
+</script>
 </html>
