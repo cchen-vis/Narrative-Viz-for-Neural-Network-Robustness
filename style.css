@@ -5,6 +5,10 @@ body {
     left: 20%;
 }
 
+#G3 {
+    display: inline-flex;
+}
+
 d-title {
     padding: 2rem 0 1.5rem;
     contain: layout style;

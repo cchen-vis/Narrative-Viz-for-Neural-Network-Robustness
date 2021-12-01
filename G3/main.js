@@ -1,19 +1,22 @@
 var img_g3 = 0;
 
 // Create SVG containers
-var imgSelectG_g3 = d3.select("#G3").append("svg")
-    .attr("id", "imgSelect")
-    .attr("width", "200px")
-    .attr("height", "600px");
-
 var ribbonG_g3 = d3.select("#G3").append("svg")
     .attr("id", "ribbonChart")
-    .attr("width", "800px")
+    .attr("transform", "translate(-150,0)")
+    .attr("width", "600px")
+    .attr("height", "600px");
+
+var imgSelectG_g3 = d3.select("#G3").append("svg")
+    .attr("id", "imgSelect")
+    .attr("transform", "translate(-150,0)")
+    .attr("width", "120px")
     .attr("height", "600px");
 
 var ribbonG_g2 = d3.select("#G3").append("svg")
     .attr("id", "ribbonChart_g2")
-    .attr("width", "800px")
+    .attr("transform", "translate(-150,0)")
+    .attr("width", "600px")
     .attr("height", "600px");
 
 // Global constants
@@ -57,10 +60,10 @@ var cScaleRibbon_g3 = d3.scaleOrdinal()
     .range(d3.schemeTableau10)
 var xScaleRibbon_g2 = d3.scaleLinear()
     .domain([-0.5,10.5])
-    .range([0, chartWidth]);
+    .range([0, chartWidth_g3]);
 var yScaleRibbon_g2 = d3.scaleLinear()
     .domain([0, 1])
-    .range([chartHeight, 0]);
+    .range([chartHeight_g3, 0]);
 var cScaleRibbon_g2 = d3.scaleOrdinal()
     .domain(keys)
     .range(d3.schemeTableau10)
@@ -71,14 +74,11 @@ var cLegendRibbon_g2 = d3.legendColor()
 var cLegendRibbon_g3 = d3.legendColor()
     .scale(cScaleRibbon_g3);
 ribbonG_g3.append("g")
-    .attr("transform", 'translate('+[chartWidth_g3 + axisPadding_g3, 100]+')')
+    .attr("transform", 'translate('+[chartWidth_g3 + axisPadding_g3 - 10, 100]+')')
     .call(cLegendRibbon_g3)
 
 
 // Axis Rendering
-var xAxis_g3 = d3.axisBottom(XScale0_g3);
-var yAxis_g3 = d3.axisLeft(hScale_g3);
-
 var xAxis_g3 = d3.axisBottom(xScaleRibbon_g3);
 var yAxis_g3 = d3.axisLeft(yScaleRibbon_g3);
 
@@ -91,7 +91,7 @@ ribbonG_g3.append('g')
     .attr("transform", 'translate('+[axisPadding_g3, axisPadding_g3]+')')
     .call(yAxis_g3);
 ribbonG_g2.append("g")
-    .attr("transform", 'translate('+[chartWidth + axisPadding, 100]+')')
+    .attr("transform", 'translate('+[chartWidth + axisPadding - 210, 100]+')')
     .call(cLegendRibbon_g2)
 
 var xAxis_g2 = d3.axisBottom(xScaleRibbon_g2);
@@ -109,9 +109,26 @@ ribbonG_g2.append('g')
 // Axis labels
 ribbonG_g3.append('text')
     .attr('class', 'axis_label')
+    .attr('transform', 'translate('+[chartWidth_g3/2, axisPadding_g3 - 25]+')')
+    .text('Adversarially Trained Network')
+ribbonG_g3.append('text')
+    .attr('class', 'axis_label')
     .attr('transform', 'translate('+[axisPadding_g3/2 + chartWidth_g3/2, chartHeight_g3+axisPadding_g3 + 50]+')')
     .text('Step of PGD');
 ribbonG_g3.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'rotate(270)translate('+[-chartHeight_g3/2 - axisPadding_g3/2 - 225, 50]+')')
+    .text("AT model's prediction probabilites for current image");
+
+ribbonG_g2.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'translate('+[chartWidth_g3/2, axisPadding_g3 - 25]+')')
+    .text('Normally Trained Network')
+ribbonG_g2.append('text')
+    .attr('class', 'axis_label')
+    .attr('transform', 'translate('+[axisPadding_g3/2 + chartWidth_g3/2, chartHeight_g3+axisPadding_g3 + 50]+')')
+    .text('Step of PGD');
+ribbonG_g2.append('text')
     .attr('class', 'axis_label')
     .attr('transform', 'rotate(270)translate('+[-chartHeight_g3/2 - axisPadding_g3/2 - 225, 50]+')')
     .text("AT model's prediction probabilites for current image");
@@ -124,7 +141,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
 
             imgSelectG_g3.append("image")
                 .attr("x", (i%2)*55 + 5)
-                .attr("y", Math.floor(i/2)*55 + 5)
+                .attr("y", Math.floor(i/2)*55 + 155)
                 .on("click", onImgSelectG3)
                 .attr("xlink:href", function() {return filepath})
                 .attr("width", 50)
@@ -187,13 +204,13 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
                 .style("stroke", "black")
         }
     
-        ribbonG_g3.selectAll(".legendCells .cell .swatch")
+        ribbonG_g2.selectAll(".legendCells .cell .swatch")
             .style("opacity", 0.6);
         
         function onImgSelectG3() {
             let thisXAttr = d3.select(this).attr("x");
             let thisYAttr = d3.select(this).attr("y");
-            img_g3 = 2*((thisYAttr-5)/55)  + ((thisXAttr-5)/55);
+            img_g3 = 2*((thisYAttr-155)/55)  + ((thisXAttr-5)/55);
 
             d3.select(".G3_image_selected")
                 .style("outline", "none")
