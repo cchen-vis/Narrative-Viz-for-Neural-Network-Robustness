@@ -217,7 +217,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv").then(dataset => {
         .style("fill", color("accuracy"))
 
     // Step two is to load the other data
-    return d3.json("../Datasets/examplesOutputProbPerEpoch_NT.json");
+    return d3.json("../Datasets/NT_OutputProbPerEpoch4examples.json");
 }).then(dataset => {
     steps = dataset;
     updateHeat();

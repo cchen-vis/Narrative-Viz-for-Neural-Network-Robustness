@@ -20,7 +20,21 @@ d-title h1 {
     margin: 0 0 0.5rem;
 }
 
-.text4G {
+li{
+    /* position: relative;
+    width: 60%;
+    z-index: 15;
+    left: 20%; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.5rem;
+    text-align: "justify";
+    line-height: 150%;
+    text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+.text4G{
     /* position: relative;
     width: 60%;
     z-index: 15;
