@@ -13,19 +13,13 @@ var chartG = d3.select("#G2").append("svg")
     .attr("width", "800px")
     .attr("height", "600px");
 
-var imgG = d3.select("#G2")
-    .append("svg")
-    .attr("id", "images")
-    .attr("width", "1000px")
-    .attr("height", "200px")
-
 // Global constants
 var margin_G2 = 200;
 var chartWidth = parseInt(chartG.attr("width")) - margin_G2;
 var chartHeight = parseInt(chartG.attr("height")) - margin_G2;
 var axisPadding = margin_G2/2;
 var barWidth = 50;
-var imageOffsetX = 550;
+var imageOffsetX = 0;
 var keys = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"];
 // d3.schemeTableau10 but with transparency (for the ribbon chart)
 var colors = [
@@ -107,7 +101,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         .style("float", "left")
         // .style("margin-right", "150px")
         .style("position", "relative")
-        .style("top", "-15px")
+        .style("top", "0px")
         .html("PGD Step: "+ epoch);
 
     // Initialize bar chart
@@ -142,35 +136,46 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         })
 
     // Initialize images
-    var imgOrig = imgG
+    var imgOrig = imgSelectG
         .append("svg:image")
         .attr("xlink:href", function() {return "../Datasets/images/img00.png"})
-        .attr("width", 100)
-        .attr("height", 100)
+        .attr("x", 40)
+        .attr("y", 300)
+        .attr("width", 75)
+        .attr("height", 75)
         .attr("transform", "translate(" + imageOffsetX + ",0)");
 
-    var imgCurr = imgG
+    var imgCurr = imgSelectG
     .append("svg:image")
         .attr("xlink:href", function() {return "../Datasets/images/img00.png"})
-        .attr("x", 150)
-        .attr("width", 100)
-        .attr("height", 100)
+        .attr("x", 120)
+        .attr("y", 300)
+        .attr("width", 75)
+        .attr("height", 75)
         .attr("transform", "translate(" + imageOffsetX + ",0)");
 
-    imgG.append("text")
+    imgSelectG.append("text")
+        .attr("x", 50)
+        .attr("y", 330)
+        .attr("font-size", "10px")
+        .attr("font-weight", "bold")
         .text("Original Image")
-        .attr("transform", "translate(" + imageOffsetX + ",125)");
+        .attr("transform", "translate(" + (imageOffsetX-15) + ",60)");
 
-    imgG.append("text")
+    imgSelectG.append("text")
+        .attr("x", 50)
+        .attr("y", 330)
+        .attr("font-size", "10px")
+        .attr("font-weight", "bold")
         .text("Adversarial Image")
-        .attr("transform", "translate(" + (imageOffsetX+140) + ",125)");
+        .attr("transform", "translate(" + (imageOffsetX+65) + ",60)");
 
     // Initialize image select
     for (i = 0; i < 10; i++) {
         filepath = "../Datasets/images/img" + i +"0.png"
 
         imgSelectG.append("image")
-            .attr("x", (i%2)*55 + 5)
+            .attr("x", (i%2)*55 + 65)
             .attr("y", Math.floor(i/2)*55 + 5)
             .on("click", onImgSelect)
             .attr("xlink:href", function() {return filepath})
@@ -207,7 +212,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         let thisXAttr = d3.select(this).attr("x");
         let thisyAttr = d3.select(this).attr("y");
         epoch = 0;
-        img = 2*((thisyAttr-5)/55)  + ((thisXAttr-5)/55);
+        img = 2*((thisyAttr-5)/55)  + ((thisXAttr-65)/55);
 
         d3.select(".G2_image_selected")
             .style("outline", "none")
