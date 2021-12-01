@@ -85,7 +85,7 @@ chartG.append('text')
 chartG.append('text')
     .attr('class', 'axis_label')
     .attr('transform', 'rotate(270)translate('+[-chartHeight/2 - axisPadding/2 - 100, 50]+')')
-    .text("Probability of prediction");
+    .text("Predictive Probability");
 
 d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
 

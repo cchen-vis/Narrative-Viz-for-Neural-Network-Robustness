@@ -95,10 +95,10 @@ Promise.all([
         .style("text-anchor", "end")
         .text(d => {
             switch (d.name) {
-                case "nt_clean": return "Normal model on Clean images";
-                case "nt_adv": return "Normal model on Adversarial images";
-                case "at_clean": return "Adversarially-trained model on Clean images";
-                case "at_adv": return "Adversarially-trained model on Adversarial images";
+                case "nt_clean": return "Regular-trained model on Clean images";
+                case "nt_adv": return "Regular-trained model on Adversarial images";
+                case "at_clean": return "Adversarial-trained model on Clean images";
+                case "at_adv": return "Adversarial-trained model on Adversarial images";
             }
         });
 
