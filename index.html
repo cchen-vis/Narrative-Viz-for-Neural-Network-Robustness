@@ -10,8 +10,9 @@
 </head>
 <body>
     <d-title>
-        <h1>A Visual Tour to Empirical Neural Network Robustness</h1>
+        <h1>A Visual Tour to Empirical Neural Network Robustness</h1><br>   
     </d-title>
+    <h2> Neural Network's Success </h2>
     <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(w,x)\)
         parameterized by \(w\) as well as a loss function \(L(w, x, y)\) where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
         a set of (sub)optimal parameters \(w\). <br>
@@ -25,6 +26,7 @@
             <svg id="G1"></svg>
         </div>
     </section>
+    <h2> PGD Attack </h2>
     <p class="text4G"> Consider the situation where an input image is poisoned by some pixel-level noise that is imperceptible to the human eye. In general, humans won’t be fooled; but unfortunately this is not 
         true for neural networks. In fact, noises found in certain ways are able to mislead a neural network almost always, and one of the popular attackers is <i>PGD attack</i> [cite 2 papers]. As its name
         indicates, PGD attack is a gradient-based attacker. It main contains the following steps:
@@ -48,6 +50,7 @@
             </div>
         </div>
     </section>
+    <h2> Adversarial Training </h2>
     <p class="text4G">
         Here comes a natural question: can we avoid this? The answer is yes! An popular and effective solution is <i>adversarial training</i> [cite]. The idea is just to utilize the PGD attack in your 
         training process: training your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind is not trivial. In standard training, we
@@ -68,6 +71,9 @@
         <div id="G3" class="div4G" style="text-align:center;">
         </div>
     </section>
+    <h2>
+        Accuracy-Robustness Tradeoff
+    </h2>
     <p class="text4G">
         There is no free lunch: adversarial training enhances the model's robustness, however, at the price of a standard accuracy drop. The adversarial-trained model achieves an \(80.05\%\) accuracy on
         clean test images while that for the regular-trained model is \(91.64\%\). This is a classic Accuracy-Robustness tradeoff, and people are now interested in how we can achieve both. The line chart below
@@ -89,9 +95,10 @@
             <svg id="G5"></svg>
         </div>
     </section>
-    <p class="text4G">
-        
-    </p>
+    <br>
+    <h3>
+        Citation
+    </h3>
 </body>
 <script src="http://d3js.org/d3.v5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
