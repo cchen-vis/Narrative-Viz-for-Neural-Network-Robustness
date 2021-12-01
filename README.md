@@ -1,4 +1,8 @@
 # Narrative-Viz-for-Neural-Network-Robustness
+## Setup
+Run `python -m http.server 8080`, and you should be able to see the demo at http://localhost:8080/.
+
+
 ## Datasets
  - clean_and_adversarial_acc_AT_model.csv : contains clean accuracy and adversarial accuracy at each epoch for the adversarial-trained model
  - clean_and_adversarial_acc_NT_model.csv : contains clean accuracy and adversarial accuracy at each epoch for the naturally-trained model
