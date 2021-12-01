@@ -12,8 +12,8 @@
     <d-title>
         <h1>A Visual Tour to Empirical Neural Network Robustness</h1>
     </d-title>
-    <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(x,w)\)
-        parameterized by \(w\) as well as a loss function \(L(f, target)\) where \(target\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
+    <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(w,x)\)
+        parameterized by \(w\) as well as a loss function \(L(w, x, y)\) where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
         a set of (sub)optimal parameters \(w\). <br>
         In the visualizations below, we show how the loss value and the test accuracy evolve, and how the output probabilities change for 10 example images using a benchmark neural network 
         ResNet-18 [He 16] on the commonly-used dataset CIFAR-10 [cifar10] (the training detail can be found in [huimin]). Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
@@ -32,12 +32,13 @@
             <li>Start from a random perturbation \(x^{\prime}\) of a given clean image \(x\) such that \(\|x^{\prime} - x\|_p \leq \epsilon\);</li>
             <li>Update \(x^{\prime}\) by one step of gradient decent to increase the loss value;</li>
             <li>Project \(x^{\prime}\) back into the \(\epsilon\)-radius \(L_p\) ball if necessary;</li>
-            <li>Repeat setp 2–3 until convergence or reaching a desired number of steps.</li>
+            <li>Repeat setp 2–3 until convergence or reaching a desired number of steps \(ns\).</li>
         </ol>
     </p>
     <p class="text4G">
-        Note that the \(\epsilon\)-radius \(L_p\) ball above is to enforce the condition that "<i>the noise is imperceptible to the human eye</i>". In the visualizations below, we display how the prediction 
-        is manipulates and how the adversarial images look like at different steps of PGD attack. In most cases, the attacker succeeds in no more than 3 steps. Do you have any other interesting findings?
+        Note that the \(\epsilon\)-radius \(L_p\) ball above is to enforce the condition that "<i>the noise is imperceptible to the human eye</i>". In the visualizations below, we set the hyperparameters
+         as \(\{p=+\infty\), \(\epsilon=8/255\), \(ns=10\}\), and display how the prediction is manipulated and how the adversarial images look like at different steps of PGD attack. In most cases, the 
+         attacker succeeds in no more than 3 steps. Do you have any other interesting findings?
     </p>
     <section id="section4G2">
         <div id="G2" class="div4G" style="text-align:center;">
@@ -48,20 +49,40 @@
         </div>
     </section>
     <p class="text4G">
-
+        Here comes a natural question: can we avoid this? The answer is yes! An popular and effective solution is <i>adversarial training</i> [cite]. The idea is just to utilize the PGD attack in your 
+        training process: training your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind is not trivial. In standard training, we
+        solve the following minimization problem:
+        $$
+            \min _{\theta} \rho(\theta), \quad \text { where } \quad \rho(\theta)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[L(w, x, y)\right],
+        $$
+        while in adversarial training, we are solving a Min-Max problem:
+        $$
+            \min _{\theta} \rho(\theta), \quad \text { where } \quad \rho(\theta)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[\max _{\delta \in \mathcal{S}} L(w, x+\delta, y)\right],
+        $$
+        where \(\mathcal{S} = \{x^{\prime}\mid\|x^{\prime} - x\|_p \leq \epsilon\}\) denotes the \(\epsilon\)-radius \(L_p\) ball. In theory, the convergence condition for such a Min-Max problem over a general
+        function is hard to determine, while adversarial training converges for most neural networks in practice. In the following visualizations, we compare the output probabilities of a regular-trained model
+        an adversarial-trained model when the same PGD attack is applied, and display how the probabilities flow as the PGD attack goes. It is clear that the adversarial-trained model is more robust. One thing
+        worth mentioning here is that the adversarial-trained model cannot resist PGD attack all the time: its accuracy under the PGD attack is \(50.51\%\) (that for the regular-trained model is only \(0.01\%\)).
     </p>
     <section id="section4G3">
         <div id="G3" class="div4G" style="text-align:center;">
         </div>
     </section>
-    <p class="text4G"></p>
+    <p class="text4G">
+        There is no free lunch: adversarial training enhances the model's robustness, however, at the price of a standard accuracy drop. The adversarial-trained model achieves an \(80.05\%\) accuracy on
+        clean test images while that for the regular-trained model is \(91.64\%\). This is a classic Accuracy-Robustness tradeoff, and people are now interested in how we can achieve both. The line chart below
+        gives a sense about how this tradeoff looks like during the training.
+    </p>
     <section id="section4G4">
         <div id="div4G4" class="div4G" style="text-align:center;">
             <svg id="G4"></svg>
         </div>
     </section>
     <p class="text4G">
-
+        Other than a binary thing, adversarial training is influenced by the hyperparameter \(\epsilon\), thus it is expected that the Accuracy-Robustness tradeoff varies when \(\epsilon\) changes. In general,
+        a smaller \(\epsilon\) leads to an adversarial-trained model that is more accurate on clean images but less resistant to PGD attack, and versa vice. We adversarial-trained 5 models with \(\epsilon=1/255,\ 2/255,\ 4/255,\ 8/266,\ 16/255\) 
+        (other hyperparameters, as well as the attacker, are the same to make a fair comparison), and present their clean accuracy and adversarial accuracy (i.e., accuracy under PGD attack) in the scatter plot below.
+        Note that the model with \(\epsilon=16/255\) doesn't bring better robustness than that of the model with \(\epsilon=8/255\), thus the rule mentioned above is only valid within a certain range.
     </p>
     <section id="section4G5">
         <div id="div4G5" class="div4G" style="text-align:center;">
