@@ -103,8 +103,8 @@ d3.json("../Datasets/stepWiseProb_NT.json").then(prob_data => {
         // .style("float", "left")
         // .style("margin-right", "150px")
         .style("position", "relative")
-        .style("top", "-27.5px")
-        .style("left", "20px")
+        .style("left", "25px")
+        .style("top", "-26.5px")
         .html("PGD Step: "+ epoch);
 
     // Initialize bar chart
