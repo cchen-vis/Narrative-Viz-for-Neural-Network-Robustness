@@ -1,12 +1,19 @@
 let data_G1;
 let steps;
 
-const margin = {top: 20, right: 80, bottom: 20, left: 80},
+// Building the image selection and the heatmap
+const imgSize = 50;
+const imgMargin = 3;
+let currentEpoch = 1;
+const categories = ["airplane", "automobile", "bird", "cat", "deer",
+                    "dog", "frog", "horse", "ship", "truck"];
+
+const margin = {top: 20, right: 40, bottom: 20, left: 40},
       width = 600 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom,
       padding = 50;
 const graph = d3.select("#G1")
-    .attr("width", 2 * width + margin.left + margin.right + padding)
+    .attr("width", width + margin.left + margin.right + padding + 5 * imgSize + 4 * imgMargin)
     .attr("height", height + margin.top + margin.bottom + padding)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -17,14 +24,6 @@ const map = d3.select("#G1")
     .attr("transform", "translate(" + (margin.left + width + padding) + "," + margin.top + ")")
     .attr("width", width)
     .attr("height", height);
-
-// Building the image selection and the heatmap
-const gallery = map.append("g");
-const imgSize = 50;
-const imgMargin = 3;
-let currentEpoch = 1;
-const categories = ["airplane", "automobile", "bird", "cat", "deer",
-                    "dog", "frog", "horse", "ship", "truck"];
 
 // Scales and Axes
 const x = d3.scaleLinear()
@@ -58,6 +57,8 @@ function selectImage() {
     this.setAttribute("class", "g1-selected-image");
     updateHeat();
 }
+
+const gallery = map.append("g");
 gallery.selectAll(".g1-heatmap-img")
     .data(categories)
     .enter()
@@ -97,7 +98,7 @@ heatmap.selectAll(".g1-heatmap-measure")
     .append("text")
     .attr("class", "g1-heatmap-measure")
     .attr("x", imgSize * 5 + imgMargin * 3)
-    .attr("text-anchor", "right")
+    .attr("text-anchor", "end")
     .attr("dy", "0.3em")
     .style("font-size", "12px")
     .style("font-family", "sans-serif")
