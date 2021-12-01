@@ -81,17 +81,17 @@ Promise.all([
         .attr("transform", (d, i) => "translate(0," + (450 + i * 20) + ")");
     legend.append("line")
         .attr("x1", width - 28)
-        .attr("y1", 10)
+        .attr("y1", -79)
         .attr("x2", width)
-        .attr("y2", 10)
+        .attr("y2", -79)
         .style("stroke-dasharray", d => {
             if (d.name.split("_")[1] === "adv") return "4"
         })
         .style("stroke", d => color_g4(d.name.split("_")[0]))
     legend.append("text")
-        .attr("x", width - 44)
-        .attr("y", 9)
-        .attr("dy", ".35em")
+        .attr("x", width - 35)
+        .attr("y", -75)
+        // .attr("dy", "0.35em")
         .style("text-anchor", "end")
         .text(d => {
             switch (d.name) {

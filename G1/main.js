@@ -2,7 +2,7 @@ let data_G1;
 let steps;
 
 // Building the image selection and the heatmap
-const imgSize = 50;
+const imgSize = 60;
 const imgMargin = 3;
 let currentEpoch = 1;
 const categories = ["airplane", "automobile", "bird", "cat", "deer",
@@ -10,7 +10,7 @@ const categories = ["airplane", "automobile", "bird", "cat", "deer",
 
 const margin = {top: 20, right: 40, bottom: 20, left: 40},
       width = 600 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom,
+      height = 500 - margin.top - margin.bottom,
       padding = 50;
 const graph = d3.select("#G1")
     .attr("width", width + margin.left + margin.right + padding + 5 * imgSize + 4 * imgMargin)
