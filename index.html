@@ -61,12 +61,12 @@
 </d-byline>
     <h2> Neural Network's Success </h2>
     <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(w,x)\)
-        parameterized by \(w\) as well as a loss function \(L(w, x, y)\) where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
-        a set of (sub)optimal parameters \(w\). <br>
+        parameterized by \(w\) as well as a loss function \(L(w, x, y)\), where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
+        a set of (approximately) optimal parameters \(w\). <br>
         In the visualizations below, we show how the loss value and the test accuracy evolve, and how the output probabilities change for 10 example images using a benchmark neural network 
-        ResNet-18<dt-cite key="he2016deep"></dt-cite> on the commonly-used dataset CIFAR-10<dt-cite key="krizhevsky2009learning"></dt-cite> (the training detail can be found in <dt-cite key="zeng2020adversarial"></dt-cite>) . Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
-        will display the changes of the predictive probabilities at different training epochs. You could find some interesting patterns there, for example, the prediction for the <i>Dog</i> 
-        image (2nd row, 1st column) jump between <i>Cat</i> and <i>Dog</i> many times as the training goes.
+        ResNet-18<dt-cite key="he2016deep"></dt-cite> on the commonly-used dataset CIFAR-10<dt-cite key="krizhevsky2009learning"></dt-cite> (the training details can be found in <dt-cite key="zeng2020adversarial"></dt-cite>) . Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
+        will display the changes of the predictive probabilities at different training epochs. You could find some interesting patterns there; for example, the prediction for the <i>Dog</i> 
+        image (2nd row, 1st column) jumps between <i>Cat</i> and <i>Dog</i> many times as the training iterates.
     </p>
     <section id="section4G1">
         <div class="div4G" style="text-align:center;">
@@ -74,21 +74,21 @@
         </div>
     </section>
     <h2> PGD Attack </h2>
-    <p class="text4G"> Consider the situation where an input image is poisoned by some pixel-level noise that is imperceptible to the human eye. In general, humans won’t be fooled; but unfortunately, this is not 
-        true for neural networks. In fact, noises found in certain ways are able to mislead a neural network almost always, and one of the popular attackers is <i>PGD attack</i> <dt-cite key="goodfellow2014explaining,madry2017towards"></dt-cite>. As its name
-        indicates, PGD attack is a gradient-based attacker. It mainly contains the following steps:
+    <p class="text4G"> Consider the situation where an input image is altered by some pixel-level noise that is imperceptible to the human eye. In general, humans won’t be fooled; but unfortunately this is not 
+        true for neural networks. In fact, noises found in certain ways are able to mislead a neural network almost always. One of the popular attack methods is the <i>Projected Gradient Descent (PGD) attack</i> <dt-cite key="goodfellow2014explaining,madry2017towards"></dt-cite>. As its name
+        indicates, the PGD attack is a gradient-based attacker. It mainly contains the following steps:
         <ol>
             <li>Start from a random perturbation \(x^{\prime}\) of a given clean image \(x\) such that \(\|x^{\prime} - x\|_p \leq \epsilon\);</li>
-            <li>Update \(x^{\prime}\) by one step of gradient decent to increase the loss value;</li>
+            <li>Update \(x^{\prime}\) by one step of gradient ascent to increase the loss value;</li>
             <li>Project \(x^{\prime}\) back into the \(\epsilon\)-radius \(L_p\) ball if necessary;</li>
-            <li>Repeat Step 2–3 until convergence or reaching a desired number of steps \(ns\).</li>
+            <li>Repeat step 2–3 until convergence or reaching a desired number of steps \(ns\).</li>
         </ol>
     </p>
     <p class="text4G">
-        Note that the \(\epsilon\)-radius \(L_p\) ball above is to enforce the condition that "<i>the noise is imperceptible to the human eye</i>". In the visualizations below, we set the hyperparameters
-         as \(\{p=+\infty\), \(\epsilon=8/255\), \(ns=10\}\), and display how the prediction is manipulated and how the adversarial images look like at different steps of PGD attack. Select an image, scroll
-         the slider denoting the number of steps PGD takes, and you will see how the outcome probabilities of the neural network change. In most cases, the attacker succeeds in no more than 3 steps, and the 
-         resulting adversarial images look just the same as the clean counterpart to the human eye. Do you have any other interesting findings?
+        Note that the \(\epsilon\)-radius \(L_p\) ball above enforces the condition that "<i>the noise is imperceptible to the human eye</i>". In the visualizations below, we set the hyperparameters
+         as \(\{p=+\infty\), \(\epsilon=8/255\), \(ns=10\}\), and display how the neural network's predictions are manipulated and how the adversarial images look at different steps of PGD attack.
+         The user can make use of the slider to step through the PDG attack, and can select from the 10 example images by clicking on them. In most cases, the 
+         attacker succeeds in no more than 3 steps, while the adversarial images look nearly identical to their original counterparts. Do you have any other interesting findings?
     </p>
     <section id="section4G2">
         <div id="G2" class="div4G" style="text-align:center;">
@@ -100,22 +100,21 @@
     </section>
     <h2> Adversarial Training </h2>
     <p class="text4G">
-        Here comes a natural question: can we avoid this? The answer is yes! An popular and effective solution is <i>adversarial training</i> <dt-cite key="madry2017towards"></dt-cite>. The idea is just to utilize the PGD attack in your 
-        training process: train your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind is not trivial. In standard training, we
+        Here comes a natural question: can we avoid this? The answer is yes! A popular and effective solution is <i>adversarial training</i> <dt-cite key="madry2017towards"></dt-cite>. The idea is to utilize the PGD attack in your 
+        training process, that is, train your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind it is not trivial. In standard training, we
         solve the following minimization problem:
         $$
             \min _{\theta} \rho(\theta), \quad \text { where } \quad \rho(\theta)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[L(w, x, y)\right],
         $$
-        while in adversarial training, we are solving a Min-Max problem:
+        While in adversarial training, we are solving a Min-Max problem:
         $$
             \min _{\theta} \rho(\theta), \quad \text { where } \quad \rho(\theta)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[\max _{\delta \in \mathcal{S}} L(w, x+\delta, y)\right],
         $$
-        where \(\mathcal{S} = \{x^{\prime}\mid\|x^{\prime} - x\|_p \leq \epsilon\}\) denotes the \(\epsilon\)-radius \(L_p\) ball. In theory, the convergence condition for such a Min-Max problem over a general
-        function (e.g., a neural network) is hard to determine, while adversarial training converges for most neural networks in practice. In the following visualizations, we compare the output probabilities of a regular-trained model
-        and an adversarial-trained model when the same PGD attack is applied, and display how the probabilities evolve as the PGD attack goes on both models for your selected image. You can hover over one label's probability flow
-        area in either one of the two charts, and the probability flow for that label in the other chart will also be highlighted to facilitate the comparison.
-        It should be clear that the adversarial-trained model won't make mistakes on these ten images, thus is more robust. One thing
-        worth mentioning here is that the adversarial-trained model cannot resist PGD attack all the time: its accuracy on the entire test set under the PGD attack is \(50.51\%\) (that for the regular-trained model is only \(0.01\%\)).
+        where \(\mathcal{S} = \{x^{\prime}\mid\|x^{\prime} - x\|_p \leq \epsilon\}\) denotes the \(\epsilon\)-radius \(L_p\) ball. In theory, the convergence conditions for such a Min-Max problem over a general
+        function is hard to determine; however, in practice, adversarial training converges for most neural networks. In the following visualizations, we compare the output probabilities of a regular-trained model
+        and an adversarial-trained model when the same PGD attack is applied, and display how the probabilities flow as the PGD attack iterates. Like above, the user can select from the set of 10 images, and view the difference in performance between the two models.
+        It is clear that the adversarial-trained model is more robust. One thing
+        worth mentioning here is that the adversarial-trained model cannot resist PGD attack all the time: its accuracy under the PGD attack is \(50.51\%\) (that for the regular-trained model is only \(0.01\%\)).
     </p>
     <section id="section4G3">
         <div id="G3" class="div4G" style="text-align:center;">
@@ -125,9 +124,9 @@
         Accuracy-Robustness Tradeoff
     </h2>
     <p class="text4G">
-        There is no free lunch: apart from a longer training time (since you need to replace the clean training data with it adversarial counterpart), adversarial training suffers from the price of a standard accuracy drop. The adversarial-trained model achieves an \(80.05\%\) accuracy on
-        clean test images while that for the regular-trained model is \(91.64\%\). This is a classic Accuracy-Robustness tradeoff, and people are now interested in how we can achieve both. The line chart below
-        gives a sense about how this tradeoff looks like during the training. Hover over the lines to see details at different epochs.
+        There is no free lunch: while adversarial training enhances the model's robustness, it comes at the price of a standard accuracy drop. The adversarial-trained model achieves an \(80.05\%\) accuracy on
+        clean test images while that for the regular-trained model is \(91.64\%\). This creates an Accuracy-Robustness tradeoff, and people are now interested in how we can achieve both. The line chart below
+        gives a sense about how this tradeoff looks during training.
     </p>
     <section id="section4G4">
         <div id="div4G4" class="div4G" style="text-align:center;">
@@ -135,9 +134,9 @@
         </div>
     </section>
     <p class="text4G">
-        Other than a binary thing, adversarial training is influenced by the hyperparameter \(\epsilon\), thus it is expected that the Accuracy-Robustness tradeoff varies when \(\epsilon\) changes. In general,
-        a smaller \(\epsilon\) leads to an adversarial-trained model that is more accurate on clean images but less resistant to PGD attack, and versa vice. We adversarial-trained 5 models with \(\epsilon=1/255,\ 2/255,\ 4/255,\ 8/266,\ 16/255\) 
-        (other hyperparameters, as well as the attacker, are the same to make a fair comparison), and present their clean accuracy and adversarial accuracy (i.e., accuracy under PGD attack) in the scatter plot below (hover over the squares to see details for different models.).
+        The Accuracy-Robustness tradeoff is not binary; instead, adversarial training is influenced by the hyperparameter \(\epsilon\). It is expected that the Accuracy-Robustness tradeoff varies when \(\epsilon\) changes. In general,
+        a smaller \(\epsilon\) leads to an adversarial-trained model that is more accurate on clean images but less resistant to PGD attack, and vice versa. We adversarial-trained 5 models with \(\epsilon=1/255,\ 2/255,\ 4/255,\ 8/266,\ 16/255\) 
+        (other hyperparameters, including the attacker, are the same to make a fair comparison), and present their clean accuracy and adversarial accuracy (i.e., accuracy under PGD attack) in the scatter plot below.
         Note that the model with \(\epsilon=16/255\) doesn't bring a better robustness than that of the model with \(\epsilon=8/255\), thus the rule mentioned above is only valid within a certain range.
     </p>
     <section id="section4G5">
