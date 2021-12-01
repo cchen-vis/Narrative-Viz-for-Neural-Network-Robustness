@@ -34,7 +34,16 @@ d-title h1 {
     -webkit-text-size-adjust: 100%;
 }
 
+.div4G {
+    display: flex;
+}
+
 /* G1 */
+#G1 {
+    display: block;
+    margin: 0 auto;
+}
+
 .g1-selected-image {
     outline: 5px solid gold;
 }
