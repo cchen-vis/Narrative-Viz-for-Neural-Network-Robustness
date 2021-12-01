@@ -6,12 +6,12 @@ var alpha = 0.8;
 var imgSelectG = d3.select("#G2").append("svg")
     .attr("id", "imgSelect_g2")
     .attr("transform", "translate(0,-50)")
-    .attr("width", "200px")
+    .attr("width", "210px")
     .attr("height", "500px");
 
 var chartG = d3.select("#G2").append("svg")
     .attr("id", "stackedBarChart")
-    .attr("transform", "translate(0,-50)")
+    .attr("transform", "translate(10,-50)")
     .attr("width", "800px")
     .attr("height", "600px");
 
