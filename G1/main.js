@@ -2,9 +2,9 @@ let data_G1;
 let steps;
 
 const margin = {top: 20, right: 80, bottom: 20, left: 80},
-      width = 800 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom,
-      padding = 100;
+      width = 600 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom,
+      padding = 50;
 const graph = d3.select("#G1")
     .attr("width", 2 * width + margin.left + margin.right + padding)
     .attr("height", height + margin.top + margin.bottom + padding)
@@ -20,8 +20,8 @@ const map = d3.select("#G1")
 
 // Building the image selection and the heatmap
 const gallery = map.append("g");
-const imgSize = 70;
-const imgMargin = 5;
+const imgSize = 50;
+const imgMargin = 3;
 let currentEpoch = 1;
 const categories = ["airplane", "automobile", "bird", "cat", "deer",
                     "dog", "frog", "horse", "ship", "truck"];
@@ -51,7 +51,7 @@ const yAccAxis = d3.axisRight(yAcc);
 
 const heatmap = map.append("g")
     .attr("class", "g1-heatmap")
-    .attr("transform", "translate(0, 180)")
+    .attr("transform", "translate(0," + (2.5 * imgSize) + ")")
 function selectImage() {
     d3.select(".g1-selected-image")
         .classed("g1-selected-image", false);
