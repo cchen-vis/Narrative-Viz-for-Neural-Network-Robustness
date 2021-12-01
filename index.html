@@ -5,18 +5,26 @@
 <meta name="author" content="co-authored by Chen Chen, Ethan Remsberg and Jason Tan">
 <title>A Visual Tour to Empirical Neural Network Robustness</title>
 <link rel="stylesheet" href="./style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <d-title>
         <h1>A Visual Tour to Empirical Neural Network Robustness</h1>
     </d-title>
-    <p class="text4G">The above figure helps us look at a single image at a time; however, it does not provide much context to understand the relationship between layers, between different examples, or between different class labels. For that, researchers often turn to more sophisticated visualizations.</p>
+    <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(x,w)\)
+        parameterized by \(w\) as well as a loss function \(L(f, target)\) where \(target\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain a set of (sub)optimal parameters w. <br>
+        In the visualizations below, we show how the loss value and the test accuracy evolve, and how the output probabilities change for 10 example images using a benchmark neural network 
+        ResNet-18 [He 16] on the commonly-used dataset CIFAR-10 [cifar10] (the training detail can be found in [huimin]). Select an image, hover over the left-hand-side line chart, and then a racing bar chart will
+        display the changes of the predictive probabilities at different training epochs. You could find some interesting patterns there, for example, the prediction for the \(Dog\) image (2nd row, 1st column) jump 
+        between \(Cat\) and \(Dog\) many times as the training goes.
+    </p>
     <section id="section4G1">
         <div class="div4G" style="text-align:center;">
             <svg id="G1"></svg>
         </div>
     </section>
-    <p class="text4G">The above figure helps us look at a single image at a time; however, it does not provide much context to understand the relationship between layers, between different examples, or between different class labels. For that, researchers often turn to more sophisticated visualizations.</p>
+    <p class="text4G"> The above figure helps us look at a single image at a time; however, it does not provide much context to understand the relationship between layers, between different examples, or between different class labels. For that, researchers often turn to more sophisticated visualizations.</p>
     <section id="section4G2">
         <div id="G2" class="div4G" style="text-align:center;">
             <div id="slider">
