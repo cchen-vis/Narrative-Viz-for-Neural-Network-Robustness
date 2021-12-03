@@ -131,7 +131,7 @@ ribbonG_g2.append('text')
 ribbonG_g2.append('text')
     .attr('class', 'axis_label')
     .attr('transform', 'rotate(270)translate('+[-chartHeight_g3/2 - axisPadding_g3/2 - 225, 50]+')')
-    .text("AT model's prediction probabilites for current image");
+    .text("RT model's prediction probabilites for current image");
 
 d3.json("../Datasets/stepWiseProb_NT.json").then(nt_data => {
     d3.json("../Datasets/stepWiseProb_AT.json").then(at_data => {
