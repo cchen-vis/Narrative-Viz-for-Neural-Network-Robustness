@@ -178,27 +178,32 @@
       };
 
     var testSVG = document.getElementById("g1-image-1");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-2");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-3");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-4");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-5");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-6");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-7");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-8");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-    testSVG = document.getElementById("g1-image-9");
-    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
-
-    YUI().use("node-event-simulate", function (Y) {
-        Y.one("#hoverRect").simulate("mouseover");
-    });
+    setTimeout( function(){ 
+        simulateMouseEvent(testSVG, "click"); 
+        testSVG = document.getElementById("g1-image-2");
+        setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    }, 2000);
+    // testSVG = document.getElementById("g1-image-2");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-3");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-4");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-5");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-6");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-7");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-8");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    // testSVG = document.getElementById("g1-image-9");
+    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+    
+    setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
+        Y.one("#hoverRect").simulate("mouseover", { relatedTarget: document.body });
+    }); }, 2000);
+    
 </script>
 
 <script type="text/bibliography">
