@@ -164,6 +164,42 @@
 <script src="./G3/main.js"></script>
 <script src="./G4/main.js"></script>
 <script src="./G5/main.js"></script>
+<script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
+<script>
+    var simulateMouseEvent = function (element, eventName, coordX, coordY) {
+        element.dispatchEvent(
+          new MouseEvent(eventName, {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            button: 0,
+          })
+        );
+      };
+
+    var testSVG = document.getElementById("g1-image-1");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-2");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-3");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-4");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-5");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-6");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-7");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-8");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+    testSVG = document.getElementById("g1-image-9");
+    setTimeout(simulateMouseEvent(testSVG, "click"), 4000);
+
+    YUI().use("node-event-simulate", function (Y) {
+        Y.one("#hoverRect").simulate("mouseover");
+    });
+</script>
 
 <script type="text/bibliography">
     @inproceedings{he2016deep,
