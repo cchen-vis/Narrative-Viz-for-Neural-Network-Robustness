@@ -181,7 +181,11 @@
     setTimeout( function(){ 
         simulateMouseEvent(testSVG, "click"); 
         testSVG = document.getElementById("g1-image-2");
-        setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
+        setTimeout(function(){ simulateMouseEvent(testSVG, "click");
+            setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
+            Y.one("#g1-image-3").simulate("click");}); 
+            }, 2000);
+        }, 2000);
     }, 2000);
     // testSVG = document.getElementById("g1-image-2");
     // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
@@ -202,7 +206,7 @@
     
     setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
         Y.one("#hoverRect").simulate("mouseover", { relatedTarget: document.body });
-    }); }, 2000);
+    }); }, 8000);
     
 </script>
 
