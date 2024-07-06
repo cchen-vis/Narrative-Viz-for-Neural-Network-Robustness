@@ -1,55 +1,59 @@
 body {
-    position: relative;
-    width: 60%;
-    z-index: 15;
-    left: 20%;
+  position: relative;
+  width: 60%;
+  z-index: 15;
+  left: 20%;
 }
 
 #G3 {
-    display: inline-flex;
+  display: inline-flex;
 }
 
 d-title {
-    padding: 2rem 0 1.5rem;
-    contain: layout style;
-    overflow-x: hidden;
-    text-align: center;
+  padding: 2rem 0 1.5rem;
+  contain: layout style;
+  overflow-x: hidden;
+  text-align: center;
 }
 
 d-title h1 {
-    grid-column: text;
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 1.1em;
-    margin: 0 0 0.5rem;
+  grid-column: text;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1em;
+  margin: 0 0 0.5rem;
 }
 
-li{
-    /* position: relative;
+li {
+  /* position: relative;
     width: 60%;
     z-index: 15;
     left: 20%; */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-    font-size: 1.5rem;
-    text-align: "justify";
-    line-height: 150%;
-    text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+    sans-serif;
+  font-size: 1.5rem;
+  text-align: "justify";
+  line-height: 150%;
+  text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-.text4G{
-    /* position: relative;
+.text4G {
+  /* position: relative;
     width: 60%;
     z-index: 15;
     left: 20%; */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-    font-size: 1.5rem;
-    text-align: "justify";
-    line-height: 150%;
-    text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial,
+    sans-serif;
+  font-size: 1.5rem;
+  text-align: "justify";
+  line-height: 150%;
+  text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* .div4G {
@@ -58,79 +62,88 @@ li{
 
 /* G1 */
 #G1 {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .g1-selected-image {
-    outline: 5px solid gold;
+  outline: 5px solid gold;
 }
 
 .g1-line {
-    stroke-width: 3;
+  stroke-width: 3;
 }
 
 .g1-mouse-per-line text {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 .g1-heatmap text {
-    font-size: 13px;
-    font-weight: bold;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 /* G2 & G3 */
 
 .y_axis .tick text {
-    font-size: 10px;
-    font-weight: bold;
-    fill: black;
+  font-size: 10px;
+  font-weight: bold;
+  fill: black;
 }
 
 .y_axis path.domain {
-    stroke: black;
+  stroke: black;
 }
 
 .x_axis .tick text {
-    font-size: 10px;
-    font-weight: bold;
-    fill: black;
+  font-size: 10px;
+  font-weight: bold;
+  fill: black;
 }
 
 .x_axis path.domain {
-    stroke: black;
+  stroke: black;
 }
 
 .bar rect:hover {
-    stroke: black;
+  stroke: black;
 }
 
 .bar rect text {
-    opacity: 0;
+  opacity: 0;
 }
 
 .bar rect:hover text {
-    opacity: 1;
+  opacity: 1;
 }
 
 .axis_label {
-    font-size: 16px;
-    font-weight: 600;
-    fill: black;
+  font-size: 16px;
+  font-weight: 600;
+  fill: black;
 }
 
 .area_g3 {
-    pointer-events:all;
+  pointer-events: all;
 }
 
 /* G4 */
 .g4-line {
-    stroke-width: 3;
+  stroke-width: 3;
 }
 
 .g4-mouse-per-line text {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 /* G5 */
-circle { cursor: pointer; }
+circle {
+  cursor: pointer;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}

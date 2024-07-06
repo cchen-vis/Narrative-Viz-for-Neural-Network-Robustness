@@ -91,11 +91,11 @@
          attacker succeeds in no more than 3 steps, while the adversarial images look nearly identical to their original counterparts. Do you have any other interesting findings?
     </p>
     <section id="section4G2">
-        <div id="G2" class="div4G" style="text-align:center;">
-            <div id="slider" style="height: 100px; width: 400px; position: relative; top: 50px; left: 300px; z-index: 99;">
-                <input id="epoch_slider">
-                <p id="slider_text"></p>
-            </div>
+        <div id="slider" style="height: 100px; width: 400px; position: relative; top: 50px; left: 20%; z-index: 99;">
+            <input id="epoch_slider">
+            <p id="slider_text"></p>
+        </div>
+        <div id="G2" class="div4G flex-container" style="text-align:center;">
         </div>
     </section>
     <h2> Adversarial Training </h2>
@@ -187,22 +187,6 @@
             }, 2000);
         }, 2000);
     }, 2000);
-    // testSVG = document.getElementById("g1-image-2");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-3");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-4");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-5");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-6");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-7");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-8");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
-    // testSVG = document.getElementById("g1-image-9");
-    // setTimeout(function(){ simulateMouseEvent(testSVG, "click");}, 2000);
     
     setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
         Y.one("#hoverRect").simulate("mouseover", { relatedTarget: document.body });
