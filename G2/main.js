@@ -9,17 +9,13 @@ var imgSelectG = container
   .attr("id", "imgSelect_g2")
   .attr("width", "210")
   .attr("height", "500")
-  .style("position", "relative")
-  .style("left", "calc(50% - 505px)")
-  .style("top", "0%");
+  .attr("transform", "translate(0,0)");
 var chartG = container
   .append("svg")
   .attr("id", "stackedBarChart")
   .attr("width", "800")
   .attr("height", "600")
-  .style("position", "relative")
-  .style("left", "calc(50% - 505px)")
-  .style("top", "-100px");
+  .attr("transform", "translate(0,-100)");
 
 container.selectAll("svg").style("display", "block");
 
