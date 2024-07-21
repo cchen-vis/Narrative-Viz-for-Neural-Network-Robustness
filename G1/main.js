@@ -1,6 +1,12 @@
 let data_G1;
 let steps;
 
+function pad(num, size) {
+  num = num.toString();
+  while (num.length < size) num = "0" + num;
+  return num;
+}
+
 // Building the image selection and the heatmap
 const imgSize = 60;
 const imgMargin = 3;
@@ -73,18 +79,18 @@ function selectImage() {
 const gallery = map.append("g");
 gallery
   .selectAll(".g1-heatmap-img")
-  .data(categories)
+  .data([...Array(512).keys()])
   .enter()
   .append("image")
   .attr("id", (d, i) => "g1-image-" + i)
   .attr("class", "g1-heatmap-img")
   .classed("g1-selected-image", (d, i) => i == 0)
   .attr("data-index", (d, i) => i)
-  .attr("href", (d, i) => "../Datasets/Images/img" + i + "0.png")
+  .attr("href", (d, i) => "../images/image_" + pad(i, 3) + ".png")
   .attr("width", imgSize)
   .attr("height", imgSize)
-  .attr("x", (d, i) => (i % 5) * (imgSize + imgMargin))
-  .attr("y", (d, i) => Math.floor(i / 5) * (imgSize + imgMargin))
+  .attr("x", (d, i) => (i % 256) * (imgSize + imgMargin))
+  .attr("y", (d, i) => Math.floor(i / 256) * (imgSize + imgMargin))
   .on("click", selectImage);
 
 heatmap
@@ -342,7 +348,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
         d3.selectAll(".g1-mouse-per-line text").style("opacity", "0");
       })
       .on("mouseover", () => {
-        console.log("hovered!")
+        console.log("hovered!");
         d3.select(".g1-mouse-line").style("opacity", "1");
         d3.selectAll(".g1-axis-line").style("opacity", "0.5");
         d3.selectAll(".g1-mouse-per-line circle").style("opacity", "1");
