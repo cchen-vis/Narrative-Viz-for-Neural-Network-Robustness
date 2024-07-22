@@ -166,31 +166,31 @@
 <script src="./G5/main.js"></script>
 <script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
 <script>
-    var simulateMouseEvent = function (element, eventName, coordX, coordY) {
-        element.dispatchEvent(
-          new MouseEvent(eventName, {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            button: 0,
-          })
-        );
-      };
+    // var simulateMouseEvent = function (element, eventName, coordX, coordY) {
+    //     element.dispatchEvent(
+    //       new MouseEvent(eventName, {
+    //         view: window,
+    //         bubbles: true,
+    //         cancelable: true,
+    //         button: 0,
+    //       })
+    //     );
+    //   };
 
-    var testSVG = document.getElementById("g1-image-1");
-    setTimeout( function(){ 
-        simulateMouseEvent(testSVG, "click"); 
-        testSVG = document.getElementById("g1-image-2");
-        setTimeout(function(){ simulateMouseEvent(testSVG, "click");
-            setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
-            Y.one("#g1-image-3").simulate("click");}); 
-            }, 2000);
-        }, 2000);
-    }, 2000);
+    // var testSVG = document.getElementById("g1-image-1");
+    // setTimeout( function(){ 
+    //     simulateMouseEvent(testSVG, "click"); 
+    //     testSVG = document.getElementById("g1-image-2");
+    //     setTimeout(function(){ simulateMouseEvent(testSVG, "click");
+    //         setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
+    //         Y.one("#g1-image-3").simulate("click");}); 
+    //         }, 2000);
+    //     }, 2000);
+    // }, 2000);
     
-    setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
-        Y.one("#hoverRect").simulate("mouseover", { relatedTarget: document.body });
-    }); }, 8000);
+    // setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
+    //     Y.one("#hoverRect").simulate("mouseover", { relatedTarget: document.body });
+    // }); }, 8000);
     
 </script>
 

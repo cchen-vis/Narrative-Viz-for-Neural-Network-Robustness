@@ -1,10 +1,65 @@
 let data_G1;
 let steps;
+var chosenImg = 0;
 
 function pad(num, size) {
   num = num.toString();
   while (num.length < size) num = "0" + num;
   return num;
+}
+
+function updateHeat() {
+  const animTime = 50;
+  const animStyle = d3.easeLinear; //x => (x < 0.5) ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
+  heatmap
+    .selectAll(".g1-heatmap-square")
+    .sort((a, b) =>
+      d3.descending(
+        steps[currentEpoch][chosenImg][a],
+        steps[currentEpoch][chosenImg][b]
+      )
+    )
+    .transition()
+    .ease(animStyle)
+    .duration(animTime)
+    .attr("width", (d) => bar(steps[currentEpoch][chosenImg][d]))
+    .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)));
+  heatmap
+    .selectAll(".g1-heatmap-label")
+    .sort((a, b) =>
+      d3.descending(
+        steps[currentEpoch][chosenImg][a],
+        steps[currentEpoch][chosenImg][b]
+      )
+    )
+    .transition()
+    .ease(animStyle)
+    .duration(animTime)
+    .attr("x", (d, i) => {
+      return bar(steps[currentEpoch][chosenImg][d]) > 100
+        ? 10
+        : bar(steps[currentEpoch][chosenImg][d]) + 10;
+    })
+    .attr(
+      "y",
+      (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + imgSize / 4
+    );
+  heatmap
+    .selectAll(".g1-heatmap-measure")
+    .sort((a, b) =>
+      d3.descending(
+        steps[currentEpoch][chosenImg][a],
+        steps[currentEpoch][chosenImg][b]
+      )
+    )
+    .text((d, i) => (steps[currentEpoch][chosenImg][d] * 100).toFixed(2) + "%")
+    .transition()
+    .ease(animStyle)
+    .duration(animTime)
+    .attr(
+      "y",
+      (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + imgSize / 4
+    );
 }
 
 // Building the image selection and the heatmap
@@ -70,11 +125,6 @@ const heatmap = map
   .append("g")
   .attr("class", "g1-heatmap")
   .attr("transform", "translate(0," + 2.5 * imgSize + ")");
-function selectImage() {
-  d3.select(".g1-selected-image").classed("g1-selected-image", false);
-  this.setAttribute("class", "g1-selected-image");
-  updateHeat();
-}
 
 const gallery = map.append("g");
 gallery
@@ -91,7 +141,12 @@ gallery
   .attr("height", imgSize)
   .attr("x", (d, i) => (i % 256) * (imgSize + imgMargin))
   .attr("y", (d, i) => Math.floor(i / 256) * (imgSize + imgMargin))
-  .on("click", selectImage);
+  .on("click", (d, i) => {
+    chosenImg = i;
+    d3.selectAll(".g1-heatmap-img").classed("g1-selected-image", false);
+    d3.select("#g1-image-" + i).classed("g1-selected-image", true);
+    updateHeat();
+  });
 
 heatmap
   .selectAll(".g1-heatmap-square")
@@ -126,60 +181,6 @@ heatmap
   .style("font-size", "12px")
   .style("font-family", "sans-serif")
   .style("fill", "black");
-function updateHeat() {
-  const chosenImg = d3.select(".g1-selected-image").attr("data-index");
-  const animTime = 50;
-  const animStyle = d3.easeLinear; //x => (x < 0.5) ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
-  heatmap
-    .selectAll(".g1-heatmap-square")
-    .sort((a, b) =>
-      d3.descending(
-        steps[currentEpoch][chosenImg][a],
-        steps[currentEpoch][chosenImg][b]
-      )
-    )
-    .transition()
-    .ease(animStyle)
-    .duration(animTime)
-    .attr("width", (d) => bar(steps[currentEpoch][chosenImg][d]))
-    .attr("y", (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)));
-  heatmap
-    .selectAll(".g1-heatmap-label")
-    .sort((a, b) =>
-      d3.descending(
-        steps[currentEpoch][chosenImg][a],
-        steps[currentEpoch][chosenImg][b]
-      )
-    )
-    .transition()
-    .ease(animStyle)
-    .duration(animTime)
-    .attr("x", (d, i) => {
-      return bar(steps[currentEpoch][chosenImg][d]) > 100
-        ? 10
-        : bar(steps[currentEpoch][chosenImg][d]) + 10;
-    })
-    .attr(
-      "y",
-      (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + imgSize / 4
-    );
-  heatmap
-    .selectAll(".g1-heatmap-measure")
-    .sort((a, b) =>
-      d3.descending(
-        steps[currentEpoch][chosenImg][a],
-        steps[currentEpoch][chosenImg][b]
-      )
-    )
-    .text((d, i) => (steps[currentEpoch][chosenImg][d] * 100).toFixed(2) + "%")
-    .transition()
-    .ease(animStyle)
-    .duration(animTime)
-    .attr(
-      "y",
-      (d, i) => Math.floor(i * (imgSize / 2 + imgMargin)) + imgSize / 4
-    );
-}
 
 d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
   .then((dataset) => {
