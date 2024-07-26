@@ -1,6 +1,5 @@
 let data_G1;
 let steps;
-var chosenImg = 0;
 
 function pad(num, size) {
   num = num.toString();
@@ -128,25 +127,14 @@ const heatmap = map
 
 const gallery = map.append("g");
 gallery
-  .selectAll(".g1-heatmap-img")
-  .data([...Array(512).keys()])
-  .enter()
   .append("image")
-  .attr("id", (d, i) => "g1-image-" + i)
-  .attr("class", "g1-heatmap-img")
-  .classed("g1-selected-image", (d, i) => i == 0)
-  .attr("data-index", (d, i) => i)
+  .attr("id", "selected-image-in-G1")
+  .attr("class", "global-selected-image")
   .attr("href", (d, i) => "../images/image_" + pad(i, 3) + ".png")
   .attr("width", imgSize)
   .attr("height", imgSize)
-  .attr("x", (d, i) => (i % 256) * (imgSize + imgMargin))
-  .attr("y", (d, i) => Math.floor(i / 256) * (imgSize + imgMargin))
-  .on("click", (d, i) => {
-    chosenImg = i;
-    d3.selectAll(".g1-heatmap-img").classed("g1-selected-image", false);
-    d3.select("#g1-image-" + i).classed("g1-selected-image", true);
-    updateHeat();
-  });
+  .attr("x", (d, i) => 1.5 * (imgSize + imgMargin))
+  .attr("y", (d, i) => imgMargin);
 
 heatmap
   .selectAll(".g1-heatmap-square")

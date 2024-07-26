@@ -166,6 +166,7 @@
     
 </body>
 <script>
+    var chosenImg = 0;
     // D3 script to load JSON and render scatter plot
     d3.json('./Datasets/_projections.json').then(data => {
         const margin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -198,7 +199,15 @@
             .attr("y", d => yScale(d.position[1]) - 12) // Adjust for image size
             .attr("width", 24)
             .attr("height", 24)
-            .attr("xlink:href", d => `./images/${d.key}`);
+            .attr("xlink:href", d => `./images/image_${d.key}.png`)
+            .attr("class", "scatterplot-image")
+            .attr("id", d => `scatterplot-image-${d.key}`)
+            .on("click", d => {
+                chosenImg = parseInt(d.key);
+                d3.selectAll(".scatterplot-image").classed("g1-selected-image", false);
+                d3.select("#scatterplot-image-" + d.key).classed("g1-selected-image", true);
+                updateHeat();
+            });
     }).catch(error => {
         console.error('Error loading JSON file:', error);
     });
