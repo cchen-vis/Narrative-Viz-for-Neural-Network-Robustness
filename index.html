@@ -166,6 +166,38 @@
     
 </body>
 <script>
+    function wrap(text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr("x"),
+                y = text.attr("y"),
+                dy = 0, //parseFloat(text.attr("dy")),
+                tspan = text.text(null)
+                            .append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan")
+                                .attr("x", x)
+                                .attr("y", y)
+                                .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                                .text(word);
+                }
+            }
+        });
+    }
     var chosenImg = 0;
     // D3 script to load JSON and render scatter plot
     d3.json('./Datasets/_projections.json').then(data => {
@@ -198,7 +230,7 @@
             .attr("height", 100) // Larger size
             .attr("border", "#b41930")
             .attr("class", "top-right-image")
-            .attr("xlink:href", `./images/image_${data[0].key}.png`);
+            .attr("xlink:href", `./images/image_${data[158].key}.png`);
 
         svg.selectAll("image")
             .data(data)
@@ -229,6 +261,15 @@
                     .attr("stroke-width", 2);
                 updateHeat();
             });
+
+        svg.append("rect")
+            .attr("x", xScale(data[158].position[0]) - 14) // Adjust position to be on the border
+            .attr("y", yScale(data[158].position[1]) - 14) // Adjust position to be on the border
+            .attr("width", 28) // Rectangle size
+            .attr("height", 28) // Rectangle size
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 2);
     }).catch(error => {
         console.error('Error loading JSON file:', error);
     });

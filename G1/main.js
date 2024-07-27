@@ -123,17 +123,18 @@ const yAccAxis = d3.axisRight(yAcc);
 const heatmap = map
   .append("g")
   .attr("class", "g1-heatmap")
-  .attr("transform", "translate(0," + 1.25 * imgSize + ")");
+  .attr("transform", "translate(0," + 1.5 * imgSize + ")");
 
 // give heatmap a figure caption
 heatmap
   .append("text")
   .attr("class", "g1-heatmap-caption")
   .attr("x", 0)
-  .attr("y", -10)
+  .attr("y", -70)
   .text(
     "The bar chart below presents the output distribution for the selected image. Hover over the left line chart to see the distribution change over epochs."
-  );
+  )
+  .call(wrap, 300);
 
 // const gallery = map.append("g").attr("class", "selectedImage4view");
 // gallery
