@@ -191,6 +191,15 @@
             .domain(yExtent)
             .range([height, 0]);
 
+        const topRightImage = svg.append("image")
+            .attr("x", width - 110) // Adjust position to top-right corner
+            .attr("y", 10) // Adjust position to top-right corner
+            .attr("width", 100) // Larger size
+            .attr("height", 100) // Larger size
+            .attr("border", "#b41930")
+            .attr("class", "top-right-image")
+            .attr("xlink:href", `./images/image_${data[0].key}.png`);
+
         svg.selectAll("image")
             .data(data)
             .enter()
@@ -204,8 +213,20 @@
             .attr("id", d => `scatterplot-image-${d.key}`)
             .on("click", d => {
                 chosenImg = parseInt(d.key);
-                d3.selectAll(".scatterplot-image").classed("g1-selected-image", false);
-                d3.select("#scatterplot-image-" + d.key).classed("g1-selected-image", true);
+                topRightImage.attr("xlink:href", `./images/image_${d.key}.png`);
+                // d3.selectAll(".scatterplot-image").classed("g1-selected-image", false);
+                // d3.select("#scatterplot-image-" + d.key).classed("g1-selected-image", true);
+
+                svg.selectAll("rect").remove();
+                // Append a new highlight rectangle
+                svg.append("rect")
+                    .attr("x", xScale(d.position[0]) - 14) // Adjust position to be on the border
+                    .attr("y", yScale(d.position[1]) - 14) // Adjust position to be on the border
+                    .attr("width", 28) // Rectangle size
+                    .attr("height", 28) // Rectangle size
+                    .attr("fill", "none")
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 2);
                 updateHeat();
             });
     }).catch(error => {

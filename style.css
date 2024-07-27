@@ -105,6 +105,10 @@ li {
   outline: 5px solid #b41930;
 }
 
+.top-right-image {
+  outline: 2.5px solid #b41930;
+}
+
 .g1-line {
   stroke-width: 3;
 }

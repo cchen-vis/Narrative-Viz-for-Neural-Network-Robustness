@@ -63,7 +63,7 @@ function updateHeat() {
 
 // Building the image selection and the heatmap
 const imgSize = 60;
-const imgMargin = 3;
+const imgMargin = 0;
 let currentEpoch = 1;
 const categories = [
   "airplane",
@@ -123,18 +123,26 @@ const yAccAxis = d3.axisRight(yAcc);
 const heatmap = map
   .append("g")
   .attr("class", "g1-heatmap")
-  .attr("transform", "translate(0," + 2.5 * imgSize + ")");
+  .attr("transform", "translate(0," + 1.25 * imgSize + ")");
 
-const gallery = map.append("g");
-gallery
-  .append("image")
-  .attr("id", "selected-image-in-G1")
-  .attr("class", "global-selected-image")
-  .attr("href", (d, i) => "../images/image_" + pad(i, 3) + ".png")
-  .attr("width", imgSize)
-  .attr("height", imgSize)
-  .attr("x", (d, i) => 1.5 * (imgSize + imgMargin))
-  .attr("y", (d, i) => imgMargin);
+// give heatmap a figure caption
+heatmap
+  .append("text")
+  .attr("class", "g1-heatmap-caption")
+  .attr("x", 0)
+  .attr("y", -10)
+  .text(
+    "The bar chart below presents the output distribution for the selected image. Hover over the left line chart to see the distribution change over epochs."
+  );
+
+// const gallery = map.append("g").attr("class", "selectedImage4view");
+// gallery
+//   .append("image")
+//   .attr("href", (d, i) => "../images/image_" + pad(i, 3) + ".png")
+//   .attr("width", imgSize * 2)
+//   .attr("height", imgSize * 2)
+//   .attr("x", (d, i) => 1.5 * (imgSize + imgMargin))
+//   .attr("y", (d, i) => imgMargin);
 
 heatmap
   .selectAll(".g1-heatmap-square")
@@ -365,7 +373,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
           if (d === "loss") {
             d3.select(this)
               .select("text")
-              .text(data_G1[epoch - 1].loss);
+              .text(parseFloat(data_G1[epoch - 1].loss).toFixed(2));
             return (
               "translate(" +
               x(epoch) +
