@@ -9,13 +9,13 @@ var ribbonG_g3 = d3
   .attr("width", "600px")
   .attr("height", "600px");
 
-var imgSelectG_g3 = d3
-  .select("#G3")
-  .append("svg")
-  .attr("id", "imgSelect")
-  .attr("transform", "translate(-50,0)")
-  .attr("width", "120px")
-  .attr("height", "600px");
+// var imgSelectG_g3 = d3
+//   .select("#G3")
+//   .append("svg")
+//   .attr("id", "imgSelect")
+//   .attr("transform", "translate(-50,0)")
+//   .attr("width", "120px")
+//   .attr("height", "600px");
 
 var ribbonG_g2 = d3
   .select("#G3")
@@ -198,23 +198,23 @@ ribbonG_g2
 
 d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
   d3.json("../Datasets/stepWiseProb_AT.json").then((at_data) => {
-    // Initialize image select
-    for (i = 0; i < 10; i++) {
-      filepath = "../Datasets/images/img" + i + "0.png";
+    // // Initialize image select
+    // for (i = 0; i < 10; i++) {
+    //   filepath = "../Datasets/images/img" + i + "0.png";
 
-      imgSelectG_g3
-        .append("image")
-        .attr("x", (i % 2) * 55 + 5)
-        .attr("y", Math.floor(i / 2) * 55 + 155)
-        .on("click", onImgSelectG3)
-        .attr("xlink:href", function () {
-          return filepath;
-        })
-        .attr("width", 50)
-        .attr("height", 50)
-        .attr("class", i == 0 ? "G3_image_selected" : "G3_image")
-        .style("outline", i == 0 ? "5px solid gold" : "none");
-    }
+    //   imgSelectG_g3
+    //     .append("image")
+    //     .attr("x", (i % 2) * 55 + 5)
+    //     .attr("y", Math.floor(i / 2) * 55 + 155)
+    //     .on("click", onImgSelectG3)
+    //     .attr("xlink:href", function () {
+    //       return filepath;
+    //     })
+    //     .attr("width", 50)
+    //     .attr("height", 50)
+    //     .attr("class", i == 0 ? "G3_image_selected" : "G3_image")
+    //     .style("outline", i == 0 ? "5px solid gold" : "none");
+    // }
 
     // Initialize ribbon chart
     ribbonG_g3

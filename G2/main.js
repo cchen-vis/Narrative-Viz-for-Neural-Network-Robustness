@@ -1,15 +1,14 @@
-var img = 0;
 var epoch = 0;
 var alpha = 0.8;
 
 var container = d3.select("#G2");
 
-var imgSelectG = container
-  .append("svg")
-  .attr("id", "imgSelect_g2")
-  .attr("width", "210")
-  .attr("height", "500")
-  .attr("transform", "translate(0,0)");
+// var imgSelectG = container
+//   .append("svg")
+//   .attr("id", "imgSelect_g2")
+//   .attr("width", "210")
+//   .attr("height", "500")
+//   .attr("transform", "translate(0,0)");
 var chartG = container
   .append("svg")
   .attr("id", "stackedBarChart")
@@ -126,12 +125,35 @@ chartG
   )
   .text("Predictive Probability");
 
+function onImgSelect_g2() {
+  d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
+    d3.select("#stackedBarChart")
+      .selectAll(".bar rect")
+      .data(prob_data[0][chosenImg])
+      .transition()
+      .attr("height", (d, i) => hScale(0) - hScale(d))
+      .attr("y", (d, i) => hScale(d) + axisPadding)
+      .style("fill", (d, i) => cScale(i));
+
+    // imgCurr.attr("xlink:href", function () {
+    //   return getImageCurr();
+    // });
+    // imgOrig.attr("xlink:href", function () {
+    //   return getImageOrig();
+    // });
+
+    d3.select("#epoch_slider").attr("max", 0).attr("max", 5);
+
+    d3.select("#slider_text").html("PGD Step: " + 0);
+  });
+}
+
 d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
   // Initialize slider and text
   d3.select("#epoch_slider")
     .attr("type", "range")
     .attr("min", 0)
-    .attr("max", 10)
+    .attr("max", 5)
     .attr("value", epoch)
     .on("input", onSlide);
 
@@ -146,7 +168,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
     .html("PGD Step: " + epoch);
 
   // Initialize bar chart
-  data_G2 = prob_data[epoch][img];
+  data_G2 = prob_data[epoch][chosenImg];
 
   var bars = chartG.selectAll(".rect").data(data_G2);
 
@@ -174,71 +196,71 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
       chartG.selectAll(".g2-hoverAddOn").remove();
     });
 
-  // Initialize images
-  var imgOrig = imgSelectG
-    .append("svg:image")
-    .attr("xlink:href", function () {
-      return "../Datasets/images/img00.png";
-    })
-    .attr("x", 40)
-    .attr("y", 300)
-    .attr("width", 75)
-    .attr("height", 75)
-    .attr("transform", "translate(" + imageOffsetX + ",0)");
+  // // Initialize images
+  // var imgOrig = imgSelectG
+  //   .append("svg:image")
+  //   .attr("xlink:href", function () {
+  //     return "../Datasets/images/img00.png";
+  //   })
+  //   .attr("x", 40)
+  //   .attr("y", 300)
+  //   .attr("width", 75)
+  //   .attr("height", 75)
+  //   .attr("transform", "translate(" + imageOffsetX + ",0)");
 
-  var imgCurr = imgSelectG
-    .append("svg:image")
-    .attr("xlink:href", function () {
-      return "../Datasets/images/img00.png";
-    })
-    .attr("x", 120)
-    .attr("y", 300)
-    .attr("width", 75)
-    .attr("height", 75)
-    .attr("transform", "translate(" + imageOffsetX + ",0)");
+  // var imgCurr = imgSelectG
+  //   .append("svg:image")
+  //   .attr("xlink:href", function () {
+  //     return "../Datasets/images/img00.png";
+  //   })
+  //   .attr("x", 120)
+  //   .attr("y", 300)
+  //   .attr("width", 75)
+  //   .attr("height", 75)
+  //   .attr("transform", "translate(" + imageOffsetX + ",0)");
 
-  imgSelectG
-    .append("text")
-    .attr("x", 50)
-    .attr("y", 330)
-    .attr("font-size", "10px")
-    .attr("font-weight", "bold")
-    .text("Original Image")
-    .attr("transform", "translate(" + (imageOffsetX - 15) + ",60)");
+  // imgSelectG
+  //   .append("text")
+  //   .attr("x", 50)
+  //   .attr("y", 330)
+  //   .attr("font-size", "10px")
+  //   .attr("font-weight", "bold")
+  //   .text("Original Image")
+  //   .attr("transform", "translate(" + (imageOffsetX - 15) + ",60)");
 
-  imgSelectG
-    .append("text")
-    .attr("x", 50)
-    .attr("y", 330)
-    .attr("font-size", "10px")
-    .attr("font-weight", "bold")
-    .text("Adversarial Image")
-    .attr("transform", "translate(" + (imageOffsetX + 65) + ",60)");
+  // imgSelectG
+  //   .append("text")
+  //   .attr("x", 50)
+  //   .attr("y", 330)
+  //   .attr("font-size", "10px")
+  //   .attr("font-weight", "bold")
+  //   .text("Adversarial Image")
+  //   .attr("transform", "translate(" + (imageOffsetX + 65) + ",60)");
 
-  // Initialize image select
-  for (i = 0; i < 10; i++) {
-    filepath = "../Datasets/images/img" + i + "0.png";
+  // // Initialize image select
+  // for (i = 0; i < 10; i++) {
+  //   filepath = "../Datasets/images/img" + i + "0.png";
 
-    imgSelectG
-      .append("image")
-      .attr("x", (i % 2) * 55 + 65)
-      .attr("y", Math.floor(i / 2) * 55 + 5)
-      .on("click", onImgSelect)
-      .attr("xlink:href", function () {
-        return filepath;
-      })
-      .attr("width", 50)
-      .attr("height", 50)
-      .attr("class", i == 0 ? "G2_image_selected" : "G2_image")
-      .style("outline", i == 0 ? "5px solid gold" : "none");
-  }
+  //   imgSelectG
+  //     .append("image")
+  //     .attr("x", (i % 2) * 55 + 65)
+  //     .attr("y", Math.floor(i / 2) * 55 + 5)
+  //     .on("click", onImgSelect)
+  //     .attr("xlink:href", function () {
+  //       return filepath;
+  //     })
+  //     .attr("width", 50)
+  //     .attr("height", 50)
+  //     .attr("class", i == 0 ? "G2_image_selected" : "G2_image")
+  //     .style("outline", i == 0 ? "5px solid gold" : "none");
+  // }
 
   // Event callback
   function onSlide() {
     epoch = this.value;
     d3.select("#slider_text").html("PGD Step: " + epoch);
 
-    data_G2 = prob_data[epoch][img];
+    data_G2 = prob_data[epoch][chosenImg];
     var thisSvg = d3.select("#stackedBarChart");
     var barRect = thisSvg.selectAll(".bar rect");
 
@@ -249,45 +271,9 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
       .attr("y", (d, i) => hScale(d) + axisPadding)
       .style("fill", (d, i) => cScale(i));
 
-    imgCurr.attr("xlink:href", function () {
-      return getImageCurr();
-    });
-  }
-
-  function onImgSelect() {
-    let thisXAttr = d3.select(this).attr("x");
-    let thisyAttr = d3.select(this).attr("y");
-    epoch = 0;
-    img = 2 * ((thisyAttr - 5) / 55) + (thisXAttr - 65) / 55;
-
-    d3.select(".G2_image_selected")
-      .style("outline", "none")
-      .attr("class", "G2_image");
-    d3.select(this)
-      .style("outline", "5px solid gold")
-      .attr("class", "G2_image_selected");
-
-    data_G2 = prob_data[epoch][img];
-    var thisSvg = d3.select("#stackedBarChart");
-    var barRect = thisSvg.selectAll(".bar rect");
-
-    barRect
-      .data(data_G2)
-      .transition()
-      .attr("height", (d, i) => hScale(0) - hScale(d))
-      .attr("y", (d, i) => hScale(d) + axisPadding)
-      .style("fill", (d, i) => cScale(i));
-
-    imgCurr.attr("xlink:href", function () {
-      return getImageCurr();
-    });
-    imgOrig.attr("xlink:href", function () {
-      return getImageOrig();
-    });
-
-    d3.select("#epoch_slider").attr("max", 0).attr("max", 10);
-
-    d3.select("#slider_text").html("PGD Step: " + 0);
+    // imgCurr.attr("xlink:href", function () {
+    //   return getImageCurr();
+    // });
   }
 
   // Uses d3.stack to get data in format for stacked area chart
