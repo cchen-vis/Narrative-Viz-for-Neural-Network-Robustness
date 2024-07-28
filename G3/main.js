@@ -1,5 +1,3 @@
-var img_g3 = 0;
-
 // Create SVG containers
 var ribbonG_g3 = d3
   .select("#G3")
@@ -27,7 +25,7 @@ var ribbonG_g2 = d3
 
 // Global constants
 var margin_g3 = 200;
-var chartWidth_g3 = parseInt(ribbonG_g3.attr("width")) - margin_g3;
+var chartWidth_g3 = (parseInt(ribbonG_g3.attr("width")) - margin_g3) / 2;
 var chartHeight_g3 = parseInt(ribbonG_g3.attr("height")) - margin_g3;
 var axisPadding_g3 = margin_g3 / 2;
 var axisPadding = margin_G2 / 2;
@@ -64,7 +62,7 @@ var hScale_g3 = d3.scaleLinear().domain([0, 100]).range([chartHeight_g3, 1]);
 var XScale0_g3 = d3.scaleLinear().domain([5, 105]).range([0, chartWidth_g3]);
 var xScaleRibbon_g3 = d3
   .scaleLinear()
-  .domain([-0.5, 10.5])
+  .domain([-0.5, 5.5])
   .range([0, chartWidth_g3]);
 var yScaleRibbon_g3 = d3
   .scaleLinear()
@@ -73,7 +71,7 @@ var yScaleRibbon_g3 = d3
 var cScaleRibbon_g3 = d3.scaleOrdinal().domain(keys).range(d3.schemeTableau10);
 var xScaleRibbon_g2 = d3
   .scaleLinear()
-  .domain([-0.5, 10.5])
+  .domain([-0.5, 5.5])
   .range([0, chartWidth_g3]);
 var yScaleRibbon_g2 = d3
   .scaleLinear()
@@ -296,7 +294,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
     function onImgSelectG3() {
       let thisXAttr = d3.select(this).attr("x");
       let thisYAttr = d3.select(this).attr("y");
-      img_g3 = 2 * ((thisYAttr - 155) / 55) + (thisXAttr - 5) / 55;
+      chosenImg = 2 * ((thisYAttr - 155) / 55) + (thisXAttr - 5) / 55;
 
       d3.select(".G3_image_selected")
         .style("outline", "none")
@@ -393,10 +391,10 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
     // Uses d3.stack to get data in format for stacked area chart
     function getStackedDataG3() {
       ribbonData = Array();
-      for (i = 0; i <= 10; i++) {
+      for (i = 0; i <= 5; i++) {
         dict = { step: i };
         for (j = 0; j < 10; j++) {
-          dict[convertLabel(j)] = at_data[String(i)][img_g3][j];
+          dict[convertLabel(j)] = at_data[String(i)][chosenImg][j];
         }
         ribbonData.push(dict);
       }
@@ -425,7 +423,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
       }
 
       // For all steps of PGD...
-      for (j = 0; j < 11; j++) {
+      for (j = 0; j <= 5; j++) {
         diffs = [];
         // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
         for (i = 0; i < 10; i++) {
@@ -469,15 +467,16 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
           }
         }
       }
+      console.log(final_data);
       return final_data;
     }
 
     function getStackedData() {
       ribbonData = Array();
-      for (i = 0; i <= 10; i++) {
+      for (i = 0; i <= 5; i++) {
         dict = { step: i };
         for (j = 0; j < 10; j++) {
-          dict[convertLabel(j)] = nt_data[String(i)][img_g3][j];
+          dict[convertLabel(j)] = nt_data[String(i)][chosenImg][j];
         }
         ribbonData.push(dict);
       }
@@ -506,7 +505,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
       }
 
       // For all steps of PGD...
-      for (j = 0; j < 11; j++) {
+      for (j = 0; j <= 5; j++) {
         diffs = [];
         // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
         for (i = 0; i < 10; i++) {
@@ -586,9 +585,9 @@ function convertToColor(i) {
 }
 
 function getImageOrig() {
-  return "../Datasets/images/img" + String(img_g3) + String(0) + ".png";
+  return "../Datasets/images/img" + String(chosenImg) + String(0) + ".png";
 }
 
 function getImageCurr() {
-  return "../Datasets/images/img" + String(img_g3) + String(epoch) + ".png";
+  return "../Datasets/images/img" + String(chosenImg) + String(epoch) + ".png";
 }
