@@ -7,13 +7,13 @@ var ribbonG_g3 = d3
   .attr("width", "600px")
   .attr("height", "600px");
 
-// var imgSelectG_g3 = d3
-//   .select("#G3")
-//   .append("svg")
-//   .attr("id", "imgSelect")
-//   .attr("transform", "translate(-50,0)")
-//   .attr("width", "120px")
-//   .attr("height", "600px");
+var imgSelectG_g3 = d3
+  .select("#G3")
+  .append("svg")
+  .attr("id", "imgSelect")
+  .attr("transform", "translate(-50,0)")
+  .attr("width", "120px")
+  .attr("height", "600px");
 
 var ribbonG_g2 = d3
   .select("#G3")
@@ -25,7 +25,7 @@ var ribbonG_g2 = d3
 
 // Global constants
 var margin_g3 = 200;
-var chartWidth_g3 = (parseInt(ribbonG_g3.attr("width")) - margin_g3) / 2;
+var chartWidth_g3 = parseInt(ribbonG_g3.attr("width")) - margin_g3;
 var chartHeight_g3 = parseInt(ribbonG_g3.attr("height")) - margin_g3;
 var axisPadding_g3 = margin_g3 / 2;
 var axisPadding = margin_G2 / 2;
@@ -62,7 +62,7 @@ var hScale_g3 = d3.scaleLinear().domain([0, 100]).range([chartHeight_g3, 1]);
 var XScale0_g3 = d3.scaleLinear().domain([5, 105]).range([0, chartWidth_g3]);
 var xScaleRibbon_g3 = d3
   .scaleLinear()
-  .domain([-0.5, 5.5])
+  .domain([-0.5, 10.5])
   .range([0, chartWidth_g3]);
 var yScaleRibbon_g3 = d3
   .scaleLinear()
@@ -71,7 +71,7 @@ var yScaleRibbon_g3 = d3
 var cScaleRibbon_g3 = d3.scaleOrdinal().domain(keys).range(d3.schemeTableau10);
 var xScaleRibbon_g2 = d3
   .scaleLinear()
-  .domain([-0.5, 5.5])
+  .domain([-0.5, 10.5])
   .range([0, chartWidth_g3]);
 var yScaleRibbon_g2 = d3
   .scaleLinear()
@@ -196,23 +196,23 @@ ribbonG_g2
 
 d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
   d3.json("../Datasets/stepWiseProb_AT.json").then((at_data) => {
-    // // Initialize image select
-    // for (i = 0; i < 10; i++) {
-    //   filepath = "../Datasets/images/img" + i + "0.png";
+    // Initialize image select
+    for (i = 0; i < 10; i++) {
+      filepath = "../Datasets/images/img" + i + "0.png";
 
-    //   imgSelectG_g3
-    //     .append("image")
-    //     .attr("x", (i % 2) * 55 + 5)
-    //     .attr("y", Math.floor(i / 2) * 55 + 155)
-    //     .on("click", onImgSelectG3)
-    //     .attr("xlink:href", function () {
-    //       return filepath;
-    //     })
-    //     .attr("width", 50)
-    //     .attr("height", 50)
-    //     .attr("class", i == 0 ? "G3_image_selected" : "G3_image")
-    //     .style("outline", i == 0 ? "5px solid gold" : "none");
-    // }
+      imgSelectG_g3
+        .append("image")
+        .attr("x", (i % 2) * 55 + 5)
+        .attr("y", Math.floor(i / 2) * 55 + 155)
+        .on("click", onImgSelectG3)
+        .attr("xlink:href", function () {
+          return filepath;
+        })
+        .attr("width", 50)
+        .attr("height", 50)
+        .attr("class", i == 0 ? "G3_image_selected" : "G3_image")
+        .style("outline", i == 0 ? "5px solid gold" : "none");
+    }
 
     // Initialize ribbon chart
     ribbonG_g3
@@ -221,8 +221,9 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
       .enter()
       .append("path")
       // .style("stroke", function(d) { return cScaleRibbon_g3(d.key); })
-      .style("fill", function (d) {
-        return cScaleRibbon_g3(d.key);
+      .style("fill", function (d, i) {
+        console.log(d);
+        return colors[i];
       })
       .style("opacity", 0.6)
       .attr("class", "area_g3")
@@ -262,8 +263,9 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
       .enter()
       .append("path")
       // .style("stroke", function(d) { return cScaleRibbon_g2(d.key); })
-      .style("fill", function (d) {
-        return cScaleRibbon_g2(d.key);
+      .style("fill", function (d, i) {
+        console.log(d);
+        return colors[i];
       })
       .style("opacity", 0.6)
       .attr("class", "area_g2")
@@ -419,11 +421,11 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
       // Create new data structure mimicking stackedData
       final_data = new Array(10);
       for (i = 0; i < 10; i++) {
-        final_data[i] = { key: convertLabel(i), length: 11 };
+        final_data[i] = [];
       }
 
       // For all steps of PGD...
-      for (j = 0; j <= 5; j++) {
+      for (j = 0; j < 6; j++) {
         diffs = [];
         // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
         for (i = 0; i < 10; i++) {
@@ -501,11 +503,11 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
       // Create new data structure mimicking stackedData
       final_data = new Array(10);
       for (i = 0; i < 10; i++) {
-        final_data[i] = { key: convertLabel(i), length: 11 };
+        final_data[i] = [];
       }
 
       // For all steps of PGD...
-      for (j = 0; j <= 5; j++) {
+      for (j = 0; j < 6; j++) {
         diffs = [];
         // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
         for (i = 0; i < 10; i++) {
