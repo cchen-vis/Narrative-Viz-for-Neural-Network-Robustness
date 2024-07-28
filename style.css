@@ -91,9 +91,9 @@ li {
   -webkit-text-size-adjust: 100%;
 }
 
-/* .div4G {
-    display: flex;
-} */
+.div4G {
+  width: 100%;
+}
 
 /* G1 */
 #G1 {
@@ -185,4 +185,23 @@ circle {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: flex-start;
+}
+
+.button4G4 {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffa500; /* Dark Orange */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.button4G4:hover {
+  background-color: #ff8c00; /* Light Orange */
+}
+.button4G4.clicked {
+  background-color: #ff4500; /* Orange Red */
+  transform: scale(1.1);
 }

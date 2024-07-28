@@ -6,7 +6,7 @@
 <title>A Visual Tour to Empirical Neural Network Robustness</title>
 <link rel="stylesheet" href="./style.css">
 <link rel="stylesheet" href="./distill.css">
-<script src="//polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<!-- <script src="//polyfill.io/v3/polyfill.min.js?features=es6"></script> -->
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="template.v1.js"></script>
 <script src="//d3js.org/d3.v5.min.js"></script>
@@ -134,6 +134,13 @@
                 gives a sense about how this tradeoff looks during training.
             </p>
             <section id="section4G4">
+                <div style="text-align:center;">
+                    <button class="button4G4" data-value="1" onclick="showAcc(1)"> \(\epsilon=\frac{1}{255}\) </button>
+                    <button class="button4G4" data-value="2" onclick="showAcc(2)">\(\epsilon=\frac{2}{255}\)</button>
+                    <button class="button4G4" data-value="4" onclick="showAcc(4)">\(\epsilon=\frac{4}{255}\)</button>
+                    <button id="defaultButton" class="button4G4" data-value="8" onclick="showAcc(8)">\(\epsilon=\frac{8}{255}\)</button>
+                    <button class="button4G4" data-value="16" onclick="showAcc(16)">\(\epsilon=\frac{16}{255}\)</button>
+                </div>
                 <div id="div4G4" class="div4G" style="text-align:center;">
                     <svg id="G4"></svg>
                 </div>
@@ -199,6 +206,11 @@
         });
     }
     var chosenImg = 0;
+
+    window.onload = function() {
+        document.getElementById('defaultButton').classList.add('clicked');
+    };
+
     // D3 script to load JSON and render scatter plot
     d3.json('./Datasets/_projections.json').then(data => {
         const margin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -261,6 +273,7 @@
                     .attr("stroke-width", 2);
                 updateHeat();
                 onImgSelect_g2();
+                onImgSelectG3();
             });
 
         svg.append("rect")

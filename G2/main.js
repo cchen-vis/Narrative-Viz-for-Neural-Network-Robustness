@@ -69,13 +69,6 @@ var xScale = d3
     "truck",
   ])
   .range([0, chartWidth]);
-var xScaleRibbon_g2 = d3
-  .scaleLinear()
-  .domain([-0.5, 10.5])
-  .range([0, chartWidth]);
-var yScaleRibbon_g2 = d3.scaleLinear().domain([0, 1]).range([chartHeight, 0]);
-var cScaleRibbon_g2 = d3.scaleOrdinal().domain(keys).range(colors);
-var cLegendRibbon_g2 = d3.legendColor().scale(cScaleRibbon_g2);
 
 // Axis Rendering
 var xAxis = d3.axisBottom(xScale);
@@ -99,9 +92,6 @@ xAxisG
   .attr("class", "x label")
   .attr("transform", "translate(300,25)")
   .text("Class Label");
-
-var xAxis_g2 = d3.axisBottom(xScaleRibbon_g2);
-var yAxis_g2 = d3.axisLeft(yScaleRibbon_g2);
 
 // Axis labels
 chartG
@@ -274,96 +264,6 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
     // imgCurr.attr("xlink:href", function () {
     //   return getImageCurr();
     // });
-  }
-
-  // Uses d3.stack to get data in format for stacked area chart
-  function getStackedData() {
-    ribbonData = Array();
-    for (i = 0; i <= 10; i++) {
-      dict = { step: i };
-      for (j = 0; j < 10; j++) {
-        dict[convertLabel(j)] = prob_data[String(i)][img][j];
-      }
-      ribbonData.push(dict);
-    }
-
-    // Get data in format amenable to ribbon chart
-    stackedData = d3
-      .stack()
-      .keys([
-        "airplane",
-        "automobile",
-        "bird",
-        "cat",
-        "deer",
-        "dog",
-        "frog",
-        "horse",
-        "ship",
-        "truck",
-      ])
-      .order(d3.stackOrderAscending)(ribbonData);
-
-    // Create new data structure mimicking stackedData
-    final_data = new Array(10);
-    for (i = 0; i < 10; i++) {
-      final_data[i] = { key: convertLabel(i), length: 11 };
-    }
-
-    // For all steps of PGD...
-    for (j = 0; j < 11; j++) {
-      diffs = [];
-      // Calculate the difference in y values (i.e. the size of the area at each step of PGD)
-      for (i = 0; i < 10; i++) {
-        arr = stackedData[i][j];
-        diffs.push(arr[1] - arr[0]);
-      }
-
-      // Sort data by decreasing area
-      indices = new Array(10);
-      for (k = 0; k < 10; ++k) indices[k] = k;
-      indices.sort(function (a, b) {
-        return diffs[a] > diffs[b] ? -1 : diffs[a] < diffs[b] ? 1 : 0;
-      });
-
-      // Convert stackedData to sorted order
-      // Also converts raw data to pixel coordinates, so we can vertically shift areas as needed
-      final_data[indices[0]][j] = [
-        yScaleRibbon_g2(stackedData[indices[0]][j][0]) -
-          yScaleRibbon_g2(stackedData[indices[0]][j][1]),
-        0,
-      ];
-      for (l = 1; l < indices.length; l++) {
-        final_data[indices[l]][j] = [
-          final_data[indices[l - 1]][j][0] +
-            yScaleRibbon_g2(stackedData[indices[l]][j][0]) -
-            yScaleRibbon_g2(stackedData[indices[l]][j][1]),
-          final_data[indices[l - 1]][j][0],
-        ];
-      }
-
-      min_height = 2.5;
-      for (l = 0; l < indices.length; l++) {
-        arr = final_data[indices[l]][j];
-        if (Math.abs(arr[0] - arr[1]) < min_height) {
-          arr[1] = arr[0] - min_height;
-          for (k = 1; k < l; k++) {
-            final_data[indices[k]][j][0] -= min_height;
-            final_data[indices[k]][j][1] -= min_height;
-          }
-          final_data[indices[0]][j][0] -= min_height;
-        }
-      }
-    }
-    return final_data;
-  }
-
-  function getImageOrig() {
-    return "../Datasets/images/img" + String(img) + String(0) + ".png";
-  }
-
-  function getImageCurr() {
-    return "../Datasets/images/img" + String(img) + String(epoch) + ".png";
   }
 });
 
