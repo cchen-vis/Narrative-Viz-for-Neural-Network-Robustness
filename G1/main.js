@@ -10,6 +10,7 @@ function pad(num, size) {
 function updateHeat() {
   const animTime = 50;
   const animStyle = d3.easeLinear; //x => (x < 0.5) ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
+  if (steps === undefined) return;
   heatmap
     .selectAll(".g1-heatmap-square")
     .sort((a, b) =>
@@ -130,16 +131,16 @@ const heatmap = map
   .attr("class", "g1-heatmap")
   .attr("transform", "translate(0," + 1.5 * imgSize + ")");
 
-// give heatmap a figure caption
-heatmap
-  .append("text")
-  .attr("class", "g1-heatmap-caption")
-  .attr("x", 0)
-  .attr("y", -70)
-  .text(
-    "The bar chart below presents the output distribution for the selected image. Hover over the left line chart to see the distribution change over epochs."
-  )
-  .call(wrap, 0.3 * width);
+// // give heatmap a figure caption
+// heatmap
+//   .append("text")
+//   .attr("class", "g1-heatmap-caption")
+//   .attr("x", 0)
+//   .attr("y", -100)
+//   .text(
+//     "The bar chart below presents the output distribution for the selected image. Hover over the left line chart to see the distribution change over epochs."
+//   )
+//   .call(wrap, 0.3 * width);
 
 heatmap
   .selectAll(".g1-heatmap-square")

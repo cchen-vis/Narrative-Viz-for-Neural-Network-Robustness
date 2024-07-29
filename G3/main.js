@@ -318,6 +318,9 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
 
 // Uses d3.stack to get data in format for stacked area chart
 function getStackedDataG3() {
+  if (swP_AT == undefined) {
+    return;
+  }
   ribbonData = Array();
   for (i = 0; i <= 5; i++) {
     dict = { step: i };
@@ -399,6 +402,9 @@ function getStackedDataG3() {
 }
 
 function getStackedData() {
+  if (swP_NT == undefined) {
+    return;
+  }
   ribbonData = Array();
   for (i = 0; i <= 5; i++) {
     dict = { step: i };
