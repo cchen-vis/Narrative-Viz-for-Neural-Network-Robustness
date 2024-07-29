@@ -42,7 +42,7 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
   svg_g5
     .append("text")
     .attr("class", "g5-xaxis-label")
-    .attr("x", width)
+    .attr("x", 0.6 * width)
     .attr("dy", height + 35)
     .style("text-anchor", "end")
     .text("Clean Accuracy (%)");

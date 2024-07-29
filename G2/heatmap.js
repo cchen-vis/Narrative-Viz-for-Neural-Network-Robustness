@@ -111,6 +111,7 @@ d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
         .attr("dy", "0.35em")
         .attr("text-anchor", "middle")
         .attr("fill", thisPercentage > 50 ? "white" : "black")
+        .attr("mouse-event", "none")
         .text(`${thisPercentage.toFixed(2)}%`);
     })
     .on("mouseout", function () {
@@ -265,12 +266,7 @@ function updateG2Heatmap(step) {
       .domain([0, 100]);
 
     // Update the heatmap cells
-    const cells = svg
-      .selectAll(".cell")
-      .data(
-        confusionMatrix.flat(),
-        (d, i) => `cell-${parseInt(i / 10)}-${i % 10}`
-      );
+    const cells = svg.selectAll(".cell").data(confusionMatrix.flat());
     cells
       .enter()
       .append("rect")
@@ -299,6 +295,7 @@ function updateG2Heatmap(step) {
           .attr("dy", "0.35em")
           .attr("text-anchor", "middle")
           .attr("fill", thisPercentage > 50 ? "white" : "black")
+          .attr("mouse-event", "none")
           .text(`${thisPercentage.toFixed(2)}%`);
       })
       .on("mouseout", function () {
