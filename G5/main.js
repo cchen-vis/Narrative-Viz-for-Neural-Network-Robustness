@@ -47,12 +47,6 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
     .style("text-anchor", "end")
     .text("Clean Accuracy (%)");
 
-  // var tooltip_g5 = d3.select("#div4G5")
-  //     .append("div")
-  //     .style("position", "absolute")
-  //     .style("visibility", "hidden")
-  //     .text("I'm a tooltip!");
-
   svg_g5
     .selectAll(".g5-text")
     .data(data_g5)
@@ -60,11 +54,11 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
     .append("text")
     .attr(
       "x",
-      (d) => x_g5(parseFloat(d.clean_acc)) + 100 * Math.sqrt(parseFloat(d.eps))
+      (d) => x_g5(parseFloat(d.clean_acc)) + 50 * Math.sqrt(parseFloat(d.eps))
     )
     .attr(
       "y",
-      (d) => y_g5(parseFloat(d.adv_acc)) - 100 * Math.sqrt(parseFloat(d.eps))
+      (d) => y_g5(parseFloat(d.adv_acc)) - 50 * Math.sqrt(parseFloat(d.eps))
     )
     .text((d) =>
       d.eps == "0.0000"
@@ -101,15 +95,11 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
       (d) => y_g5(parseFloat(d.adv_acc)) - 50 * Math.sqrt(parseFloat(d.eps))
     )
     .attr("opacity", 0.6)
-    .attr("fill", "#ff8c00")
+    .attr("fill", "#ff4500")
     .attr("stroke", "black")
     .attr("stroke-width", 0.3)
     .on("mouseover", function (d, i) {
       d3.select(this).attr("opacity", 1).attr("stroke-width", 2);
-      // tooltip_g5.style("visibility", "visible");
-      // tooltip_g5.style("top", d3.select(this).attr("cy") + "px")
-      //        .style("left", d3.select(this).attr("cx") + "px")
-      //        .text(EpsLetter + "=" + (d.eps == "0.0000" ? "0" : d.eps == "0.0039" ? "1/255" : d.eps == "0.0078" ? "2/255" : d.eps == "0.0157" ? "4/255" : d.eps == "0.0314" ? "8/255" : "16/255"));
       svg_g5
         .append("line")
         .attr("class", "g5-hoverAddOn")
@@ -149,7 +139,6 @@ d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
     })
     .on("mouseout", function (d, i) {
       d3.select(this).attr("opacity", 0.6).attr("stroke-width", 0.3);
-      // tooltip_g5.style("visibility", "hidden");
       svg_g5.selectAll(".g5-hoverAddOn").remove();
     })
     .on("click", (d) => {});
