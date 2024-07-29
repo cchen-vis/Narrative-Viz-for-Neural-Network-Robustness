@@ -38,6 +38,9 @@ const realLabels = [
   1, 8, 0, 2, 2, 0, 4, 6, 5, 4, 9, 4, 7, 9, 9, 4, 5, 6,
 ];
 
+// Calculate maximum text width for y-axis labels
+const maxTextWidth = 100;
+
 // Load data
 d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
   // Create confusion matrix with percentages
@@ -79,12 +82,8 @@ d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
     .range([heatmapHeight, 0])
     .padding(0.01);
 
-  const colorScale = d3
-    .scaleSequential(d3.interpolatePuBuGn)
-    .domain([0, d3.max(confusionMatrix, (row) => d3.max(row))]);
+  const colorScale = d3.scaleSequential(d3.interpolatePuBuGn).domain([0, 100]);
 
-  // Calculate maximum text width for y-axis labels
-  const maxTextWidth = 100;
   // Draw heatmap cells
   svg
     .selectAll(".cell")
@@ -195,3 +194,117 @@ d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
     .attr("dy", "0.32em")
     .text(d3.format(".1f")(colorScale.domain()[0]) + "%");
 });
+
+var step = 0; // Initial step
+const maxSteps = 5; // Maximum number of steps
+
+const stepText = document.getElementById("step-text");
+const leftArrow = document.getElementById("left-arrow");
+const rightArrow = document.getElementById("right-arrow");
+
+function updateStepText() {
+  stepText.textContent = `after ${step} step(s) of adversarial attack`;
+  updateG2Heatmap(step);
+}
+
+leftArrow.addEventListener("click", () => {
+  if (step > 0) {
+    step--;
+    updateStepText();
+    // Add code here to update the heatmap based on the new step
+  }
+});
+
+rightArrow.addEventListener("click", () => {
+  if (step < maxSteps) {
+    step++;
+    updateStepText();
+    // Add code here to update the heatmap based on the new step
+  }
+});
+
+function updateG2Heatmap(step) {
+  // Add code here to update the heatmap based on the new step
+  d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
+    // Create confusion matrix with percentages
+    const confusionMatrix = Array.from({ length: 10 }, () => Array(10).fill(0));
+    const labelCounts = Array(10).fill(0);
+
+    data[step.toString()].forEach((imagePredictions, index) => {
+      const realLabel = realLabels[index];
+      const predictedLabel = imagePredictions.indexOf(
+        Math.max(...imagePredictions)
+      );
+      labelCounts[realLabel]++;
+      confusionMatrix[realLabel][predictedLabel]++;
+    });
+
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        confusionMatrix[i][j] = (confusionMatrix[i][j] / labelCounts[i]) * 100;
+      }
+    }
+
+    // Create scales
+    const svg = d3.select("#heatmap svg");
+
+    const xScale = d3
+      .scaleBand()
+      .domain(classLabels)
+      .range([0, heatmapWidth])
+      .padding(0.01);
+
+    const yScale = d3
+      .scaleBand()
+      .domain(classLabels)
+      .range([heatmapHeight, 0])
+      .padding(0.01);
+
+    const colorScale = d3
+      .scaleSequential(d3.interpolatePuBuGn)
+      .domain([0, 100]);
+
+    // Update the heatmap cells
+    const cells = svg
+      .selectAll(".cell")
+      .data(
+        confusionMatrix.flat(),
+        (d, i) => `cell-${parseInt(i / 10)}-${i % 10}`
+      );
+    cells
+      .enter()
+      .append("rect")
+      .attr("class", "cell")
+      .merge(cells)
+      .attr("y", (d, i) => yScale(classLabels[parseInt(i / 10)]))
+      .attr("x", (d, i) => xScale(classLabels[i % 10]) + maxTextWidth)
+      .attr("width", xScale.bandwidth())
+      .attr("height", yScale.bandwidth())
+      .attr("id", (d, i) => `cell-${parseInt(i / 10)}-${i % 10}-${d}`)
+      .attr("fill", (d) => colorScale(d))
+      .attr("cursor", "pointer")
+      .on("mouseover", function (event, d) {
+        let thisPercentage = parseFloat(this.id.split("-")[3]);
+        // Calculate the center of the cell
+        const x =
+          parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() / 2;
+        const y =
+          parseFloat(d3.select(this).attr("y")) + yScale.bandwidth() / 2;
+        // Append a text element to display the data
+        svg
+          .append("text")
+          .attr("class", "cell-tooltip")
+          .attr("x", x)
+          .attr("y", y)
+          .attr("dy", "0.35em")
+          .attr("text-anchor", "middle")
+          .attr("fill", thisPercentage > 50 ? "white" : "black")
+          .text(`${thisPercentage.toFixed(2)}%`);
+      })
+      .on("mouseout", function () {
+        svg.selectAll(".cell-tooltip").remove();
+      });
+
+    cells.exit().remove();
+  });
+}

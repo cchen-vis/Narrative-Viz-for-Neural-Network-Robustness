@@ -342,7 +342,6 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
         d3.selectAll(".g1-mouse-per-line text").style("opacity", "0");
       })
       .on("mouseover", () => {
-        console.log("hovered!");
         d3.select(".g1-mouse-line").style("opacity", "1");
         d3.selectAll(".g1-axis-line").style("opacity", "0.5");
         d3.selectAll(".g1-mouse-per-line circle").style("opacity", "1");
