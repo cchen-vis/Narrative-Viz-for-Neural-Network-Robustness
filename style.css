@@ -6,6 +6,11 @@ body {
   overflow: hidden;
 }
 
+.centered {
+  display: block;
+  text-align: center;
+}
+
 .container {
   display: flex;
   height: 100vh;
@@ -25,6 +30,7 @@ body {
   margin-left: 42.5%;
   overflow-y: auto;
   height: 100vh;
+  scrollbar-width: none;
 }
 
 .scatterplot {
