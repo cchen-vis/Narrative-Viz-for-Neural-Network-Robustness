@@ -1,7 +1,7 @@
 const EpsLetter = "\u03F5";
 const svg_g5 = d3
   .select("#G5")
-  .attr("width", width + margin.left + margin.right + padding)
+  .attr("width", 0.6 * width + margin.left + margin.right + padding)
   .attr("height", height + margin.top + margin.bottom + padding)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -9,7 +9,7 @@ const svg_g5 = d3
   .attr("height", height);
 
 // Scales and Axes
-const x_g5 = d3.scaleLinear().range([0, width]);
+const x_g5 = d3.scaleLinear().range([0, 0.6 * width]);
 const y_g5 = d3.scaleLinear().range([height, 0]);
 
 d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {

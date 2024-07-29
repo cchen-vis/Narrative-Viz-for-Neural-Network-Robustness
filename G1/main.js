@@ -79,32 +79,37 @@ const categories = [
 ];
 
 const margin = { top: 20, right: 40, bottom: 20, left: 40 },
-  width = 600 - margin.left - margin.right,
+  width =
+    document.getElementById("div4G1").clientWidth - margin.left - margin.right,
   height = 500 - margin.top - margin.bottom,
   padding = 50;
 const graph = d3
   .select("#G1")
-  .attr(
-    "width",
-    width + margin.left + margin.right + padding + 5 * imgSize + 4 * imgMargin
-  )
+  .attr("width", width)
   .attr("height", height + margin.top + margin.bottom + padding)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-  .attr("width", width)
+  .attr("width", 0.6 * width)
   .attr("height", height);
 const map = d3
   .select("#G1")
   .append("g")
   .attr(
     "transform",
-    "translate(" + (margin.left + width + padding) + "," + margin.top + ")"
+    "translate(" +
+      (margin.left + 0.6 * width + padding) +
+      "," +
+      margin.top +
+      ")"
   )
-  .attr("width", width)
+  .attr("width", 0.4 * width - padding)
   .attr("height", height);
 
 // Scales and Axes
-const x = d3.scaleLinear().domain([1, 100]).range([0, width]);
+const x = d3
+  .scaleLinear()
+  .domain([1, 100])
+  .range([0, 0.6 * width]);
 const yLoss = d3.scaleLinear().domain([0, 2.03]).range([height, 0]);
 const yAcc = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 const color = d3
@@ -114,7 +119,7 @@ const color = d3
 const bar = d3
   .scaleLinear()
   .domain([0, 1])
-  .range([0, imgSize * 5 + imgMargin * 4]);
+  .range([0, 0.4 * width - padding]);
 const barColor = d3.scaleOrdinal().domain(categories).range(d3.schemeTableau10);
 const xAxis_G1 = d3.axisBottom(x);
 const yLossAxis = d3.axisLeft(yLoss);
@@ -134,16 +139,7 @@ heatmap
   .text(
     "The bar chart below presents the output distribution for the selected image. Hover over the left line chart to see the distribution change over epochs."
   )
-  .call(wrap, 300);
-
-// const gallery = map.append("g").attr("class", "selectedImage4view");
-// gallery
-//   .append("image")
-//   .attr("href", (d, i) => "../images/image_" + pad(i, 3) + ".png")
-//   .attr("width", imgSize * 2)
-//   .attr("height", imgSize * 2)
-//   .attr("x", (d, i) => 1.5 * (imgSize + imgMargin))
-//   .attr("y", (d, i) => imgMargin);
+  .call(wrap, 0.3 * width);
 
 heatmap
   .selectAll(".g1-heatmap-square")
@@ -207,14 +203,14 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
     axes
       .append("g")
       .attr("class", "g1-acc-yaxis")
-      .attr("transform", "translate(" + width + ",0)")
+      .attr("transform", "translate(" + 0.6 * width + ",0)")
       .call(yAccAxis)
       .select(".domain")
       .attr("stroke", color("accuracy"));
     axes
       .append("text")
       .attr("class", "g1-acc-yaxis-label")
-      .attr("y", width - 20)
+      .attr("y", 0.6 * width - 20)
       .attr("x", 6)
       .attr("dy", ".71em")
       .attr("transform", "rotate(-90)")
@@ -334,7 +330,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
     const lines = document.getElementsByClassName("g1-line");
     mouse
       .append("svg:rect")
-      .attr("width", width)
+      .attr("width", 0.6 * width)
       .attr("height", height)
       .attr("fill", "none")
       .attr("pointer-events", "all")
@@ -367,7 +363,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
         });
         d3.select(".g1-mouse-acc-line").attr("d", function () {
           let d = "M" + x(epoch) + "," + yAcc(data_G1[epoch - 1].clean_acc);
-          d += " " + width + "," + yAcc(data_G1[epoch - 1].clean_acc);
+          d += " " + 0.6 * width + "," + yAcc(data_G1[epoch - 1].clean_acc);
           return d;
         });
         d3.selectAll(".g1-mouse-per-line").attr("transform", function (d) {

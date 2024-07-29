@@ -74,7 +74,7 @@
                 image (2nd row, 1st column) jumps between <i>Cat</i> and <i>Dog</i> many times as the training iterates.
             </p>
             <section id="section4G1">
-                <div class="div4G" style="text-align:center;">
+                <div id="div4G1" class="div4G" style="text-align:center;">
                     <svg id="G1"></svg>
                 </div>
             </section>
@@ -96,9 +96,31 @@
                 attacker succeeds in no more than 3 steps, while the adversarial images look nearly identical to their original counterparts. Do you have any other interesting findings?
             </p>
             <section id="section4G2">
-                <div id="slider" style="height: 100px; width: 400px; position: relative; top: 30px; left: 20%; z-index: 99;">
-                    <input id="epoch_slider">
-                    <p id="slider_text"></p>
+                <div id="imagesG2" class="div4G">
+                    <div class="image-container">
+                        <div class="image-title">Original</div>
+                        <img src="./images_AT/image_0_000.png" class="clickable-image" data-index="1" alt="Image 1" id="image-g2-0">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 1</div>
+                        <img src="./images_AT/image_1_000.png" class="clickable-image" data-index="2" alt="Image 2" id="image-g2-1">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 2</div>
+                        <img src="./images_AT/image_2_000.png" class="clickable-image" data-index="3" alt="Image 3" id="image-g2-2">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 3</div>
+                        <img src="./images_AT/image_3_000.png" class="clickable-image" data-index="4" alt="Image 4" id="image-g2-3">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 4</div>
+                        <img src="./images_AT/image_4_000.png" class="clickable-image" data-index="5" alt="Image 5" id="image-g2-4">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 5</div>
+                        <img src="./images_AT/image_5_000.png" class="clickable-image" data-index="6" alt="Image 6" id="image-g2-5">
+                    </div>
                 </div>
                 <div id="G2" class="div4G" style="text-align:center;">
                 </div>
@@ -242,7 +264,7 @@
             .attr("height", 100) // Larger size
             .attr("border", "#b41930")
             .attr("class", "top-right-image")
-            .attr("xlink:href", `./images/image_${data[158].key}.png`);
+            .attr("xlink:href", `./images/image_${pad(chosenImg, 3)}.png`);
 
         svg.selectAll("image")
             .data(data)
@@ -277,8 +299,8 @@
             });
 
         svg.append("rect")
-            .attr("x", xScale(data[158].position[0]) - 14) // Adjust position to be on the border
-            .attr("y", yScale(data[158].position[1]) - 14) // Adjust position to be on the border
+            .attr("x", xScale(data[157].position[0]) - 14) // Adjust position to be on the border
+            .attr("y", yScale(data[157].position[1]) - 14) // Adjust position to be on the border
             .attr("width", 28) // Rectangle size
             .attr("height", 28) // Rectangle size
             .attr("fill", "none")

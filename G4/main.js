@@ -2,7 +2,7 @@ let samples;
 
 const svg_g4 = d3
   .select("#G4")
-  .attr("width", width + margin.left + margin.right + padding)
+  .attr("width", 0.6 * width + margin.left + margin.right + padding)
   .attr("height", height + margin.top + margin.bottom + padding)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -10,7 +10,7 @@ const svg_g4 = d3
   .attr("height", height);
 
 // Scales and Axes
-const x_g4 = d3.scaleLinear().range([0, width]);
+const x_g4 = d3.scaleLinear().range([0, 0.6 * width]);
 const y_g4 = d3.scaleLinear().range([height, 0]);
 const color_g4 = d3.scaleOrdinal().range(d3.schemeSet1);
 
@@ -90,9 +90,9 @@ Promise.all([
     .attr("transform", (d, i) => "translate(0," + (450 + i * 20) + ")");
   legend
     .append("line")
-    .attr("x1", width - 28)
+    .attr("x1", 0.6 * width - 28)
     .attr("y1", -79)
-    .attr("x2", width)
+    .attr("x2", 0.6 * width)
     .attr("y2", -79)
     .style("stroke-dasharray", (d) => {
       if (d.name.split("_")[1] === "adv") return "4";
@@ -100,9 +100,8 @@ Promise.all([
     .style("stroke", (d) => color_g4(d.name.split("_")[0]));
   legend
     .append("text")
-    .attr("x", width - 35)
+    .attr("x", 0.6 * width - 35)
     .attr("y", -75)
-    // .attr("dy", "0.35em")
     .style("text-anchor", "end")
     .text((d) => {
       switch (d.name) {

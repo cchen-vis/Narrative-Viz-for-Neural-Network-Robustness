@@ -205,3 +205,21 @@ circle {
   background-color: #ff4500; /* Orange Red */
   transform: scale(1.1);
 }
+
+#imagesG2 {
+  text-align: center;
+}
+.image-container {
+  display: inline-block;
+  margin: 10px;
+  text-align: center;
+}
+.image-title {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.clickable-image {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
