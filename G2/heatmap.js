@@ -84,7 +84,6 @@ d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
 
   const colorScale = d3.scaleSequential(d3.interpolatePuBuGn).domain([0, 100]);
 
-  
   // Draw heatmap cells
   cells = svg
     .selectAll(".cell")
@@ -266,9 +265,8 @@ rightArrow.addEventListener("click", () => {
 //       .scaleSequential(d3.interpolatePuBuGn)
 //       .domain([0, 100]);
 
-
 //     const cells = svg.selectAll(".cell").data(confusionMatrix.flat());
-  
+
 //     cells
 //       .enter()
 //       .append("rect")
@@ -349,11 +347,11 @@ function updateG2Heatmap(step) {
       .scaleSequential(d3.interpolatePuBuGn)
       .domain([0, 100]);
 
-    cells.data(confusionMatrix.flat())
-        .transition()
-        .duration(1000) // Duration of the transition in milliseconds
-        .attr("id", (d, i) => `cell-${parseInt(i / 10)}-${i % 10}-${d}`)
-        .attr("fill", (d) => colorScale(d));
-    
+    cells
+      .data(confusionMatrix.flat())
+      .transition()
+      .duration(500) // Duration of the transition in milliseconds
+      .attr("id", (d, i) => `cell-${parseInt(i / 10)}-${i % 10}-${d}`)
+      .attr("fill", (d) => colorScale(d));
   });
 }

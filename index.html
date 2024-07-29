@@ -174,9 +174,12 @@
                 <div id="G2" class="div4G" style="text-align:center;">
                 </div>
                 <p class="text4G">                 
-                    In most cases, the attacker succeeds in no more than 3 steps, while the adversarial images look nearly identical to their original counterparts. Do you have any other interesting findings?
+                    Another interesting aspect of the behavior of the PGD attack is that images of different classes typically are perturbed in different directions,
+                    ending up in different wrong classes. To show this phenomenon, we provide below a heatmap visualization that displays the statistics of the predictions
+                    from the model categorized by the 10 classes of the CIFAR-10 dataset. By default, the heatmap shows the predictions of the model on the clean images,
+                    where the diagonal cells are the most dominant, indicating that the model is mostly correct. You can click on the right arrow to see how the predictions 
+                    change drastically as the PGD attack iterates.
                 </p>
-                <p class="text4G"> a heatmap to see probability transfer between categories </p>
                 <div id="heatmap-controls" style="text-align:center;">
                     <button id="left-arrow" class="arrow-button">&#8592;</button>
                     <span id="step-text">after 0 step(s) of adversarial attack</span>
@@ -184,6 +187,15 @@
                   </div>
                 <div id="heatmap" class="div4G" style="text-align:center;">
                 </div>
+                <p class="text4G">                 
+                    Looking at the heatmap after 5 steps of the PGD attack, we can extract some insights:
+                    <ol>
+                        <li> the accuracy of the model on the clean images is nearly 0; </li>
+                        <li> <span style="color: rgb(242, 142, 44);">Automobile</span> images are mostly perturbed into the class <span style="color: rgb(186, 176, 171);">truck</span>, and vice versa; </li>
+                        <li> Both <span style="color: rgb(255, 157, 167);">horse</span> and <span style="color: rgb(237, 201, 73);">dog</span> images are mostly perturbed into the class <span style="color: rgb(118, 183, 178);">cat</span>, while <span style="color: rgb(118, 183, 178);">cat</span> images are more perturbed into the <span style="color: rgb(89, 161, 79);">deer</span> class. </li>
+                    </ol>
+                    Feel free to play with the heatmap (and note that hovering over the cells gives you the corresponding ratio value). Any other interesting observations?
+                </p>
             </section>
             <h2> Adversarial Training </h2>
             <p class="text4G">
