@@ -6,193 +6,418 @@
 <title>A Visual Tour to Empirical Neural Network Robustness</title>
 <link rel="stylesheet" href="./style.css">
 <link rel="stylesheet" href="./distill.css">
-<script src="//polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<!-- <script src="//polyfill.io/v3/polyfill.min.js?features=es6"></script> -->
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="template.v1.js"></script>
 <script src="//d3js.org/d3.v5.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 </head>
 <body>
-    <d-title>
-        <h1>A Visual Tour to Empirical Neural Network Robustness</h1><br>   
-    </d-title>
-    <d-byline>
-  <div class="byline grid">
-    <div class="authors-affiliations grid">
-      <h3>Authors</h3>
-      <h3>Affiliations</h3>
-      
-        <p class="author">
-          
-            <a class="name" href="https://ccdtc.cc/">Chen Chen</a>
-        </p>
-        <p class="affiliation">
-        <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
-        </p>
-      
-        <p class="author">
-          
-            <a class="name" href="https://github.com/ethan-rems">Ethan Remsberg</a>
-        </p>
-        <p class="affiliation">
-        <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
-        </p>
-      
-        <p class="author">
-          
-            <a class="name" href="https://github.com/omivore">Jason Tan</a>
-        </p>
-        <p class="affiliation">
-        <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
-        </p>
-      
+    <div class="container">
+        <div class="fixed-view">
+            <div id="scatterplot" class="scatterplot"></div>
+        </div>
+        <div class="scrollable-views">
+            <d-title>
+                <h1>A Visual Tour to Empirical Neural Network Robustness</h1><br>   
+            </d-title>
+            <d-byline>
+                <div class="byline grid">
+                <div class="authors-affiliations grid">
+                    <h3>Authors</h3>
+                    <h3>Affiliations</h3>
+                    
+                    <p class="author">
+                        
+                        <a class="name" href="https://ccdtc.cc/">Chen Chen</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+
+                    <p class="author">
+                        
+                        <a class="name" href="https://jakobwong.github.io/">Jinbin Huang</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://scai.engineering.asu.edu/">Arizona State Universitd</a>
+                    </p>
+                    
+                    <p class="author">
+                        
+                        <a class="name" href="https://www.linkedin.com/in/ethan-remsberg-052612215/">Ethan Remsberg</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+                    
+                    <p class="author">
+                        
+                        <a class="name" href="https://github.com/omivore">Jason Tan</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+
+                    <p class="author">
+                        
+                        <a class="name" href="https://www.zcliu.org/">Zhicheng Liu</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+                    
+                </div>
+                <div>
+                    <h3>Published</h3>
+                    
+                    <p><em>Not published yet.</em></p>
+                </div>
+                <div>
+                    <h3>DOI</h3>
+                    
+                    <p><em>No DOI yet.</em></p>
+                </div>
+                </div>
+            </d-byline>
+            <h2> Neural Network's Success </h2>
+            <p class="text4G"> Convolutional Neural Networks (CNN) are the most powerful classifiers for image classification tasks at present. 
+                To obtain a CNN classifier, one needs to define (1) a network architecture \(f(w,x)\) parameterized by \(w\), 
+                and (2) a loss function \(L(w, x, y)\), where \(x\) denotes the input images and \(y\) denotes the corresponding class label. 
+                After that, the gradient descent optimization <dt-cite key="ruder2016overview"></dt-cite> can be performed over the loss function to obtain a set of 
+                (approximately) optimal parameters \(w^*\). Then, the CNN model can be used to predict the class label of a new image \(x_{new}\) by
+                <tspan class="centered"> \(\hat{y} = \arg\max_{y} f(w^*, x_{new})_y\) </tspan>
+                where \(f(w^*, x_{new})_y\) denotes the probability of the image \(x_{new}\) belonging to class \(y\).
+                To better understand the architectures of Convolutional Neural Networks and how gradient descent methods 
+                work for neural networks, please check out two nice articales: 
+                <a href="https://poloclub.github.io/cnn-explainer/" target="_blank">CNN Explainer</a> 
+                and <a href="https://xnought.github.io/backprop-explainer/" target="_blank">Backprop Explainer</a>. 
+                <br><br>
+                In this article, we use the classic neural network architecture, ResNet-18 <dt-cite key="he2016deep"></dt-cite>, on one of the benchmark 
+                datasets, CIFAR-10 <dt-cite key="krizhevsky2009learning"></dt-cite>, to illustrate the key insights. 
+                On the left side of the screen, you can see a scatter-plot view of the 2D embeddings of 512 test images from CIFAR-10. The embeddings are generated by
+                the dimension reduction method UMAP <dt-cite key="mcinnes2018umap"></dt-cite> (interested readers can refer to <a href="https://mwli.net/umap-tour/" target="_blank">UMAP Tour</a> 
+                and <a href="https://visxai-dimensionality-reduction-1dbad0a67a092b007c526a45.vercel.app/" target="_blank">Intro to Dimension Reduction</a>), and images of the same 
+                class are mostly clustered together. The bigger image in the top-right corner that is indepedent of the scatter plot is the one that is currently selected. By default we display
+                a <span style="color: rgb(118, 183, 178);">cat</span> image, and you can 
+                select a different image by clicking on the images within the scatter plot. Note that this selection will be synchronized with the visualizations throughout the article.
+                <br><br>
+                In the two visualizations below, we first show how the loss value and the test accuracy evolve, and how the output probabilities from the CNN model change 
+                as the training process goes. Hover over the left-hand-side line chart and move the mouse, you will see the racing bar chart on the right-hand side displaying 
+                the changes of the predictive probabilities at different training epochs. The default selected <span style="color: rgb(118, 183, 178); cursor: pointer;" onclick="triggerImage(245)">cat</span> image is correctly
+                classified by the neural network in most of the late epochs; feel free to select other images to see how the neural network learns (there are definitely misclassified images!).
+            </p>
+            <section id="section4G1">
+                <div id="div4G1" class="div4G" style="text-align:center;">
+                    <svg id="G1"></svg>
+                </div>
+            </section>
+            <p class="text4G"> 
+                Depsite the success of neural networks we have just observed, there are behaviors that indicates some potential <b>instability</b>.
+                For example, in epoch 96, the model's prediction over the default <span style="color: rgb(118, 183, 178); cursor: pointer;" onclick="triggerImage(245)">cat</span> image is a frog; 
+                also, although this <span style="color: rgb(89, 161, 79); cursor: pointer;" onclick="triggerImage(188)">dear</span> image is correctly classified,
+                the model's prediction over it jumps between cat, dog, bird, and dear in the last 10 epochs. 
+                Then the question arises: <i> if a small change in the neural network parameters can lead to a significant change in the model's prediction, can a small change 
+                in the input image also lead to a significant change in the model's prediction? </i> The answer is YES, and the following sections will walk you through the answers.
+            </p>
+            <h2> Projected Gradient Descent Attack </h2>
+            <p class="text4G"> Consider the situation where an input image is altered by some small pixel-level noise that is imperceptible to the human eye. 
+                In general, humans will not be fooled; but unfortunately this is not true for neural networks. 
+                In fact, noises found in certain ways are able to mislead a neural network almost always. 
+                One of the popular attack methods is the Projected Gradient Descent (PGD) attack <dt-cite key="goodfellow2014explaining,madry2017towards"></dt-cite>. 
+                As its name indicates, the PGD attack is a gradient-descent-based attacker. 
+                Different from the gradient descent optimization that updates the neural network paramaters to minimize the loss value, 
+                the PGD attacker iteratively perturbs the input image to maximize the loss value so as to mislead the neural network.
+                It mainly contains the following steps:
+                <ol>
+                    <li>Start from a random perturbation \(x^{\prime}\) of a given clean image \(x\) such that \(\|x^{\prime} - x\|_p \leq \epsilon\) where \(\epsilon\) is a small threshold value called attack radius;</li>
+                    <li>Update \(x^{\prime}\) by one step of gradient ascent to increase the loss value, trying to push the network's prediction to be wrong;</li>
+                    <li>Project \(x^{\prime}\) back into the \(\epsilon\)-radius \(L_p\) space if necessary, making sure that the perturbation is within the threshold (small enough);</li>
+                    <li>Repeat the above two stpes until convergence or reaching a maximum number of perturbation allowed (denoted as \(ns\)).</li>
+                </ol>
+            </p>
+            <p class="text4G">
+                Note that the \(\epsilon\)-radius \(L_p\) space above enforces the condition that "<i>the noise is imperceptible to the human eye</i>". 
+                To illustrate the PGD attack, we implement a PGD attacker with hyperparameters \(\{p=+\infty\), \(\epsilon=8/255\), \(ns=5\}\) 
+                and display in the visualizations below how the adversarial images look at different steps of PGD attack and how the neural network's predictions are manipulated.
+                Click on the adversarial images to see the polluted output probabilities from the neural network.
+                It is clear that the attacker can easily mislead the neural network to predict a wrong class label within 3 attack steps, while 
+                the adversarial images look nearly identical to their original counterparts.
+                <br><br>
+            </p>
+            <section id="section4G2">
+                <div id="imagesG2" class="div4G">
+                    <div class="image-container">
+                        <div class="image-title">Original</div>
+                        <img src="./images_AT/image_0_000.png" class="clickable-image" data-index="1" alt="Image 1" id="image-g2-0">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 1</div>
+                        <img src="./images_AT/image_1_000.png" class="clickable-image" data-index="2" alt="Image 2" id="image-g2-1">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 2</div>
+                        <img src="./images_AT/image_2_000.png" class="clickable-image" data-index="3" alt="Image 3" id="image-g2-2">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 3</div>
+                        <img src="./images_AT/image_3_000.png" class="clickable-image" data-index="4" alt="Image 4" id="image-g2-3">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 4</div>
+                        <img src="./images_AT/image_4_000.png" class="clickable-image" data-index="5" alt="Image 5" id="image-g2-4">
+                    </div>
+                    <div class="image-container">
+                        <div class="image-title">After Step 5</div>
+                        <img src="./images_AT/image_5_000.png" class="clickable-image" data-index="6" alt="Image 6" id="image-g2-5">
+                    </div>
+                </div>
+                <div id="G2" class="div4G" style="text-align:center;">
+                </div>
+                <p class="text4G">                 
+                    Another interesting aspect of the behavior of the PGD attack is that images of different classes typically are perturbed in different directions,
+                    ending up in different wrong classes. To show this phenomenon, we provide below a heatmap visualization that displays the statistics of the predictions
+                    from the model categorized by the 10 classes of the CIFAR-10 dataset. By default, the heatmap shows the predictions of the model on the clean images,
+                    where the diagonal cells are the most dominant, indicating that the model is mostly correct. You can click on the right arrow to see how the predictions 
+                    change drastically as the PGD attack iterates.
+                </p>
+                <div id="heatmap-controls" style="text-align:center;">
+                    <button id="left-arrow" class="arrow-button">&#8592;</button>
+                    <span id="step-text">after 0 step(s) of adversarial attack</span>
+                    <button id="right-arrow" class="arrow-button">&#8594;</button>
+                  </div>
+                <div id="heatmap" class="div4G" style="text-align:center;">
+                </div>
+                <p class="text4G">                 
+                    Looking at the heatmap after 5 steps of the PGD attack, we can extract some insights:
+                    <ol>
+                        <li> The accuracy of the model on the clean images is nearly 0; </li>
+                        <li> <span style="color: rgb(242, 142, 44);">Automobile</span> images are mostly perturbed into the class <span style="color: rgb(186, 176, 171);">truck</span>, and vice versa; </li>
+                        <li> Both <span style="color: rgb(255, 157, 167);">horse</span> and <span style="color: rgb(237, 201, 73);">dog</span> images are mostly perturbed into the class <span style="color: rgb(118, 183, 178);">cat</span>, while <span style="color: rgb(118, 183, 178);">cat</span> images are more perturbed into the <span style="color: rgb(89, 161, 79);">deer</span> class. </li>
+                    </ol>
+                </p>
+                <p class="text4G">
+                    Feel free to play with the heatmap (and note that hovering over the cells gives you the corresponding ratio value). Any other interesting observations?
+                </p>
+            </section>
+            <h2> Adversarial Training </h2>
+            <p class="text4G">
+                Here comes a natural question: can we avoid producing a model that is easy to attack during training? The answer is yes! A popular and effective solution is <i>adversarial training</i> <dt-cite key="madry2017towards"></dt-cite>. The idea is to utilize the PGD attack in your 
+                training process, that is, to train your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind it is not trivial. In standard training, we
+                solve the following minimization problem:
+                $$
+                    \min _{w} \rho(w), \quad \text { where } \quad \rho(w)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[L(w, x, y)\right],
+                $$
+                While in adversarial training, we are solving a Min-Max problem:
+                $$
+                    \min _{w} \rho(w), \quad \text { where } \quad \rho(w)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[\max _{\delta \in \mathcal{S}} L(w, x+\delta, y)\right],
+                $$
+                where \(\mathcal{S} = \{x^{\prime}\mid\|x^{\prime} - x\|_p \leq \epsilon\}\) denotes the \(\epsilon\)-radius \(L_p\) space. 
+                In theory, the convergence condition for such a Min-Max problem over a general
+                function is hard to determine. In practice, adversarial training converges for most neural networks. 
+                <br><br>
+                In the following bump-area chart, we compare the output probabilities of a regular-trained model
+                and an adversarial-trained model when the same PGD attack (whose parameters were mentioned in the last section) is applied, and display how the probabilities flow 
+                as the PGD attack iterates. 
+                You can hover over the area marks in the visualization to compare the output probabilities of the input image being a certain class from the two models.
+                It is clear that the adversarial-trained model is more robust. 
+                For example, the adversarial-trained model predicts correctly on the default <span style="color: rgb(118, 183, 178); cursor: pointer;" onclick="triggerImage(245)">cat</span> image
+                after 5 steps of the PGD attack (the model's confidence is decreased though), while the regular-trained model fails to do so after only 1 step. Select other images to  play!
+            </p>
+            <section id="section4G3">
+                <div id="G3" class="div4G" style="text-align:center;">
+                </div>
+                <p class="text4G">
+                    One thing worth mentioning here is that the adversarial-trained model cannot resist PGD attack all the time: 
+                    its accuracy under the 5-step PGD attack is \(52.03\%\) (that for the regular-trained model is only \(0.04\%\)).
+                </p>
+            </section>
+            <h2>
+                Accuracy-Robustness Tradeoff
+            </h2>
+            <p class="text4G">
+                There is no free lunch: while adversarial training enhances the model's robustness, it comes at the price of a drop in the model's accuracy on clean images; i.e.,
+                the above adversarial-trained model achieves an \(83.34\%\) accuracy on
+                clean test images while that for the regular-trained model is \(91.32\%\). 
+                This creates an Accuracy-Robustness tradeoff, and people are now interested in how we can achieve a good balance by tuning the value of \(\epsilon\) during training. 
+                The line chart below gives a sense about how this tradeoff looks like during training, and you can choose a different \(\epsilon\) value to see how the tradeoff varies.
+            </p>
+            <section id="section4G4">
+                <div style="text-align:center;">
+                    <button class="button4G4" data-value="1" onclick="showAcc(1)"> \(\epsilon=\frac{1}{255}\) </button>
+                    <button class="button4G4" data-value="2" onclick="showAcc(2)">\(\epsilon=\frac{2}{255}\)</button>
+                    <button class="button4G4" data-value="4" onclick="showAcc(4)">\(\epsilon=\frac{4}{255}\)</button>
+                    <button id="defaultButton" class="button4G4" data-value="8" onclick="showAcc(8)">\(\epsilon=\frac{8}{255}\)</button>
+                    <button class="button4G4" data-value="16" onclick="showAcc(16)">\(\epsilon=\frac{16}{255}\)</button>
+                </div>
+                <div id="div4G4" class="div4G" style="text-align:center;">
+                    <svg id="G4"></svg>
+                </div>
+            </section>
+            <p class="text4G">
+                From the visualization we can tell that the Accuracy-Robustness tradeoff is not binary; instead, adversarial training is greatly influenced by the hyperparameter \(\epsilon\). 
+                In general,
+                a smaller \(\epsilon\) leads to an adversarial-trained model that is more accurate on clean images but less resistant to PGD attack, and vice versa. 
+                We further present the clean accuracies and 
+                adversarial accuracies of the above 5 adversarial-trained models with \(\epsilon=1/255,\ 2/255,\ 4/255,\ 8/266,\ 16/255\), respectively,
+                in the following scatterplot.
+                Note that the model with \(\epsilon=16/255\) doesn't bring a better robustness than that of the model with \(\epsilon=8/255\), 
+                thus the tradeoff rule is only valid within a certain range (remember the motivation of adversarial training is to perturb the input very slightly).
+            </p>
+            <section id="section4G5">
+                <div id="div4G5" class="div4G" style="text-align:center;">
+                    <svg id="G5"></svg>
+                </div>
+            </section>
+            <d-bibliography src="bibliography.bib"></d-bibliography>
+            <h3>
+                Citations
+            </h3>
+            <p>
+                [1] Ruder, Sebastian. "An overview of gradient descent optimization algorithms." arXiv preprint arXiv:1609.04747 (2016). <br>
+                [2] He, Kaiming, et al. "Deep residual learning for image recognition." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016. <br>
+                [3] Krizhevsky, Alex, and Geoffrey Hinton. "Learning multiple layers of features from tiny images." (2009): 7.<br>
+                [4] McInnes et al., (2018). UMAP: Uniform Manifold Approximation and Projection. Journal of Open Source Software, 3(29), 861, https://doi.org/10.21105/joss.00861<br>
+                [5] Goodfellow, Ian J., Jonathon Shlens, and Christian Szegedy. "Explaining and harnessing adversarial examples." arXiv preprint arXiv:1412.6572 (2014).<br>
+                [6] Madry, Aleksander, et al. "Towards Deep Learning Models Resistant to Adversarial Attacks." International Conference on Learning Representations. 2018.<br>
+            </p>
+        </div>
     </div>
-    <div>
-      <h3>Published</h3>
-      
-        <p><em>Not published yet.</em></p>
-    </div>
-    <div>
-      <h3>DOI</h3>
-      
-        <p><em>No DOI yet.</em></p>
-    </div>
-  </div>
-</d-byline>
-    <h2> Neural Network's Success </h2>
-    <p class="text4G"> Neural networks are the most powerful classifiers for image classification tasks at present. To obtain such a classifier, one first needs to define a network architecture \(f(w,x)\)
-        parameterized by \(w\) as well as a loss function \(L(w, x, y)\), where \(y\) denotes the real labels, and then perform the gradient descent optimization over the loss function to obtain 
-        a set of (approximately) optimal parameters \(w\). To understand gradient descent method for neural networks, you can check <a href="https://machinelearningmastery.com/a-gentle-introduction-to-gradient-descent-procedure/" target="_blank">this tutorial</a> and <a href="https://xnought.github.io/backprop-explainer/" target="_blank">this interactive article</a>. <br>
-        In the visualizations below, we show how the loss value and the test accuracy evolve, and how the output probabilities change for 10 example images using a benchmark neural network 
-        ResNet-18<dt-cite key="he2016deep"></dt-cite> on the commonly-used dataset CIFAR-10<dt-cite key="krizhevsky2009learning"></dt-cite> (the training details can be found in <dt-cite key="zeng2020adversarial"></dt-cite>) . Select an image, hover over the left-hand-side line chart, and then a racing bar chart 
-        will display the changes of the predictive probabilities at different training epochs. You could find some interesting patterns there; for example, the prediction for the <i>Dog</i> 
-        image (2nd row, 1st column) jumps between <i>Cat</i> and <i>Dog</i> many times as the training iterates.
-    </p>
-    <section id="section4G1">
-        <div class="div4G" style="text-align:center;">
-            <svg id="G1"></svg>
-        </div>
-    </section>
-    <h2> PGD Attack </h2>
-    <p class="text4G"> Consider the situation where an input image is altered by some pixel-level noise that is imperceptible to the human eye. In general, humans won’t be fooled; but unfortunately this is not 
-        true for neural networks. In fact, noises found in certain ways are able to mislead a neural network almost always. One of the popular attack methods is the <i>Projected Gradient Descent (PGD) attack</i> <dt-cite key="goodfellow2014explaining,madry2017towards"></dt-cite>. As its name
-        indicates, the PGD attack is a gradient-based attacker. It mainly contains the following steps:
-        <ol>
-            <li>Start from a random perturbation \(x^{\prime}\) of a given clean image \(x\) such that \(\|x^{\prime} - x\|_p \leq \epsilon\);</li>
-            <li>Update \(x^{\prime}\) by one step of gradient ascent to increase the loss value;</li>
-            <li>Project \(x^{\prime}\) back into the \(\epsilon\)-radius \(L_p\) ball if necessary;</li>
-            <li>Repeat step 2–3 until convergence or reaching a desired number of steps \(ns\).</li>
-        </ol>
-    </p>
-    <p class="text4G">
-        Note that the \(\epsilon\)-radius \(L_p\) ball above enforces the condition that "<i>the noise is imperceptible to the human eye</i>". In the visualizations below, we set the hyperparameters
-         as \(\{p=+\infty\), \(\epsilon=8/255\), \(ns=10\}\), and display how the neural network's predictions are manipulated and how the adversarial images look at different steps of PGD attack.
-         The user can make use of the slider to step through the PGD attack, and can select from the 10 example images by clicking on them. In most cases, the 
-         attacker succeeds in no more than 3 steps, while the adversarial images look nearly identical to their original counterparts. Do you have any other interesting findings?
-    </p>
-    <section id="section4G2">
-        <div id="slider" style="height: 100px; width: 400px; position: relative; top: 30px; left: 20%; z-index: 99;">
-            <input id="epoch_slider">
-            <p id="slider_text"></p>
-        </div>
-        <div id="G2" class="div4G" style="text-align:center;">
-        </div>
-    </section>
-    <h2> Adversarial Training </h2>
-    <p class="text4G">
-        Here comes a natural question: can we avoid this? The answer is yes! A popular and effective solution is <i>adversarial training</i> <dt-cite key="madry2017towards"></dt-cite>. The idea is to utilize the PGD attack in your 
-        training process, that is, train your model with adversarial images instead of clean images at each epoch. Although the idea is simple, the optimization behind it is not trivial. In standard training, we
-        solve the following minimization problem:
-        $$
-            \min _{\theta} \rho(\theta), \quad \text { where } \quad \rho(\theta)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[L(w, x, y)\right],
-        $$
-        While in adversarial training, we are solving a Min-Max problem:
-        $$
-            \min _{\theta} \rho(\theta), \quad \text { where } \quad \rho(\theta)=\mathbb{E}_{(x, y) \sim \mathcal{D}}\left[\max _{\delta \in \mathcal{S}} L(w, x+\delta, y)\right],
-        $$
-        where \(\mathcal{S} = \{x^{\prime}\mid\|x^{\prime} - x\|_p \leq \epsilon\}\) denotes the \(\epsilon\)-radius \(L_p\) ball. In theory, the convergence conditions for such a Min-Max problem over a general
-        function is hard to determine; however, in practice, adversarial training converges for most neural networks. In the following visualizations, we compare the output probabilities of a regular-trained model
-        and an adversarial-trained model when the same PGD attack is applied, and display how the probabilities flow as the PGD attack iterates. Like above, the user can select from the set of 10 images, and view the difference in performance between the two models.
-        It is clear that the adversarial-trained model is more robust. One thing
-        worth mentioning here is that the adversarial-trained model cannot resist PGD attack all the time: its accuracy under the PGD attack is \(50.51\%\) (that for the regular-trained model is only \(0.01\%\)).
-    </p>
-    <section id="section4G3">
-        <div id="G3" class="div4G" style="text-align:center;">
-        </div>
-    </section>
-    <h2>
-        Accuracy-Robustness Tradeoff
-    </h2>
-    <p class="text4G">
-        There is no free lunch: while adversarial training enhances the model's robustness, it comes at the price of a standard accuracy drop. The adversarial-trained model achieves an \(80.05\%\) accuracy on
-        clean test images while that for the regular-trained model is \(91.64\%\). This creates an Accuracy-Robustness tradeoff, and people are now interested in how we can achieve both. The line chart below
-        gives a sense about how this tradeoff looks during training.
-    </p>
-    <section id="section4G4">
-        <div id="div4G4" class="div4G" style="text-align:center;">
-            <svg id="G4"></svg>
-        </div>
-    </section>
-    <p class="text4G">
-        The Accuracy-Robustness tradeoff is not binary; instead, adversarial training is influenced by the hyperparameter \(\epsilon\). It is expected that the Accuracy-Robustness tradeoff varies when \(\epsilon\) changes. In general,
-        a smaller \(\epsilon\) leads to an adversarial-trained model that is more accurate on clean images but less resistant to PGD attack, and vice versa. We adversarial-trained 5 models with \(\epsilon=1/255,\ 2/255,\ 4/255,\ 8/266,\ 16/255\) 
-        (other hyperparameters, including the attacker, are the same to make a fair comparison), and present their clean accuracy and adversarial accuracy (i.e., accuracy under PGD attack) in the scatter plot below.
-        Note that the model with \(\epsilon=16/255\) doesn't bring a better robustness than that of the model with \(\epsilon=8/255\), thus the rule mentioned above is only valid within a certain range.
-    </p>
-    <section id="section4G5">
-        <div id="div4G5" class="div4G" style="text-align:center;">
-            <svg id="G5"></svg>
-        </div>
-    </section>
-    <d-bibliography src="bibliography.bib"></d-bibliography>
-    <h3>
-        Citations
-    </h3>
-    <p>
-        [1] He, Kaiming, et al. "Deep residual learning for image recognition." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016. <br>
-        [2] Krizhevsky, Alex, and Geoffrey Hinton. "Learning multiple layers of features from tiny images." (2009): 7.<br>
-        [3] Zeng, Huimin, et al. "Are Adversarial Examples Created Equal? A Learnable Weighted Minimax Risk for Robustness under Non-uniform Attacks." Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 35. No. 12. 2021.<br>
-        [4] Goodfellow, Ian J., Jonathon Shlens, and Christian Szegedy. "Explaining and harnessing adversarial examples." arXiv preprint arXiv:1412.6572 (2014).<br>
-        [5] Madry, Aleksander, et al. "Towards Deep Learning Models Resistant to Adversarial Attacks." International Conference on Learning Representations. 2018.<br>
-    </p>
 
     
 </body>
+<script>
+    function triggerImage(index) {
+        d3.select("#scatterplot-image-" + index).dispatch("click");
+    } 
+    
+    function wrap(text, width) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr("x"),
+                y = text.attr("y"),
+                dy = 0, //parseFloat(text.attr("dy")),
+                tspan = text.text(null)
+                            .append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan")
+                                .attr("x", x)
+                                .attr("y", y)
+                                .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                                .text(word);
+                }
+            }
+        });
+    }
+    var chosenImg = 245;
+
+    window.onload = function() {
+        document.getElementById('defaultButton').classList.add('clicked');
+    };
+
+    // D3 script to load JSON and render scatter plot
+    d3.json('./Datasets/_projections.json').then(data => {
+        const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+        const width = document.getElementById('scatterplot').clientWidth - margin.left - margin.right;
+        const height = document.getElementById('scatterplot').clientHeight - margin.top - margin.bottom;
+
+        const svg = d3.select("#scatterplot")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const xExtent = d3.extent(data, d => d.position[0]);
+        const yExtent = d3.extent(data, d => d.position[1]);
+
+        const xScale = d3.scaleLinear()
+            .domain(xExtent)
+            .range([0, width]);
+
+        const yScale = d3.scaleLinear()
+            .domain(yExtent)
+            .range([height, 0]);
+
+        const topRightImage = svg.append("image")
+            .attr("x", width - 110) // Adjust position to top-right corner
+            .attr("y", 10) // Adjust position to top-right corner
+            .attr("width", 100) // Larger size
+            .attr("height", 100) // Larger size
+            .attr("border", "#b41930")
+            .attr("class", "top-right-image")
+            .attr("xlink:href", `./images/image_${pad(chosenImg, 3)}.png`);
+
+        svg.selectAll("image")
+            .data(data)
+            .enter()
+            .append("image")
+            .attr("x", d => xScale(d.position[0]) - 12) // Adjust for image size
+            .attr("y", d => yScale(d.position[1]) - 12) // Adjust for image size
+            .attr("width", 24)
+            .attr("height", 24)
+            .attr("xlink:href", d => `./images/image_${d.key}.png`)
+            .attr("class", "scatterplot-image")
+            .attr("id", d => `scatterplot-image-${d.key}`)
+            .on("click", d => {
+                chosenImg = parseInt(d.key);
+                topRightImage.attr("xlink:href", `./images/image_${d.key}.png`);
+                // d3.selectAll(".scatterplot-image").classed("g1-selected-image", false);
+                // d3.select("#scatterplot-image-" + d.key).classed("g1-selected-image", true);
+
+                svg.selectAll("rect").remove();
+                // Append a new highlight rectangle
+                svg.append("rect")
+                    .attr("x", xScale(d.position[0]) - 14) // Adjust position to be on the border
+                    .attr("y", yScale(d.position[1]) - 14) // Adjust position to be on the border
+                    .attr("width", 28) // Rectangle size
+                    .attr("height", 28) // Rectangle size
+                    .attr("fill", "none")
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 2);
+                updateHeat();
+                onImgSelect_g2();
+                onImgSelectG3();
+            });
+
+        svg.selectAll("rect").remove();
+        // Append a new highlight rectangle
+        let chosenImageData = data.filter(d => d.key == chosenImg.toString())[0];
+        svg.append("rect")
+            .attr("x", xScale(chosenImageData.position[0]) - 14) // Adjust position to be on the border
+            .attr("y", yScale(chosenImageData.position[1]) - 14) // Adjust position to be on the border
+            .attr("width", 28) // Rectangle size
+            .attr("height", 28) // Rectangle size
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 2);
+        
+    }).catch(error => {
+        console.error('Error loading JSON file:', error);
+    });
+</script>
 <script src="./d3-tip.js"></script>
 <script src="./G1/main.js"></script>
 <script src="./G2/main.js"></script>
+<script src="./G2/heatmap.js"></script>
 <script src="./G3/main.js"></script>
 <script src="./G4/main.js"></script>
 <script src="./G5/main.js"></script>
 <script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
-<script>
-    var simulateMouseEvent = function (element, eventName, coordX, coordY) {
-        element.dispatchEvent(
-          new MouseEvent(eventName, {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            button: 0,
-          })
-        );
-      };
-
-    var testSVG = document.getElementById("g1-image-1");
-    setTimeout( function(){ 
-        simulateMouseEvent(testSVG, "click"); 
-        testSVG = document.getElementById("g1-image-2");
-        setTimeout(function(){ simulateMouseEvent(testSVG, "click");
-            setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
-            Y.one("#g1-image-3").simulate("click");}); 
-            }, 2000);
-        }, 2000);
-    }, 2000);
-    
-    setTimeout(function(){ YUI().use("node-event-simulate", function (Y) {
-        Y.one("#hoverRect").simulate("mouseover", { relatedTarget: document.body });
-    }); }, 8000);
-    
-</script>
 
 <script type="text/bibliography">
     @inproceedings{he2016deep,
@@ -202,12 +427,12 @@
         pages={770--778},
         year={2016}
       }
-    @article{krizhevsky2009learning,
+      @article{krizhevsky2009learning,
         title={Learning multiple layers of features from tiny images},
         author={Krizhevsky, Alex and Hinton, Geoffrey and others},
         year={2009},
-        publisher={Citeseer}
-    }
+        publisher={Toronto, ON, Canada}
+      }
     @article{zeng2020adversarial,
         title={Are adversarial examples created equal? A learnable weighted minimax risk for robustness under non-uniform attacks},
         author={Zeng, Huimin and Zhu, Chen and Goldstein, Tom and Huang, Furong},
@@ -221,11 +446,21 @@
         journal={arXiv preprint arXiv:1412.6572},
         year={2014}
     }
-    @article{madry2017towards,
-        title={Towards deep learning models resistant to adversarial attacks},
-        author={Madry, Aleksander and Makelov, Aleksandar and Schmidt, Ludwig and Tsipras, Dimitris and Vladu, Adrian},
-        journal={arXiv preprint arXiv:1706.06083},
-        year={2017}
-    }
+    @inproceedings{
+        madry2017towards,
+        title={Towards Deep Learning Models Resistant to Adversarial Attacks},
+        author={Aleksander Madry and Aleksandar Makelov and Ludwig Schmidt and Dimitris Tsipras and Adrian Vladu},
+        booktitle={International Conference on Learning Representations},
+        year={2018},
+        url={https://openreview.net/forum?id=rJzIBfZAb},
+        }
+    @article{ruder2016overview,
+        title={An overview of gradient descent optimization algorithms},
+        author={Ruder, Sebastian},
+        journal={arXiv preprint arXiv:1609.04747},
+        year={2016}
+      }
+
+      @article{mcinnes2018umap, doi = {10.21105/joss.00861}, url = {https://doi.org/10.21105/joss.00861}, year = {2018}, publisher = {The Open Journal}, volume = {3}, number = {29}, pages = {861}, author = {Leland McInnes and John Healy and Nathaniel Saul and Lukas Großberger}, title = {UMAP: Uniform Manifold Approximation and Projection}, journal = {Journal of Open Source Software} }
 </script>
 </html>

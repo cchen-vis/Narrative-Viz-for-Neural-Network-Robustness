@@ -1,8 +1,45 @@
 body {
   position: relative;
-  width: 60%;
+  width: 100%;
   z-index: 15;
-  left: 20%;
+  left: 0%;
+  overflow: hidden;
+}
+
+.centered {
+  display: block;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+.fixed-view {
+  width: 40%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f0f0f0; /* Example background color */
+  height: 100vh;
+  overflow: hidden;
+}
+.scrollable-views {
+  width: 55%;
+  margin-left: 42.5%;
+  overflow-y: auto;
+  height: 100vh;
+  scrollbar-width: none;
+}
+
+.scatterplot {
+  width: 100%;
+  height: 100%;
+}
+.scatterplot svg {
+  width: 100%;
+  height: 100%;
 }
 
 #G2 {
@@ -17,7 +54,7 @@ d-title {
   padding: 2rem 0 1.5rem;
   contain: layout style;
   overflow-x: hidden;
-  text-align: center;
+  text-align: left;
 }
 
 d-title h1 {
@@ -60,9 +97,9 @@ li {
   -webkit-text-size-adjust: 100%;
 }
 
-/* .div4G {
-    display: flex;
-} */
+.div4G {
+  width: 100%;
+}
 
 /* G1 */
 #G1 {
@@ -71,7 +108,11 @@ li {
 }
 
 .g1-selected-image {
-  outline: 5px solid gold;
+  outline: 5px solid #b41930;
+}
+
+.top-right-image {
+  outline: 2.5px solid #b41930;
 }
 
 .g1-line {
@@ -150,4 +191,57 @@ circle {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: flex-start;
+}
+
+.button4G4 {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffa500; /* Dark Orange */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.button4G4:hover {
+  background-color: #ff8c00; /* Light Orange */
+}
+.button4G4.clicked {
+  background-color: #ff4500; /* Orange Red */
+  transform: scale(1.1);
+}
+
+#imagesG2 {
+  text-align: center;
+}
+.image-container {
+  display: inline-block;
+  margin: 10px;
+  text-align: center;
+}
+.image-title {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.clickable-image {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+
+#heatmap-controls {
+  margin: 20px 0;
+}
+
+.arrow-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+#step-text {
+  font-size: 16px;
 }
