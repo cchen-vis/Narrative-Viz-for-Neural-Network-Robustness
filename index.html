@@ -291,6 +291,12 @@
     function triggerImage(index) {
         d3.select("#scatterplot-image-" + index).dispatch("click");
     } 
+
+    function pad(num, size) {
+        num = num.toString();
+        while (num.length < size) num = "0" + num;
+        return num;
+    }
     
     function wrap(text, width) {
         text.each(function () {

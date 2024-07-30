@@ -1,12 +1,6 @@
 let data_G1;
 let steps;
 
-function pad(num, size) {
-  num = num.toString();
-  while (num.length < size) num = "0" + num;
-  return num;
-}
-
 function updateHeat() {
   const animTime = 50;
   const animStyle = d3.easeLinear; //x => (x < 0.5) ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
