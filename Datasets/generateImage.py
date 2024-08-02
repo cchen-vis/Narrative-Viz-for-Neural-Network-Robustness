@@ -38,6 +38,6 @@ def read_json_and_save_images(json_file_path, output_folder):
             # print(f'Saved image {i}')
 
 # Example usage
-json_file_path = '/Users/chen/Documents/GitHub/Narrative-Viz-for-Neural-Network-Robustness/Datasets/sampleImages_NT.json'
+json_file_path = './Narrative-Viz-for-Neural-Network-Robustness/Datasets/sampleImages_NT.json'
 output_folder = './Dataset/images_AT'
 read_json_and_save_images(json_file_path, output_folder)
