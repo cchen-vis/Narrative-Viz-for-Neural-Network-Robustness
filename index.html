@@ -45,7 +45,9 @@
                 In the two visualizations below, we first show how the loss value and the test accuracy evolve, and how the output probabilities from the CNN model change 
                 as the training process goes. Hover over the left-hand-side line chart and move the mouse, you will see the racing bar chart on the right-hand side displaying 
                 the changes in the predictive probabilities for the selected image at different training epochs. 
-                The default selected <span style="color: rgb(118, 183, 178); cursor: pointer;" onclick="triggerImage(245)">cat</span> image is correctly
+                The default selected 
+                <span style="background-color: rgb(118, 183, 178); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(245)">cat</span> 
+                image is correctly
                 classified by the neural network in most of the late epochs. Feel free to select other images to see how the neural network learns (there are definitely misclassified images!).
             </p>
             <section id="section4G1">
@@ -55,8 +57,10 @@
             </section>
             <p class="text4G"> 
                 Despite the success of neural networks we have just observed, there are behaviors that indicate some potential <b>instability</b>.
-                For example, in epoch 96, the model's prediction over the default <span style="color: rgb(118, 183, 178); cursor: pointer;" onclick="triggerImage(245)">cat</span> image is a frog; 
-                also, although this <span style="color: rgb(89, 161, 79); cursor: pointer;" onclick="triggerImage(188)">dear</span> image is correctly classified,
+                For example, in epoch 96, the model's prediction over the default <span style="background-color: rgb(118, 183, 178); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(245)">cat</span> image is a frog; 
+                also, although this 
+                <span style="background-color: rgb(89, 161, 79); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(188)">dear</span> 
+                image is correctly classified,
                 the model's prediction over it jumps between cat, dog, bird, and dear in the last 10 epochs. 
                 Then the question arises: <i> if a small change in the neural network parameters can lead to a significant change in the model's prediction, can a small change 
                 in the input image also lead to a significant change in the model's prediction? </i> The answer is YES, and the following sections will walk you through the answers.
@@ -162,7 +166,7 @@
                 as the PGD attack iterates. 
                 <mark>You can hover over the area marks in the visualization to compare the output probabilities of the input image being a certain class from the two models.</mark>
                 It is clear that the adversarial-trained model is more robust. 
-                For example, the adversarial-trained model predicts correctly on the default <span style="color: rgb(118, 183, 178); cursor: pointer;" onclick="triggerImage(245)">cat</span> image
+                For example, the adversarial-trained model predicts correctly on the default <span style="background-color: rgb(118, 183, 178); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(245)">cat</span>  image
                 after 5 steps of the PGD attack (the model's confidence is decreased though), while the regular-trained model fails to do so after only 1 step. Select other images to  play!
             </p>
             <section id="section4G3">
