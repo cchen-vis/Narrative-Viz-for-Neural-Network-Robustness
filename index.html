@@ -20,6 +20,14 @@
             <d-title>
                 <h1>A Visual Tour to Empirical Neural Network Robustness</h1><br>   
             </d-title>
+            <p class="text4G"> 
+                In the machine learning field, people train neural network-based classifiers to recognize types of objects in images, e.g., cats, dogs, cars, etc.
+                Convolutional neural network is such a classifier that is widely used in image classification tasks because of its high accuracy.
+                However, researchers have found that convolutional neural networks are vulnerable to adversarial attacks, 
+                where small perturbations to the input image can lead to significant changes in the model's prediction.
+                To this end, researchers have been proposing defense mechanisms to enhance the robustness of neural networks, leading to the development of machine learning robustness.
+                In this article, we provide a visual tour to empirical neural network robustness, presenting how neural networks learn, how they are attacked, and how they can be defended with interactive visualizations.
+            </p>
             <h2> Neural Network's Success </h2>
             <p class="text4G"> Convolutional Neural Networks (CNN) are the most powerful classifiers for image classification tasks at present. 
                 To obtain a CNN classifier, one needs to define (1) a network architecture \(f(w,x)\) parameterized by \(w\), 
@@ -63,7 +71,7 @@
                 image is correctly classified,
                 the model's prediction over it jumps between cat, dog, bird, and dear in the last 10 epochs. 
                 Then the question arises: <i> if a small change in the neural network parameters can lead to a significant change in the model's prediction, can a small change 
-                in the input image also lead to a significant change in the model's prediction? </i> The answer is YES, and the following sections will walk you through the answers.
+                in the input image also lead to a significant change in the model's prediction? </i> The answer is YES, and the following sections will walk you through the answer.
             </p>
             <h2> Projected Gradient Descent Attack </h2>
             <p class="text4G"> Consider the situation where an input image is altered by some small pixel-level noise that is imperceptible to the human eye. 
