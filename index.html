@@ -20,6 +20,57 @@
             <d-title>
                 <h1>A Visual Tour to Empirical Neural Network Robustness</h1><br>   
             </d-title>
+            <d-byline>
+                <div class="byline grid">
+                <div class="authors-affiliations grid">
+                    <h3>Authors</h3>
+                    <h3>Affiliations</h3>
+                    
+                    <p class="author">
+                        
+                        <a class="name" href="https://ccdtc.cc/">Chen Chen</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+
+                    <p class="author">
+                        
+                        <a class="name" href="https://jakobwong.github.io/">Jinbin Huang</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://scai.engineering.asu.edu/">Arizona State University</a>
+                    </p>
+                    
+                    <p class="author">
+                        
+                        <a class="name" href="https://www.linkedin.com/in/ethan-remsberg-052612215/">Ethan Remsberg</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+
+                    <p class="author">
+                        
+                        <a class="name" href="https://www.zcliu.org/">Zhicheng Liu</a>
+                    </p>
+                    <p class="affiliation">
+                    <a class="affiliation" href="https://www.cs.umd.edu/">University of Maryland</a>
+                    </p>
+                    
+                </div>
+                <div>
+                    <h3>Published</h3>
+                    
+                    <p><em>To appear at the 7th Workshop on Visualization for AI Explainability at IEEE VIS, 2024.</em></p>
+                </div>
+                <div>
+                    <h3>DOI</h3>
+                    
+                    <p><em>No DOI yet.</em></p>
+                </div>
+                </div>
+            </d-byline>
             <p class="text4G"> 
                 In the machine learning field, people train neural network-based classifiers to recognize types of objects in images, e.g., cats, dogs, cars, etc.
                 Convolutional neural network is such a classifier that is widely used in image classification tasks because of its high accuracy.
@@ -67,9 +118,9 @@
                 Despite the success of neural networks we have just observed, there are behaviors that indicate some potential <b>instability</b>.
                 For example, in epoch 96, the model's prediction over the default <span style="background-color: rgb(118, 183, 178); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(245)">cat</span> image is a frog; 
                 also, although this 
-                <span style="background-color: rgb(89, 161, 79); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(188)">dear</span> 
+                <span style="background-color: rgb(89, 161, 79); color: white; border-radius: 5px; padding: 0 5px; cursor: pointer; display: inline-block; line-height: 1;" onclick="triggerImage(188)">deer</span> 
                 image is correctly classified,
-                the model's prediction over it jumps between cat, dog, bird, and dear in the last 10 epochs. 
+                the model's prediction over it jumps between cat, dog, bird, and deer in the last 10 epochs. 
                 Then the question arises: <i> if a small change in the neural network parameters can lead to a significant change in the model's prediction, can a small change 
                 in the input image also lead to a significant change in the model's prediction? </i> The answer is YES, and the following sections will walk you through the answer.
             </p>
