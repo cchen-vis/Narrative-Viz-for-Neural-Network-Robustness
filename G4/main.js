@@ -15,8 +15,8 @@ const y_g4 = d3.scaleLinear().range([height, 0]);
 const color_g4 = d3.scaleOrdinal().range(d3.schemeSet1);
 
 Promise.all([
-  d3.csv("../Datasets/clean_and_adversarial_acc_AT_8.csv"),
-  d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv"),
+  d3.csv("Datasets/clean_and_adversarial_acc_AT_8.csv"),
+  d3.csv("Datasets/clean_and_adversarial_acc_NT_model.csv"),
 ]).then((data_g4) => {
   let at_acc = data_g4[0];
   let nt_acc = data_g4[1];
@@ -231,7 +231,7 @@ function showAcc(eps) {
 
   Promise.all([
     d3.csv(`../Datasets/clean_and_adversarial_acc_AT_${eps}.csv`),
-    d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv"),
+    d3.csv("Datasets/clean_and_adversarial_acc_NT_model.csv"),
   ]).then((data_g4) => {
     let at_acc = data_g4[0];
     let nt_acc = data_g4[1];

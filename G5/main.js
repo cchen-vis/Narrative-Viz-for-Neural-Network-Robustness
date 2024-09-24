@@ -12,7 +12,7 @@ const svg_g5 = d3
 const x_g5 = d3.scaleLinear().range([0, 0.6 * width]);
 const y_g5 = d3.scaleLinear().range([height, 0]);
 
-d3.csv("../Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
+d3.csv("Datasets/clean_adv_tradeoff4different_eps.csv").then((data_g5) => {
   x_g5.domain([
     Math.min(...data_g5.map((d) => parseFloat(d.clean_acc))) - 5,
     Math.max(...data_g5.map((d) => parseFloat(d.clean_acc))) + 5,

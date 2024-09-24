@@ -110,7 +110,7 @@ chartG
 
 for (let i = 0; i < 6; i++) {
   d3.select("#image-g2-" + i)
-    .attr("src", "../images_AT/image_" + i + "_" + pad(chosenImg, 3) + ".png")
+    .attr("src", "images_AT/image_" + i + "_" + pad(chosenImg, 3) + ".png")
     .on("click", () => {
       onSlide(i);
     });
@@ -120,7 +120,7 @@ onSlide(0);
 function onImgSelect_g2() {
   for (let i = 0; i < 6; i++) {
     d3.select("#image-g2-" + i)
-      .attr("src", "../images_AT/image_" + i + "_" + pad(chosenImg, 3) + ".png")
+      .attr("src", "images_AT/image_" + i + "_" + pad(chosenImg, 3) + ".png")
       .on("click", () => {
         onSlide(i);
       });
@@ -128,7 +128,7 @@ function onImgSelect_g2() {
   onSlide(0);
 }
 
-d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
+d3.json("Datasets/stepWiseProb_NT.json").then((prob_data) => {
   // Initialize bar chart
   data_G2 = prob_data[epoch][chosenImg];
 
@@ -171,7 +171,7 @@ d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
 
 // Event callback
 function onSlide(AT_step) {
-  d3.json("../Datasets/stepWiseProb_NT.json").then((prob_data) => {
+  d3.json("Datasets/stepWiseProb_NT.json").then((prob_data) => {
     d3.select("#stackedBarChart")
       .selectAll(".bar rect")
       .data(prob_data[AT_step][chosenImg])

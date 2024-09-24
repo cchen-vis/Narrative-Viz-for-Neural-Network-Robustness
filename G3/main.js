@@ -190,8 +190,8 @@ ribbonG_g2
 //   .text("RT model's prediction probabilites for current image");
 
 var swP_NT, swP_AT;
-d3.json("../Datasets/stepWiseProb_NT.json").then((nt_data) => {
-  d3.json("../Datasets/stepWiseProb_AT.json").then((at_data) => {
+d3.json("Datasets/stepWiseProb_NT.json").then((nt_data) => {
+  d3.json("Datasets/stepWiseProb_AT.json").then((at_data) => {
     swP_NT = nt_data;
     swP_AT = at_data;
     // Initialize ribbon chart

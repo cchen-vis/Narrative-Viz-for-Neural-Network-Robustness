@@ -42,7 +42,7 @@ const realLabels = [
 const maxTextWidth = 100;
 let cells;
 // Load data
-d3.json("./Datasets/stepWiseProb_NT.json").then((data) => {
+d3.json("Datasets/stepWiseProb_NT.json").then((data) => {
   // Create confusion matrix with percentages
   const confusionMatrix = Array.from({ length: 10 }, () => Array(10).fill(0));
   const labelCounts = Array(10).fill(0);

@@ -170,7 +170,7 @@ heatmap
   .style("font-family", "sans-serif")
   .style("fill", "black");
 
-d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
+d3.csv("Datasets/clean_and_adversarial_acc_NT_model.csv")
   .then((dataset) => {
     data_G1 = dataset;
 
@@ -270,7 +270,7 @@ d3.csv("../Datasets/clean_and_adversarial_acc_NT_model.csv")
       .style("fill", color("accuracy"));
 
     // Step two is to load the other data
-    return d3.json("../Datasets/NT_OutputProbPerEpoch4examples.json");
+    return d3.json("Datasets/NT_OutputProbPerEpoch4examples.json");
   })
   .then((dataset) => {
     steps = dataset;
