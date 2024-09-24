@@ -230,7 +230,7 @@ function showAcc(eps) {
     .classList.add("clicked");
 
   Promise.all([
-    d3.csv("Datasets/clean_and_adversarial_acc_AT_${eps}.csv"),
+    d3.csv(`Datasets/clean_and_adversarial_acc_AT_${eps}.csv`),
     d3.csv("Datasets/clean_and_adversarial_acc_NT_model.csv"),
   ]).then((data_g4) => {
     let at_acc = data_g4[0];
