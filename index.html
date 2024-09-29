@@ -141,12 +141,14 @@
                 </ol>
             </p>
             <p class="text4G">
+                Readers who are not familiar with the notation \(\|\cdot\|_p\) (i.e., the vector norm) can refer to <a href="https://planetmath.org/vectorpnorm" target="_blank">vector p-norm</a>.
                 Note that the \(\epsilon\)-radius \(L_p\) space above enforces the condition that "<i>the noise is imperceptible to the human eye</i>". 
                 To illustrate the PGD attack, we implement a PGD attacker with hyperparameters \(\{p=+\infty\), \(\epsilon=8/255\), \(ns=5\}\) 
                 and display in the visualizations below what the adversarial images look like at different steps of the PGD attack and how the neural network's predictions are manipulated.
                 <mark>Click on the adversarial images to see the polluted output probabilities from the neural network.</mark>
                 It is clear that the attacker can easily mislead the neural network to predict a wrong class label within 3 attack steps, while 
                 the adversarial images look nearly identical to their original counterparts.
+                Feel free to click on some other images to explore; note that the purturbations are different for different images, as they are image-dependent.
                 <br><br>
             </p>
             <section id="section4G2">
@@ -273,6 +275,23 @@
                     <svg id="G5"></svg>
                 </div>
             </section>
+            <h2>
+                Conclusion  
+            </h2>
+            <p class="text4G">
+                In this article, we have reviewed the topic of adversarial machine learning and showcased the influence of adversarial attacks and the effectiveness of adversarial training through a series of visualizations.
+                We covered the following important concepts:
+                <ul>
+                    <li>Projected Gradient Descent (PGD) Attack: we showed how a neural network can be easily misled by simple yet carefully crafted noises;</li>
+                    <li>Adversarial training: we showed how to enhance the model's robustness by training it with adversarial images;</li>
+                    <li>Accuracy-robustness tradeoff: we showed how the choice of \(\epsilon\) during training can greatly influence both the model's accuracy on clean images and its robustness to adversarial attacks.</li>
+                </ul>
+            </p>
+            <p class="text4G">
+                One thing worth noting is that the PGD attack is a white-box attack, where the attacker has access to the model's parameters and architecture.
+                There are other types of attacks, such as <i>black-box attacks</i>, where the attacker does not have access to the model's parameters or architecture.
+                We hope this article serves as a starting point for readers to explore more about this exciting field.
+            </p>
             <d-bibliography src="bibliography.bib"></d-bibliography>
             <h3>
                 Citations
